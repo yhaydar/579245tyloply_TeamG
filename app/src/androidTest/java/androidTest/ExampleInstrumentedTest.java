@@ -1,4 +1,4 @@
-package com.example.bbqbuddy;
+package androidTest;
 
 import android.content.Context;
 

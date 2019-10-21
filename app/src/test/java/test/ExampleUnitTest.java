@@ -1,4 +1,4 @@
-package com.example.bbqbuddy;
+package test;
 
 import org.junit.Test;
 

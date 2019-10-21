@@ -6,11 +6,7 @@
     tools:context="ui.MainActivity">
 
     <ListView
-        android:id ="@+id/listView"
+        android:id ="@+id/foodView"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-    </ListView>
-
-
+        android:layout_height="match_parent"/>
 </RelativeLayout>

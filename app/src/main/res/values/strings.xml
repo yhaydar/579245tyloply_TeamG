@@ -4,16 +4,28 @@
     <string name="poultry">Poultry</string>
     <string name="beef">Beef</string>
     <string name="pork">Pork</string>
+    <string name="instructions">1. ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</string>
+    <string name="timer">Timer</string>
+    <string name="start">Start</string>
+    <string name="meatSelection">Type of Meat Selected</string>
+    <string name="instructionsText">Instructions</string>
     <string-array name="poultry">
-        <item>Chicken</item>
         <item>Turkey</item>
+        <item>Chicken</item>
+        <item>Drumstick, Breast</item>
+        <item>Duck</item>
     </string-array>
     <string-array name="beef">
-        <item>Burger</item>
         <item>Steak</item>
+        <item>Tenderloin</item>
+        <item>Ground Patty</item>
+        <item>Rib-eye Roast</item>
+        <item>Brisket</item>
     </string-array>
     <string-array name="pork">
-        <item>Roast</item>
-        <item>Bacon</item>
+        <item>Ham</item>
+        <item>Chop</item>
+        <item>Tenderloin</item>
+        <item>Shoulder</item>
     </string-array>
 </resources>

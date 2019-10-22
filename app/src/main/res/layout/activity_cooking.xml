@@ -19,7 +19,7 @@
         android:layout_marginTop="96dp"
         android:layout_marginEnd="156dp"
         android:layout_marginRight="156dp"
-        android:text="Timer"
+        android:text="@string/timer"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/background_light"
         android:textSize="36sp"
@@ -37,7 +37,7 @@
         android:layout_marginEnd="42dp"
         android:layout_marginRight="42dp"
         android:background="@android:color/darker_gray"
-        android:text="Start"
+        android:text="@string/start"
         android:textColor="@android:color/background_light"
         tools:visibility="visible" />
 
@@ -51,6 +51,7 @@
         android:layout_marginTop="77dp"
         android:background="@android:color/darker_gray"
         android:src="@android:drawable/ic_lock_idle_alarm"
+        android:contentDescription=""
         tools:visibility="visible"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="12dp" />
@@ -65,7 +66,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="231dp"
-        android:text="Type of Meat Selected"
+        android:text="@string/meatSelection"
         android:textColor="@android:color/background_light"
         android:textSize="30sp" />
 
@@ -79,7 +80,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="319dp"
-        android:text="Instructions"
+        android:text="@string/instructionsText"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/background_light"
@@ -95,8 +96,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="4dp"
-        android:inputType="textMultiLine"
-        android:text="1.   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+        android:singleLine="false"
+        android:text="@string/instructions"
         android:textColor="@android:color/background_light"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp" />

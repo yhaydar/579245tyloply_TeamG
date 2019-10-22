@@ -1,49 +1,99 @@
 package ui;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.TextView;
 
 import com.example.bbqbuddy.R;
 
-public class CustomListView extends ArrayAdapter<String> {
+import java.util.HashMap;
+import java.util.List;
 
-    private String[] foodNames;
+public class CustomListView extends BaseExpandableListAdapter {
+    private Context context;
+    private List<String> foodTypes;
+    private HashMap<String, List<String>> listOptions;
     private Integer[] imageIds;
-    private ArrayAdapter[] adapters;
-    private Activity context;
 
-    public CustomListView(Activity context, String[] foodNames, Integer[] imgid, ArrayAdapter[] adapters) {
-        super(context, R.layout.listview_layout,foodNames);
+    public CustomListView(Context context,List<String> foodTypes, HashMap<String,List<String>> listOptions, Integer[] imageIds){
         this.context = context;
-        this.foodNames = foodNames;
-        this.imageIds = imgid;
-        this.adapters = adapters;
+        this.foodTypes = foodTypes;
+        this.listOptions = listOptions;
+        this.imageIds = imageIds;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View r = convertView;
-        ViewHolder viewHolder = null;
-        if(r == null){
-            LayoutInflater inflater = context.getLayoutInflater();
-            r = inflater.inflate(R.layout.listview_layout,null,true);
-            viewHolder = new ViewHolder(r);
-            r.setTag(viewHolder);
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        //inflate view with custom list view layout
+        ViewHolder viewHolder;
+        if(convertView == null){
+            LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.listview_layout, null, true);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
         }
         else{
-            viewHolder = (ViewHolder) r.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.getImageView().setImageResource(imageIds[position]);
-        viewHolder.getTextView().setText(foodNames[position]);
-        viewHolder.getSpinner().setAdapter(adapters[position]);
+        //set images and text in list view item
+        viewHolder.getImageView().setImageResource(imageIds[groupPosition]);
+        viewHolder.getTextView().setText(foodTypes.get(groupPosition));
 
-        return r;
+        return convertView;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        String child = (String) getChild(groupPosition,childPosition);
+        if(convertView == null){
+            LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.list_item,null);
+        }
+        //set text in child items
+        TextView textView = convertView.findViewById(R.id.list_child);
+        textView.setText(child);
+        return convertView;
+    }
+    @Override
+    public int getGroupCount() {
+        return foodTypes.size();
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return this.listOptions.get(this.foodTypes.get(groupPosition)).size();
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return this.foodTypes.get(groupPosition);
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return this.listOptions.get(this.foodTypes.get(groupPosition)).get(childPosition);
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
     }
 }

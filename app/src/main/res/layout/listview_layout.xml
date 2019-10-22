@@ -14,6 +14,10 @@
             android:id="@+id/imageView"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="27dp"
+            android:layout_marginLeft="25dp"
             android:layout_weight="0.11" />
 
         <TextView
@@ -29,19 +33,5 @@
             android:textColor="#0A0A0E"
             android:textSize="25dp"
             android:textStyle="bold" />
-
-        <Spinner
-            android:id="@+id/optionSpinner"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="26dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:clickable="false"
-            android:focusable="auto"
-            android:focusableInTouchMode="true" />
     </RelativeLayout>
 </LinearLayout>

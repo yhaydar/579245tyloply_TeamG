@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+
+    <CheckBox
+        android:id="@+id/wellCheckBox"
+        android:layout_width="156dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/mediumCheckBox"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="129dp"
+        android:layout_marginLeft="125dp"
+        android:layout_marginTop="35dp"
+        android:text="Well"
+        android:textSize="18sp" />
+
+    <CheckBox
+        android:id="@+id/mediumCheckBox"
+        android:layout_width="156dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/rareCheckBox"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="127dp"
+        android:layout_marginLeft="125dp"
+        android:layout_marginTop="35dp"
+        android:text="Medium"
+        android:textSize="18sp" />
+
+    <CheckBox
+        android:id="@+id/rareCheckBox"
+        android:layout_width="156dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/subTitleTextView"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="34dp"
+        android:text="Rare"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/weightEditText"
+        android:layout_width="238dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/specTitleTextView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="99dp"
+        android:layout_marginLeft="99dp"
+        android:layout_marginTop="48dp"
+        android:ems="10"
+        android:hint="weight in grams"
+        android:inputType="number"
+        android:text="Enter Weight in Grams"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/specTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp"
+        android:text="Meat Specifications"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/subTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weightEditText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="116dp"
+        android:layout_marginLeft="116dp"
+        android:layout_marginTop="75dp"
+        android:text="Select Doneness"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="24sp" />
+
+</RelativeLayout>

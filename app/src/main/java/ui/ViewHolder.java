@@ -12,7 +12,7 @@ public class ViewHolder {
 
     ViewHolder(View view){
         this.textView = view.findViewById(R.id.foodName);
-        this.imageView = view.findViewById(R.id.foodView);
+        this.imageView = view.findViewById(R.id.imageView);
     }
 
     public TextView getTextView(){

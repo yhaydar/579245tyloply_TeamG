@@ -13,15 +13,17 @@ import com.example.bbqbuddy.R;
 
 public class CustomListView extends ArrayAdapter<String> {
 
-    private String[] foodName;
-    private Integer[] imgid;
+    private String[] foodNames;
+    private Integer[] imageIds;
+    private ArrayAdapter[] adapters;
     private Activity context;
 
-    public CustomListView(Activity context, String[] foodName,Integer[] imgid) {
-        super(context, R.layout.listview_layout,foodName);
+    public CustomListView(Activity context, String[] foodNames, Integer[] imgid, ArrayAdapter[] adapters) {
+        super(context, R.layout.listview_layout,foodNames);
         this.context = context;
-        this.foodName = foodName;
-        this.imgid = imgid;
+        this.foodNames = foodNames;
+        this.imageIds = imgid;
+        this.adapters = adapters;
     }
 
     @NonNull
@@ -38,8 +40,9 @@ public class CustomListView extends ArrayAdapter<String> {
         else{
             viewHolder = (ViewHolder) r.getTag();
         }
-        viewHolder.getImageView().setImageResource(imgid[position]);
-        viewHolder.getTextView().setText(foodName[position]);
+        viewHolder.getImageView().setImageResource(imageIds[position]);
+        viewHolder.getTextView().setText(foodNames[position]);
+        viewHolder.getSpinner().setAdapter(adapters[position]);
 
         return r;
     }

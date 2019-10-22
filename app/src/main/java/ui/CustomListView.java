@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bbqbuddy.R;
 
@@ -46,7 +47,7 @@ public class CustomListView extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String child = (String) getChild(groupPosition,childPosition);
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,6 +56,16 @@ public class CustomListView extends BaseExpandableListAdapter {
         //set text in child items
         TextView textView = convertView.findViewById(R.id.list_child);
         textView.setText(child);
+
+        //set onclick listener for sub items
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO implement on click for children with a switch statement
+                Toast toast = Toast.makeText(context,"Category "+ groupPosition +", item " + childPosition+" clicked",Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
         return convertView;
     }
     @Override

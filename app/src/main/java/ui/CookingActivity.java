@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,7 +51,7 @@ public class CookingActivity extends AppCompatActivity {
         });
 
         //not sure if this works yet
-        createNotificationChannel();
+        //createNotificationChannel();
 
     }
 
@@ -70,12 +71,15 @@ public class CookingActivity extends AppCompatActivity {
             public void onTick(long l) {
                 //l is variable that contains remaining time
                 timeLeftInMilliseconds = l;
-                if(timeLeftInMilliseconds % 300000 == 0){
-                    Uri finishNotification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishNotification);
+                Log.d("DEBUG","Ticking");
+                Log.d("DEBUG","time % 30000 is "+ timeLeftInMilliseconds%300000);
+                if(timeLeftInMilliseconds % 300000 < 1500){
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
                     ringtone.play();
+                    Log.d("DEBUG","Playing Ringtone");
                     //Todo add reminders notifications
-                    setupNotifications();
+                    //setupNotifications();
                 }
                 updateTimer();
             }

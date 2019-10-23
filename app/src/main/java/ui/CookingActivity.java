@@ -1,8 +1,13 @@
 package ui;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -11,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 
 import com.example.bbqbuddy.R;
 
@@ -42,6 +48,10 @@ public class CookingActivity extends AppCompatActivity {
                 startStop();
             }
         });
+
+        //not sure if this works yet
+        createNotificationChannel();
+
     }
 
     public void startStop(){
@@ -65,6 +75,7 @@ public class CookingActivity extends AppCompatActivity {
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishNotification);
                     ringtone.play();
                     //Todo add reminders notifications
+                    setupNotifications();
                 }
                 updateTimer();
             }
@@ -103,4 +114,34 @@ public class CookingActivity extends AppCompatActivity {
         countdownText.setText(timeLeftText);
     }
 
+    public void setupNotifications(){
+        Intent intent = new Intent(this, CookingActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,1,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        try{
+            pendingIntent.send();
+        } catch(PendingIntent.CanceledException e){
+            e.printStackTrace();
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "id")
+                .setSmallIcon(R.drawable.beef)//todo change this to match the type of food cooked
+                .setContentTitle("Text notification") //todo change this to the name of the food cooked
+                .setContentText("X minutes remaining") //todo add time remaining in meal
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+    }
+
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "TestName";
+            String description = "TestChannelDescription";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("id",name,importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 }

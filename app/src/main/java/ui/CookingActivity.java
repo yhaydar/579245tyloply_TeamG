@@ -1,20 +1,20 @@
 package ui;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
-
-import com.example.bbqbuddy.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class cookingActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.example.bbqbuddy.R;
+
+public class CookingActivity extends AppCompatActivity {
 
     private TextView countdownText;
     private Button countdownButton;
@@ -60,12 +60,20 @@ public class cookingActivity extends AppCompatActivity {
             public void onTick(long l) {
                 //l is variable that contains remaining time
                 timeLeftInMilliseconds = l;
+                if(timeLeftInMilliseconds % 300000 == 0){
+                    Uri finishNotification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishNotification);
+                    ringtone.play();
+                    //Todo add reminders notifications
+                }
                 updateTimer();
             }
 
             @Override
             public void onFinish() {
-
+                Uri finishNotification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishNotification);
+                ringtone.play();
             }
         }
         .start();
@@ -93,7 +101,6 @@ public class cookingActivity extends AppCompatActivity {
         timeLeftText += seconds;
 
         countdownText.setText(timeLeftText);
-
-
     }
+
 }

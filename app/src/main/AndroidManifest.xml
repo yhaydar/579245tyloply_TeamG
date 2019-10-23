@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="ui.cookingActivity"
+            android:name="ui.CookingActivity"
             android:label="@string/title_activity_cooking"
             android:parentActivityName="ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

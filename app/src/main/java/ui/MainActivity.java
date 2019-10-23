@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     //temp function to open activity2 (to be removed later)
      public void openActivity2(){
-        Intent intent = new Intent(this, cookingActivity.class);
+        Intent intent = new Intent(this, CookingActivity.class);
         startActivity(intent);
     }
 }

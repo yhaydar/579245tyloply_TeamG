@@ -1,16 +1,14 @@
 package ui;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,7 +25,7 @@ public class CookingActivity extends AppCompatActivity {
     private Button countdownButton;
 
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 600000; //10 mins is 600000 milliseconds
+    private long timeLeftInMilliseconds = 310000; //10 mins is 600000 milliseconds
     private boolean timerRunning; // tells us if timer is running
 
 
@@ -49,10 +47,6 @@ public class CookingActivity extends AppCompatActivity {
                 startStop();
             }
         });
-
-        //not sure if this works yet
-        //createNotificationChannel();
-
     }
 
     public void startStop(){
@@ -71,24 +65,27 @@ public class CookingActivity extends AppCompatActivity {
             public void onTick(long l) {
                 //l is variable that contains remaining time
                 timeLeftInMilliseconds = l;
-                Log.d("DEBUG","Ticking");
-                Log.d("DEBUG","time % 30000 is "+ timeLeftInMilliseconds%300000);
+
                 if(timeLeftInMilliseconds % 300000 < 1500){
                     Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
                     ringtone.play();
-                    Log.d("DEBUG","Playing Ringtone");
-                    //Todo add reminders notifications
-                    //setupNotifications();
+
+                    sendNotification("PORK ROAST", timeLeftInMilliseconds/1000.0);
                 }
                 updateTimer();
             }
 
             @Override
             public void onFinish() {
-                Uri finishNotification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishNotification);
-                ringtone.play();
+                countdownText.setText("0:00");
+                try{
+                    Uri finishedAlarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
+                    ringtone.play();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         }
         .start();
@@ -105,47 +102,36 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     public void updateTimer(){
+       countdownText.setText(convertMillisToString(timeLeftInMilliseconds));
+    }
+
+    public String convertMillisToString(double timeLeftInMilliseconds){
         int minutes = (int) timeLeftInMilliseconds/60000;
         int seconds = (int) timeLeftInMilliseconds % 60000 / 1000;
 
-        String timeLeftText;
+        String time;
 
-        timeLeftText = "" + minutes;
-        timeLeftText += ":";
-        if (seconds <10) timeLeftText += "0"; // if single digit seconds, adds 0 to hold place
-        timeLeftText += seconds;
+        time = "" + minutes;
+        time += ":";
+        if (seconds <10) time += "0"; // if single digit seconds, adds 0 to hold place
+        time += seconds;
 
-        countdownText.setText(timeLeftText);
+        return time;
     }
 
-    public void setupNotifications(){
+    private void sendNotification(String mealName, double remainingTime){
+        //sends a notifications with an intent that brings back to cooking activity
         Intent intent = new Intent(this, CookingActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,1,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
 
-        try{
-            pendingIntent.send();
-        } catch(PendingIntent.CanceledException e){
-            e.printStackTrace();
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "id")
-                .setSmallIcon(R.drawable.beef)//todo change this to match the type of food cooked
-                .setContentTitle("Text notification") //todo change this to the name of the food cooked
-                .setContentText("X minutes remaining") //todo add time remaining in meal
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
+                .setSmallIcon(R.drawable.beef)
+                .setContentTitle(mealName)
+                .setContentText("Your "+ mealName +" has " + convertMillisToString(timeLeftInMilliseconds) + " left")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-    }
 
-    private void createNotificationChannel(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "TestName";
-            String description = "TestChannelDescription";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("id",name,importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(001,builder.build());
     }
 }

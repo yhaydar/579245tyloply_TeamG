@@ -71,7 +71,7 @@ public class CookingActivity extends AppCompatActivity {
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
                     ringtone.play();
 
-                    sendNotification("PORK ROAST", timeLeftInMilliseconds/1000.0);
+                    sendNotification("PORK ROAST");
                 }
                 updateTimer();
             }
@@ -119,7 +119,7 @@ public class CookingActivity extends AppCompatActivity {
         return time;
     }
 
-    private void sendNotification(String mealName, double remainingTime){
+    private void sendNotification(String mealName){
         //sends a notifications with an intent that brings back to cooking activity
         Intent intent = new Intent(this, CookingActivity.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);

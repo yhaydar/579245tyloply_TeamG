@@ -67,10 +67,11 @@ public class CookingActivity extends AppCompatActivity {
                 timeLeftInMilliseconds = l;
 
                 if(timeLeftInMilliseconds % 300000 < 1500){
-                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                    Uri notificationAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.notification);
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
+                    //TODO replace with temperature based solution
                     sendNotification("PORK ROAST");
                 }
                 updateTimer();
@@ -80,7 +81,7 @@ public class CookingActivity extends AppCompatActivity {
             public void onFinish() {
                 countdownText.setText("0:00");
                 try{
-                    Uri finishedAlarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                    Uri finishedAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.alarm);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                     ringtone.play();
                 } catch(Exception e){

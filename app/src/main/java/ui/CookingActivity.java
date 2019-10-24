@@ -126,7 +126,7 @@ public class CookingActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
-                .setSmallIcon(R.drawable.beef)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(mealName)
                 .setContentText("Your "+ mealName +" has " + convertMillisToString(timeLeftInMilliseconds) + " left")
                 .setContentIntent(pendingIntent)

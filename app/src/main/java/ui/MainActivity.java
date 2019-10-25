@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         foodTypes = new ArrayList<>();
         listOptions = new HashMap<>();
         imageIds = new Integer[]{R.drawable.chicken,R.drawable.beef,R.drawable.pork};
-        customListView = new CustomListView(this, foodTypes,listOptions,imageIds);
+        customListView = new CustomListView(this, foodTypes,listOptions,imageIds,this.getSupportFragmentManager());
         listView.setAdapter(customListView);
         initializeData();
 

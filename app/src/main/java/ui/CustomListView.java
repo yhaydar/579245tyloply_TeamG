@@ -1,12 +1,14 @@
 package ui;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.example.bbqbuddy.R;
 
@@ -18,12 +20,14 @@ public class CustomListView extends BaseExpandableListAdapter {
     private List<String> foodTypes;
     private HashMap<String, List<String>> listOptions;
     private Integer[] imageIds;
+    private FragmentManager fragmentManager;
 
-    public CustomListView(Context context,List<String> foodTypes, HashMap<String,List<String>> listOptions, Integer[] imageIds){
+    public CustomListView(Context context, List<String> foodTypes, HashMap<String,List<String>> listOptions, Integer[] imageIds, FragmentManager fragmentManager){
         this.context = context;
         this.foodTypes = foodTypes;
         this.listOptions = listOptions;
         this.imageIds = imageIds;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -61,9 +65,14 @@ public class CustomListView extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO implement on click for children with a switch statement
-                Toast toast = Toast.makeText(context,"Category "+ groupPosition +", item " + childPosition+" clicked",Toast.LENGTH_SHORT);
-                toast.show();
+                //create dialog box
+                FoodSpecDialog dialog = new FoodSpecDialog();
+                //pass meat info to the box
+                Bundle info = new Bundle();
+                info.putString("meatType",foodTypes.get(groupPosition));
+                info.putString("meal",listOptions.get(foodTypes.get(groupPosition)).get(childPosition));
+                dialog.setArguments(info);
+                dialog.show(fragmentManager,"Meat Specifications");
             }
         });
         return convertView;

@@ -9,8 +9,10 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,13 +21,22 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.bbqbuddy.R;
 
-public class CookingActivity extends AppCompatActivity {
+public class CookingActivity extends AppCompatActivity implements setTimerDialog.SetTimerDialogListener {
+    private static final String TAG = CookingActivity.class.getSimpleName();
+
+    private EditText mEditTextInput;
 
     private TextView countdownText;
+
     private Button countdownButton;
+    private Button editTimerButton;
+
 
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 310000; //10 mins is 600000 milliseconds
+
+    private long mStartTimeInMillis = 310000;
+    private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
+
     private boolean timerRunning; // tells us if timer is running
 
 
@@ -38,13 +49,24 @@ public class CookingActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        countdownText = findViewById(R.id.countdownText);
+        Log.d(TAG, "Cooking Activity On Create Built");
+
+        countdownText   = findViewById(R.id.countdownText);
         countdownButton = findViewById(R.id.countdownButton);
+        editTimerButton = findViewById(R.id.editTimerButton);
+
 
         countdownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startStop();
+            }
+        });
+        editTimerButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                openSetTimerFrag();
             }
         });
     }
@@ -59,7 +81,7 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     public void startTimer(){
-        countDownTimer = new CountDownTimer(timeLeftInMilliseconds,1000) {
+        countDownTimer = new CountDownTimer(mStartTimeInMillis,1000) {
                             // CountDownTimer(time left, countdown interval)
             @Override
             public void onTick(long l) {
@@ -134,5 +156,15 @@ public class CookingActivity extends AppCompatActivity {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(001,builder.build());
+    }
+
+    public void openSetTimerFrag(){
+        setTimerDialog setTimer = new setTimerDialog();
+        setTimer.show(getSupportFragmentManager(), " ");
+    }
+
+    @Override
+    public void applyValue(String timeEntered) {
+
     }
 }

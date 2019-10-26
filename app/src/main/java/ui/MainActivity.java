@@ -16,8 +16,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    //temporary button to access second activity (testing purposes)
-    private Button tempButton;
 
     //Elements for the list view in main activity
     ExpandableListView listView;
@@ -39,15 +37,6 @@ public class MainActivity extends AppCompatActivity {
         customListView = new CustomListView(this, foodTypes,listOptions,imageIds,this.getSupportFragmentManager());
         listView.setAdapter(customListView);
         initializeData();
-
-        //temp button intent
-        tempButton = findViewById(R.id.tempButton);
-        tempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openActivity2();
-            }
-        });
 
         }
 
@@ -88,9 +77,4 @@ public class MainActivity extends AppCompatActivity {
         customListView.notifyDataSetChanged();
     }
 
-    //temp function to open activity2 (to be removed later)
-     public void openActivity2(){
-        Intent intent = new Intent(this, CookingActivity.class);
-        startActivity(intent);
-    }
 }

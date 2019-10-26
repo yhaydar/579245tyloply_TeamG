@@ -12,7 +12,6 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +23,7 @@ import com.example.bbqbuddy.R;
 public class CookingActivity extends AppCompatActivity implements setTimerDialog.SetTimerDialogListener {
     private static final String TAG = CookingActivity.class.getSimpleName();
 
-    private EditText mEditTextInput;
+
 
     private TextView countdownText;
 
@@ -34,8 +33,8 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
 
     private CountDownTimer countDownTimer;
 
-    private long mStartTimeInMillis = 310000;
-    private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
+
+    private long timeLeftInMilliseconds= 310000; //10 mins is 600000 milliseconds
 
     private boolean timerRunning; // tells us if timer is running
 
@@ -74,14 +73,16 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
     public void startStop(){
         if (timerRunning) {
             stopTimer();
+            editTimerButton.setVisibility(View.VISIBLE);
         } else {
             startTimer();
+            editTimerButton.setVisibility(View.INVISIBLE);
         }
 
     }
 
     public void startTimer(){
-        countDownTimer = new CountDownTimer(mStartTimeInMillis,1000) {
+        countDownTimer = new CountDownTimer(timeLeftInMilliseconds,1000) {
                             // CountDownTimer(time left, countdown interval)
             @Override
             public void onTick(long l) {
@@ -128,7 +129,7 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
        countdownText.setText(convertMillisToString(timeLeftInMilliseconds));
     }
 
-    public String convertMillisToString(double timeLeftInMilliseconds){
+    public String convertMillisToString(long timeLeftInMilliseconds){
         int minutes = (int) timeLeftInMilliseconds/60000;
         int seconds = (int) timeLeftInMilliseconds % 60000 / 1000;
 
@@ -160,11 +161,13 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
 
     public void openSetTimerFrag(){
         setTimerDialog setTimer = new setTimerDialog();
-        setTimer.show(getSupportFragmentManager(), " ");
+        setTimer.show(getSupportFragmentManager(), "Set Timer frag");
     }
 
     @Override
-    public void applyValue(String timeEntered) {
-
+    public void applyValue(int timeEntered) {
+        long minutesEntered = timeEntered * 60000; // to get value in minutes
+        timeLeftInMilliseconds = minutesEntered;   // adjusts timer
+        countdownText.setText(convertMillisToString(minutesEntered));
     }
 }

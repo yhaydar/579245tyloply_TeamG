@@ -33,8 +33,8 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
 
     private CountDownTimer countDownTimer;
 
-
-    private long timeLeftInMilliseconds= 310000; //10 mins is 600000 milliseconds
+    private long startTimeInMillis = 310000;
+    private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
 
     private boolean timerRunning; // tells us if timer is running
 
@@ -54,7 +54,7 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
         countdownButton = findViewById(R.id.countdownButton);
         editTimerButton = findViewById(R.id.editTimerButton);
 
-
+        timeLeftInMilliseconds = startTimeInMillis;
         countdownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +65,7 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
 
             @Override
             public void onClick(View view) {
-                openSetTimerFrag();
+                    openSetTimerFrag();
             }
         });
     }
@@ -80,6 +80,7 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
         }
 
     }
+
 
     public void startTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds,1000) {

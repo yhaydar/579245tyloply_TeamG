@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="@android:color/background_dark"
     tools:context="ui.CookingActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -46,9 +44,7 @@
         android:layout_marginTop="132dp"
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
-        android:background="@android:color/darker_gray"
         android:text="Edit Timer"
-        android:textColor="@android:color/background_light"
         tools:visibility="visible" />
 
     <TextView
@@ -64,7 +60,6 @@
         android:text="@string/instructionsText"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/background_light"
         android:textStyle="bold" />
 
     <TextView
@@ -81,7 +76,7 @@
         android:layout_marginBottom="4dp"
         android:singleLine="false"
         android:text="@string/instructions"
-        android:textColor="@android:color/background_light" />
+         />
 
     <Button
         android:id="@+id/countdownButton"
@@ -93,9 +88,7 @@
         android:layout_marginTop="68dp"
         android:layout_marginEnd="39dp"
         android:layout_marginRight="39dp"
-        android:background="@android:color/darker_gray"
         android:text="@string/start"
-        android:textColor="@android:color/background_light"
         tools:visibility="visible" />
 
     <ImageView
@@ -108,7 +101,6 @@
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="77dp"
-        android:background="@android:color/darker_gray"
         android:contentDescription=""
         android:src="@android:drawable/ic_lock_idle_alarm"
         tools:visibility="visible" />
@@ -129,7 +121,6 @@
         android:layout_toRightOf="@+id/timerImage"
         android:text="@string/timer"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/background_light"
         android:textSize="36sp"
         android:textStyle="bold"
         tools:visibility="visible" />
@@ -145,7 +136,6 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="231dp"
         android:text="@string/meatSelection"
-        android:textColor="@android:color/background_light"
         android:textSize="30sp" />
 
 </RelativeLayout>

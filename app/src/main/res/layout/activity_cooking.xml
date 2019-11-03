@@ -74,8 +74,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="4dp"
-        android:singleLine="false"
-        android:text='""' />
+        android:singleLine="false" />
 
     <Button
         android:id="@+id/countdownButton"

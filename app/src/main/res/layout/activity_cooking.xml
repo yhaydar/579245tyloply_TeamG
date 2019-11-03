@@ -75,8 +75,7 @@
         android:layout_marginTop="9dp"
         android:layout_marginBottom="4dp"
         android:singleLine="false"
-        android:text="@string/instructions"
-         />
+        android:text='""' />
 
     <Button
         android:id="@+id/countdownButton"

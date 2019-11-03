@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.example.bbqbuddy.R;
 
 public class FoodSpecDialog extends DialogFragment {
 
+    View view;
     EditText weightText;
     TextView specTitle;
     TextView subTitle;
@@ -25,6 +27,7 @@ public class FoodSpecDialog extends DialogFragment {
     Button cancelButton;
     Button doneButton;
     String meatType;
+    String meatCut;
 
     public View onCreateView(LayoutInflater inflator, @Nullable ViewGroup container, Bundle savedInstanceState){
         View view = inflator.inflate(R.layout.specifications_fragment, container, false);
@@ -37,6 +40,9 @@ public class FoodSpecDialog extends DialogFragment {
         cancelButton = view.findViewById(R.id.cancelButton);
         doneButton = view.findViewById(R.id.doneButton);
         meatType = getArguments().getString("meatType");
+        meatCut = getArguments().getString("meatCut");
+        this.view = view;
+
         //add listeners to both buttons
         setupDialogFragment();
         setupDoneButton();
@@ -75,19 +81,29 @@ public class FoodSpecDialog extends DialogFragment {
                 String weight = weightText.getText().toString();
 
                 //TODO retrive timer data from the database
+
                 if(radioGroup.isEnabled() == true){
                     //checks if a weight was entered and if an item was checked in radio group
                     if(!(weight.equals("") || radioGroup.getCheckedRadioButtonId() == -1 )) {
+                        //get the text of the clicked radio button
+                        RadioButton clickedButton = view.findViewById(radioGroup.getCheckedRadioButtonId());
+
+                        //Make intent and send all the cooking values to cooking activity
                         Intent intent = new Intent(getActivity(), CookingActivity.class);
                         intent.putExtra("foodWeight", weight);
+                        intent.putExtra("doneness", clickedButton.getText().toString());
+                        intent.putExtra("meatType", meatType);
+                        intent.putExtra("meatCut", meatCut);
                         startActivity(intent);
                     }
                 }
                 else{
-                    //checks if a weight was entered and if an item was checked in radio group
+                    //checks if a weight was entered
                     if(!(weight.equals(""))) {
                         Intent intent = new Intent(getActivity(), CookingActivity.class);
                         intent.putExtra("foodWeight", weight);
+                        intent.putExtra("meatType", meatType);
+                        intent.putExtra("meatCut", meatCut);
                         startActivity(intent);
                     }
                 }

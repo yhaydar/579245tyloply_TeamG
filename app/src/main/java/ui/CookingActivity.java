@@ -14,22 +14,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.bbqbuddy.R;
 
-public class CookingActivity extends AppCompatActivity implements setTimerDialog.SetTimerDialogListener {
+import backend.CookingViewModel;
+import backend.DatabaseController;
+
+public class CookingActivity extends AppCompatActivity  implements setTimerDialog.SetTimerDialogListener {
     private static final String TAG = CookingActivity.class.getSimpleName();
 
-
+    private CookingViewModel model;
 
     private TextView countdownText;
+    private TextView instructionsText;
 
     private Button countdownButton;
     private Button editTimerButton;
-
 
     private CountDownTimer countDownTimer;
 
@@ -48,13 +54,23 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Log.d(TAG, "Cooking Activity On Create Built");
+        setupViewModel();
+        setupActivity();
 
+        Log.d(TAG, "Cooking Activity On Create Built");
+    }
+
+    private void setupActivity() {
+        //setup ui components
         countdownText   = findViewById(R.id.countdownText);
+        instructionsText = findViewById(R.id.instructionSetTextView);
         countdownButton = findViewById(R.id.countdownButton);
         editTimerButton = findViewById(R.id.editTimerButton);
 
+        //set the remaining time and the instruction text
         timeLeftInMilliseconds = startTimeInMillis;
+
+        //add listeners to the countdown button
         countdownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,9 +81,28 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
 
             @Override
             public void onClick(View view) {
-                    openSetTimerFrag();
+                openSetTimerFrag();
             }
         });
+    }
+
+    private void setupViewModel() {
+        //get the view model
+        model = ViewModelProviders.of(this).get(CookingViewModel.class);
+
+        //create observer to update UI
+        final Observer<String> instructionObserver = new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable final String s) {
+                //update instruction text view
+                instructionsText.setText(s);
+            }
+        };
+
+        model.getInstructions().observe(this, instructionObserver);
+
+        DatabaseController dbcontroller = new DatabaseController();
+        dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"),getIntent().getStringExtra("meatCut"), model);
     }
 
     public void startStop(){
@@ -80,7 +115,6 @@ public class CookingActivity extends AppCompatActivity implements setTimerDialog
         }
 
     }
-
 
     public void startTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds,1000) {

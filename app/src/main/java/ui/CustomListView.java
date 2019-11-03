@@ -70,7 +70,7 @@ public class CustomListView extends BaseExpandableListAdapter {
                 //pass meat info to the box
                 Bundle info = new Bundle();
                 info.putString("meatType",foodTypes.get(groupPosition));
-                info.putString("meal",listOptions.get(foodTypes.get(groupPosition)).get(childPosition));
+                info.putString("meatCut",listOptions.get(foodTypes.get(groupPosition)).get(childPosition));
                 dialog.setArguments(info);
                 dialog.show(fragmentManager,"Meat Specifications");
             }

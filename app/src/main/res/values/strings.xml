@@ -10,22 +10,18 @@
     <string name="meatSelection">Type of Meat Selected</string>
     <string name="instructionsText">Instructions</string>
     <string-array name="poultry">
-        <item>Turkey</item>
-        <item>Chicken</item>
-        <item>Drumstick, Breast</item>
-        <item>Duck</item>
+        <item>Drumstick</item>
+        <item>Breast</item>
+        <item>Wings</item>
     </string-array>
     <string-array name="beef">
         <item>Steak</item>
         <item>Tenderloin</item>
         <item>Ground Patty</item>
-        <item>Rib-eye Roast</item>
-        <item>Brisket</item>
     </string-array>
     <string-array name="pork">
-        <item>Ham</item>
+        <item>Ham Slices</item>
         <item>Chop</item>
         <item>Tenderloin</item>
-        <item>Shoulder</item>
     </string-array>
 </resources>

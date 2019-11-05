@@ -6,10 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,37 +19,45 @@ import androidx.fragment.app.DialogFragment;
 import com.example.bbqbuddy.R;
 
 public class FoodSpecDialog extends DialogFragment {
-
     View view;
-    EditText weightText;
     TextView specTitle;
     TextView subTitle;
+    Spinner spinner;
     RadioGroup radioGroup;
     Button cancelButton;
     Button doneButton;
     String meatType;
     String meatCut;
+    String[] mealOptions;
 
     public View onCreateView(LayoutInflater inflator, @Nullable ViewGroup container, Bundle savedInstanceState){
         View view = inflator.inflate(R.layout.specifications_fragment, container, false);
+        this.view = view;
 
         //map the objects to their values in the layout
-        weightText = view.findViewById(R.id.weightEditText);
         specTitle = view.findViewById(R.id.specTitleTextView);
         subTitle = view.findViewById(R.id.subTitleTextView);
         radioGroup = view.findViewById(R.id.donenessGroup);
         cancelButton = view.findViewById(R.id.cancelButton);
         doneButton = view.findViewById(R.id.doneButton);
+        spinner = view.findViewById(R.id.spinner);
+
+        //get info from the bundle
         meatType = getArguments().getString("meatType");
         meatCut = getArguments().getString("meatCut");
-        this.view = view;
+        mealOptions = getArguments().getStringArray("optionsArray");
 
         //add listeners to both buttons
         setupDialogFragment();
         setupDoneButton();
         setupCancelButton();
+        setupSpinner();
 
         return view;
+    }
+    private void setupSpinner(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_layout, mealOptions);
+        spinner.setAdapter(adapter);
     }
 
     private void setupDialogFragment() {
@@ -78,19 +87,15 @@ public class FoodSpecDialog extends DialogFragment {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String weight = weightText.getText().toString();
-
-                //TODO retrive timer data from the database
-
                 if(radioGroup.isEnabled() == true){
                     //checks if a weight was entered and if an item was checked in radio group
-                    if(!(weight.equals("") || radioGroup.getCheckedRadioButtonId() == -1 )) {
+                    if(!(spinner.getSelectedItem() == null || radioGroup.getCheckedRadioButtonId() == -1 )) {
                         //get the text of the clicked radio button
                         RadioButton clickedButton = view.findViewById(radioGroup.getCheckedRadioButtonId());
 
                         //Make intent and send all the cooking values to cooking activity
                         Intent intent = new Intent(getActivity(), CookingActivity.class);
-                        intent.putExtra("foodWeight", weight);
+                        intent.putExtra("foodSpec", spinner.getSelectedItem().toString());
                         intent.putExtra("doneness", clickedButton.getText().toString());
                         intent.putExtra("meatType", meatType);
                         intent.putExtra("meatCut", meatCut);
@@ -99,9 +104,9 @@ public class FoodSpecDialog extends DialogFragment {
                 }
                 else{
                     //checks if a weight was entered
-                    if(!(weight.equals(""))) {
+                    if(!(spinner == null)) {
                         Intent intent = new Intent(getActivity(), CookingActivity.class);
-                        intent.putExtra("foodWeight", weight);
+                        intent.putExtra("foodSpec", spinner.getSelectedItem().toString());
                         intent.putExtra("meatType", meatType);
                         intent.putExtra("meatCut", meatCut);
                         startActivity(intent);

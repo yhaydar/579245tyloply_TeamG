@@ -24,4 +24,40 @@
         <item>Chop</item>
         <item>Tenderloin</item>
     </string-array>
+    <string-array name = "PoultryDrumstick">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
+    <string-array name = "PoultryBreast">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
+    <string-array name = "PoultryWings">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
+    <string-array name = "BeefSteak">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
+    <string-array name = "BeefTenderloin">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
+    <string-array name = "BeefGroundPatty">
+        <item>50lbs</item>
+        <item>150lbs</item>
+    </string-array>
+    <string-array name = "PorkHamSlices">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
+    <string-array name = "PorkChop">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
+    <string-array name = "PorkTenderloin">
+        <item>1.9cm</item>
+        <item>2.5cm</item>
+    </string-array>
 </resources>

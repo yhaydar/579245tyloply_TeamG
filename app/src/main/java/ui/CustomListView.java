@@ -67,10 +67,19 @@ public class CustomListView extends BaseExpandableListAdapter {
             public void onClick(View v) {
                 //create dialog box
                 FoodSpecDialog dialog = new FoodSpecDialog();
+                String parentName =foodTypes.get(groupPosition);
+                String childName = listOptions.get(foodTypes.get(groupPosition)).get(childPosition);
+
+                //get the options for meat size
+                String arrayName = parentName + childName.replaceAll("\\s+","");
+                int arrayId = context.getResources().getIdentifier(arrayName,"array", context.getPackageName());
+                String[] mealOptions = context.getResources().getStringArray(arrayId);
+
                 //pass meat info to the box
                 Bundle info = new Bundle();
-                info.putString("meatType",foodTypes.get(groupPosition));
-                info.putString("meatCut",listOptions.get(foodTypes.get(groupPosition)).get(childPosition));
+                info.putString("meatType",parentName);
+                info.putString("meatCut",childName);
+                info.putStringArray("optionsArray", mealOptions);
                 dialog.setArguments(info);
                 dialog.show(fragmentManager,"Meat Specifications");
             }

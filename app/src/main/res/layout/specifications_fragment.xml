@@ -21,12 +21,11 @@
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="349dp"
-        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/specTitleTextView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:layout_marginBottom="-114dp" />
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:id="@+id/subTitleTextView"
@@ -38,7 +37,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginStart="121dp"
         android:layout_marginLeft="121dp"
-        android:layout_marginTop="137dp"
+        android:layout_marginTop="15dp"
         android:text="Select Doneness"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="20sp" />

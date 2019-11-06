@@ -66,7 +66,7 @@ public class FoodSpecDialog extends DialogFragment {
     }
 
     private void setupDialogFragment() {
-        specTitle.setText(getArguments().getString("meal"));
+       // specTitle.setText(getArguments().getString("meal"));
         //disable checkboxes for rare, medium, well if it isn't beef
         Log.d("debug", meatType);
 

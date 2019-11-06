@@ -102,7 +102,16 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
         model.getInstructions().observe(this, instructionObserver);
 
         DatabaseController dbcontroller = new DatabaseController();
-        dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"),getIntent().getStringExtra("meatCut"), model);
+        String meatCut = getIntent().getStringExtra("meatCut");
+        String foodSpec = getIntent().getStringExtra("foodSpec");
+        String meatFoodSpec;
+        if(foodSpec == null){
+            meatFoodSpec = meatCut;
+        }
+        else{
+            meatFoodSpec = meatCut+"("+foodSpec+")";
+        }
+        dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
     }
 
     public void startStop(){

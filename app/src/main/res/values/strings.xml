@@ -13,7 +13,6 @@
         <item>Drumstick</item>
         <item>Breast</item>
         <item>Wings</item>
-
     </string-array>
     <string-array name="beef">
         <item>Steak</item>
@@ -26,44 +25,32 @@
         <item>Tenderloin</item>
     </string-array>
     <string-array name = "PoultryDrumstick">
-        <item>1-1.5lbs</item>
-        <item>1.5-2lbs</item>
-        <item> More than 2 lbs</item>
     </string-array>
     <string-array name = "PoultryBreast">
-        <item>1-1.5lbs</item>
-        <item>1.5-2lbs</item>
-        <item> More than 2 lbs</item>
     </string-array>
     <string-array name = "PoultryWings">
-        <item>5-10 Wings</item>
-        <item>10-15 Wings</item>
-        <item>15-20 Wings</item>
     </string-array>
     <string-array name = "BeefSteak">
-        <item>3/4 Inch</item>
-        <item>1 Inch</item>
-        <item>1.5 Inch</item>
-        <item>2 Inch</item>
+        <item>0.75Inch</item>
+        <item>1Inch</item>
+        <item>1.5Inch</item>
+        <item>2Inch</item>
     </string-array>
     <string-array name = "BeefTenderloin">
-        <item>1 inch slices</item>
     </string-array>
     <string-array name = "BeefGroundPatty">
-        <item>1/2 Inch Thick Patties</item>
+        <item>0.5Inch</item>
     </string-array>
     <string-array name = "PorkHamSlices">
-        <item>1 Inch Slice</item>
-        <item>2-3 lbs</item>
-        <item>3-4 lbs</item>
-        <item>4-6 lbs</item>
+        <item>1Inch</item>
+        <item>3-4lbs</item>
+        <item>4-6lbs</item>
     </string-array>
     <string-array name = "PorkChop">
-        <item>1 Inch</item>
-        <item>1.5 Inch</item>
+        <item>1Inch</item>
+        <item>1.5Inch</item>
     </string-array>
     <string-array name = "PorkTenderloin">
-        <item>1 Inch - Medium</item>
-        <item>1 Inch - Well</item>
+        <item>1Inch</item>
     </string-array>
 </resources>

@@ -56,8 +56,13 @@ public class FoodSpecDialog extends DialogFragment {
         return view;
     }
     private void setupSpinner(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_layout, mealOptions);
-        spinner.setAdapter(adapter);
+        if(mealOptions.length > 0){
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_layout, mealOptions);
+            spinner.setAdapter(adapter);
+        }
+        else{
+            spinner.setEnabled(false);
+        }
     }
 
     private void setupDialogFragment() {
@@ -87,31 +92,46 @@ public class FoodSpecDialog extends DialogFragment {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(radioGroup.isEnabled() == true){
-                    //checks if a weight was entered and if an item was checked in radio group
-                    if(!(spinner.getSelectedItem() == null || radioGroup.getCheckedRadioButtonId() == -1 )) {
-                        //get the text of the clicked radio button
-                        RadioButton clickedButton = view.findViewById(radioGroup.getCheckedRadioButtonId());
+                boolean spinnerReq = false;
+                boolean radioButtonReq = false;
 
-                        //Make intent and send all the cooking values to cooking activity
-                        Intent intent = new Intent(getActivity(), CookingActivity.class);
+                //Make intent and send all the cooking values to cooking activity
+                Intent intent = new Intent(getActivity(), CookingActivity.class);
+                intent.putExtra("meatType", meatType);
+                intent.putExtra("meatCut", meatCut);
+                if(spinner.isEnabled()) {
+                    if(!(spinner.getSelectedItem() == null)) {
                         intent.putExtra("foodSpec", spinner.getSelectedItem().toString());
-                        intent.putExtra("doneness", clickedButton.getText().toString());
-                        intent.putExtra("meatType", meatType);
-                        intent.putExtra("meatCut", meatCut);
-                        startActivity(intent);
+                        spinnerReq = true;
+                    }
+                    else{
+                        spinnerReq = false;
                     }
                 }
                 else{
-                    //checks if a weight was entered
-                    if(!(spinner == null)) {
-                        Intent intent = new Intent(getActivity(), CookingActivity.class);
-                        intent.putExtra("foodSpec", spinner.getSelectedItem().toString());
-                        intent.putExtra("meatType", meatType);
-                        intent.putExtra("meatCut", meatCut);
-                        startActivity(intent);
+                    //if spinner is disabled, we ignore its input
+                    spinnerReq = true;
+                }
+                if(radioGroup.isEnabled()) {
+                    if(!(radioGroup.getCheckedRadioButtonId() == -1)) {
+                        RadioButton clickedButton = view.findViewById(radioGroup.getCheckedRadioButtonId());
+                        intent.putExtra("doneness", clickedButton.getText().toString());
+                        radioButtonReq = true;
+                    }
+                    else{
+                        radioButtonReq = false;
                     }
                 }
+                else{
+                    //if radiogroup is disabled, we can ignore it
+                    radioButtonReq = true;
+                }
+
+                //if both the spinner and radio button requirements are good, we can start the intent
+                if(radioButtonReq && spinnerReq){
+                    startActivity(intent);
+                }
+
             }
         });
     }

@@ -30,6 +30,7 @@ public class DatabaseController implements Serializable {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if(task.isSuccessful()) {
                         for(QueryDocumentSnapshot document :task.getResult()){
+                            Log.d("DEBUG", meatCut);
                             if(document.getId().equals(meatCut)){
                                 Log.d("DEBUG", "Matched: " + document.getId());
                                 String dbInstructions = document.getData().get("Instructions").toString();

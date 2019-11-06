@@ -37,27 +37,27 @@
         <item>2.5cm</item>
     </string-array>
     <string-array name = "BeefSteak">
-        <item>1.9cm</item>
-        <item>2.5cm</item>
+        <item>0.75inch</item>
+        <item>1.0inch</item>
+        <item>1.5inch</item>
+        <item>2.0inch</item>
     </string-array>
     <string-array name = "BeefTenderloin">
-        <item>1.9cm</item>
-        <item>2.5cm</item>
+        <item>tenderloin</item>
     </string-array>
     <string-array name = "BeefGroundPatty">
-        <item>50lbs</item>
-        <item>150lbs</item>
+        <item>0.5inch</item>
     </string-array>
     <string-array name = "PorkHamSlices">
-        <item>1.9cm</item>
-        <item>2.5cm</item>
+        <item>1.0inch</item>
+        <item>3-4lbs</item>
+        <item>4-6lbs</item>
     </string-array>
     <string-array name = "PorkChop">
-        <item>1.9cm</item>
-        <item>2.5cm</item>
+        <item>1.0inch</item>
+        <item>1.5inch</item>
     </string-array>
     <string-array name = "PorkTenderloin">
-        <item>1.9cm</item>
-        <item>2.5cm</item>
+        <item>1.0inch</item>
     </string-array>
 </resources>

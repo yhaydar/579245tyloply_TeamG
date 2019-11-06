@@ -25,10 +25,15 @@
         <item>Tenderloin</item>
     </string-array>
     <string-array name = "PoultryDrumstick">
+        <item>1-1.5lbs</item>
     </string-array>
     <string-array name = "PoultryBreast">
+        <item>1-1.5lbs</item>
     </string-array>
     <string-array name = "PoultryWings">
+        <item>5-10</item>
+        <item>10-15</item>
+        <item>15-20</item>
     </string-array>
     <string-array name = "BeefSteak">
         <item>0.75Inch</item>
@@ -37,6 +42,9 @@
         <item>2Inch</item>
     </string-array>
     <string-array name = "BeefTenderloin">
+        <item>1-2lbs</item>
+        <item>2-3lbs</item>
+        <item>3-4lbs</item>
     </string-array>
     <string-array name = "BeefGroundPatty">
         <item>0.5Inch</item>

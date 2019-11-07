@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,10 +25,12 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.bbqbuddy.R;
 
+import java.util.Locale;
+
 import backend.CookingViewModel;
 import backend.DatabaseController;
 
-public class CookingActivity extends AppCompatActivity  implements setTimerDialog.SetTimerDialogListener {
+public class CookingActivity extends AppCompatActivity  {//implements setTimerDialog.SetTimerDialogListener {
     private static final String TAG = CookingActivity.class.getSimpleName();
 
     private CookingViewModel model;
@@ -35,12 +39,13 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
     private TextView instructionsText;
 
     private Button countdownButton;
-    private Button editTimerButton;
+    private Button resetButton;
 
     private CountDownTimer countDownTimer;
 
     private long startTimeInMillis = 310000;
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
+    private long endTime;
 
     private boolean timerRunning; // tells us if timer is running
 
@@ -65,10 +70,7 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
         countdownText   = findViewById(R.id.countdownText);
         instructionsText = findViewById(R.id.instructionSetTextView);
         countdownButton = findViewById(R.id.countdownButton);
-        editTimerButton = findViewById(R.id.editTimerButton);
-
-        //set the remaining time and the instruction text
-        timeLeftInMilliseconds = startTimeInMillis;
+        resetButton = findViewById(R.id.resetButton);
 
         //add listeners to the countdown button
         countdownButton.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +79,16 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
                 startStop();
             }
         });
-        editTimerButton.setOnClickListener(new View.OnClickListener(){
+        resetButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                openSetTimerFrag();
+                resetTimer();
             }
         });
+
+
+
     }
 
     private void setupViewModel() {
@@ -117,21 +122,25 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
     public void startStop(){
         if (timerRunning) {
             stopTimer();
-            editTimerButton.setVisibility(View.VISIBLE);
+            resetButton.setVisibility(View.VISIBLE);
+
         } else {
             startTimer();
-            editTimerButton.setVisibility(View.INVISIBLE);
+            resetButton.setVisibility(View.VISIBLE);
         }
 
     }
 
     public void startTimer(){
+        endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
+
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds,1000) {
-                            // CountDownTimer(time left, countdown interval)
+            // CountDownTimer(time left, countdown interval)
             @Override
-            public void onTick(long l) {
+            public void onTick(long millisUntilFinished) {
                 //l is variable that contains remaining time
-                timeLeftInMilliseconds = l;
+                timeLeftInMilliseconds = millisUntilFinished;
+                updateTimer();
 
                 if(timeLeftInMilliseconds % 300000 < 1500){
                     Uri notificationAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.notification);
@@ -141,12 +150,13 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
                     //TODO replace with temperature based solution
                     sendNotification("PORK ROAST");
                 }
-                updateTimer();
+
             }
 
             @Override
             public void onFinish() {
                 countdownText.setText("0:00");
+                timerRunning = false;
                 try{
                     Uri finishedAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.alarm);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
@@ -168,24 +178,24 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
         countdownButton.setText("START");
         timerRunning = false;
     }
+    private void resetTimer(){
+        stopTimer();
+        timeLeftInMilliseconds = startTimeInMillis;
+        updateTimer();
+        timerRunning = false;
+    }
 
     public void updateTimer(){
-       countdownText.setText(convertMillisToString(timeLeftInMilliseconds));
+            int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+            int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+
+            String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+            countdownText.setText(timeLeftFormatted);
+
     }
 
-    public String convertMillisToString(long timeLeftInMilliseconds){
-        int minutes = (int) timeLeftInMilliseconds/60000;
-        int seconds = (int) timeLeftInMilliseconds % 60000 / 1000;
 
-        String time;
-
-        time = "" + minutes;
-        time += ":";
-        if (seconds <10) time += "0"; // if single digit seconds, adds 0 to hold place
-        time += seconds;
-
-        return time;
-    }
 
     private void sendNotification(String mealName){
         //sends a notifications with an intent that brings back to cooking activity
@@ -195,7 +205,6 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(mealName)
-                .setContentText("Your "+ mealName +" has " + convertMillisToString(timeLeftInMilliseconds) + " left")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
@@ -203,15 +212,47 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
         notificationManager.notify(001,builder.build());
     }
 
-    public void openSetTimerFrag(){
-        setTimerDialog setTimer = new setTimerDialog();
-        setTimer.show(getSupportFragmentManager(), "Set Timer frag");
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putLong("millisLeft", timeLeftInMilliseconds);
+        editor.putBoolean("timerRunning", timerRunning);
+        editor.putLong("endTime", endTime);
+
+        editor.apply();
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 
     @Override
-    public void applyValue(int timeEntered) {
-        long minutesEntered = timeEntered * 60000; // to get value in minutes
-        timeLeftInMilliseconds = minutesEntered;   // adjusts timer
-        countdownText.setText(convertMillisToString(minutesEntered));
+    protected void onStart() {
+        super.onStart();
+
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+
+        timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
+        timerRunning = prefs.getBoolean("timerRunning", false);
+
+        updateTimer();
+
+        if (timerRunning) {
+            endTime = prefs.getLong("endTime", 0);
+            timeLeftInMilliseconds = endTime - System.currentTimeMillis();
+
+            if (timeLeftInMilliseconds < 0) {
+                timeLeftInMilliseconds = 0;
+                timerRunning = false;
+                updateTimer();
+            }
+            else {
+                startTimer();
+            }
+        } resetButton.setVisibility(View.INVISIBLE);
+        }
     }
-}
+

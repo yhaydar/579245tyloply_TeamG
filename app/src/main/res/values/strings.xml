@@ -24,41 +24,41 @@
         <item>Chop</item>
         <item>Tenderloin</item>
     </string-array>
-    <string-array name = "PoultryDrumstick">
+    <string-array name="PoultryDrumstick">
         <item>1-1.5lbs</item>
     </string-array>
-    <string-array name = "PoultryBreast">
+    <string-array name="PoultryBreast">
         <item>1-1.5lbs</item>
     </string-array>
-    <string-array name = "PoultryWings">
+    <string-array name="PoultryWings">
         <item>5-10</item>
         <item>10-15</item>
         <item>15-20</item>
     </string-array>
-    <string-array name = "BeefSteak">
+    <string-array name="BeefSteak">
         <item>0.75Inch</item>
         <item>1Inch</item>
         <item>1.5Inch</item>
         <item>2Inch</item>
     </string-array>
-    <string-array name = "BeefTenderloin">
+    <string-array name="BeefTenderloin">
         <item>1-2lbs</item>
         <item>2-3lbs</item>
         <item>3-4lbs</item>
     </string-array>
-    <string-array name = "BeefGroundPatty">
+    <string-array name="BeefGroundPatty">
         <item>0.5Inch</item>
     </string-array>
-    <string-array name = "PorkHamSlices">
+    <string-array name="PorkHamSlices">
         <item>1Inch</item>
         <item>3-4lbs</item>
         <item>4-6lbs</item>
     </string-array>
-    <string-array name = "PorkChop">
+    <string-array name="PorkChop">
         <item>1Inch</item>
         <item>1.5Inch</item>
     </string-array>
-    <string-array name = "PorkTenderloin">
+    <string-array name="PorkTenderloin">
         <item>1Inch</item>
     </string-array>
 </resources>

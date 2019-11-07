@@ -41,6 +41,9 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
     private TextView textReceived;
     private TextView textStatus;
 
+    private TextView bluetoothStatus;
+    private TextView temperatureText;
+
     private BlunoLibrary blunoLibrary;
 
     private CountDownTimer countDownTimer;
@@ -100,6 +103,8 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
 
         textReceived = findViewById(R.id.text_Received);
         textStatus = findViewById(R.id.textStatus);
+        temperatureText = findViewById(R.id.temperatureText);
+        bluetoothStatus = findViewById(R.id.bluetoothStatus);
 
         //set the remaining time and the instruction text
         timeLeftInMilliseconds = startTimeInMillis;

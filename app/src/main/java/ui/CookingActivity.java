@@ -61,7 +61,7 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        //setupViewModel();
+        setupViewModel();
         setupActivity();
 
         Log.d(TAG, "Cooking Activity On Create Built");

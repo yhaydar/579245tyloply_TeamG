@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -135,6 +134,7 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
 
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds,1000) {
+
             // CountDownTimer(time left, countdown interval)
             @Override
             public void onTick(long millisUntilFinished) {
@@ -179,10 +179,16 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         timerRunning = false;
     }
     private void resetTimer(){
-        stopTimer();
-        timeLeftInMilliseconds = startTimeInMillis;
-        updateTimer();
-        timerRunning = false;
+        if(timerRunning == true) {
+            stopTimer();
+            timeLeftInMilliseconds = startTimeInMillis;
+            updateTimer();
+            timerRunning = false;
+        } else {
+            timeLeftInMilliseconds = startTimeInMillis;
+            updateTimer();
+            timerRunning = false;
+        }
     }
 
     public void updateTimer(){
@@ -252,7 +258,7 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
             else {
                 startTimer();
             }
-        } resetButton.setVisibility(View.INVISIBLE);
+        }
         }
     }
 

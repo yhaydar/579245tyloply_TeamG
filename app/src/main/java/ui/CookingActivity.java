@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.bbqbuddy.R;
 
+import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
 
@@ -36,6 +37,14 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
 
     private Button countdownButton;
     private Button editTimerButton;
+
+    private TextView textReceived;
+    private TextView textStatus;
+
+    private TextView bluetoothStatus;
+    private TextView temperatureText;
+
+    private BlunoLibrary blunoLibrary;
 
     private CountDownTimer countDownTimer;
 
@@ -54,11 +63,36 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         setupViewModel();
         setupActivity();
 
         Log.d(TAG, "Cooking Activity On Create Built");
     }
+
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResumeBegins");
+        super.onResume();
+        blunoLibrary.onResumeProcess();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStopCalled");
+
+        blunoLibrary.scanLeDevice(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        blunoLibrary.onDestroyProcess();
+    }
+
 
     private void setupActivity() {
         //setup ui components
@@ -66,6 +100,11 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
         instructionsText = findViewById(R.id.instructionSetTextView);
         countdownButton = findViewById(R.id.countdownButton);
         editTimerButton = findViewById(R.id.editTimerButton);
+
+        textReceived = findViewById(R.id.text_Received);
+        textStatus = findViewById(R.id.textStatus);
+        temperatureText = findViewById(R.id.temperatureText);
+        bluetoothStatus = findViewById(R.id.bluetoothStatus);
 
         //set the remaining time and the instruction text
         timeLeftInMilliseconds = startTimeInMillis;
@@ -84,6 +123,9 @@ public class CookingActivity extends AppCompatActivity  implements setTimerDialo
                 openSetTimerFrag();
             }
         });
+
+        blunoLibrary = new BlunoLibrary(this);
+        blunoLibrary.scanLeDevice(true);
     }
 
     private void setupViewModel() {

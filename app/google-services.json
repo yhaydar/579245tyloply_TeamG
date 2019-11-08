@@ -1,0 +1,80 @@
+{
+  "project_info": {
+    "project_number": "733779945647",
+    "firebase_url": "https://bbq-buddy.firebaseio.com",
+    "project_id": "bbq-buddy",
+    "storage_bucket": "bbq-buddy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733779945647:android:3e0aac8139d076bf078c5a",
+        "android_client_info": {
+          "package_name": "com.example.bbqbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733779945647-h5uiellcji5oiu5p83r7cftgh9815u5d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bbqbuddy",
+            "certificate_hash": "36c3f987e7f473a09ac1feed484731bce1c67565"
+          }
+        },
+        {
+          "client_id": "733779945647-imicib9hn7qsl4krfje851iqlvjkhfvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bbqbuddy",
+            "certificate_hash": "84ee95670bdf4cc8e29ac4ae6adfff846c9e5c3d"
+          }
+        },
+        {
+          "client_id": "733779945647-o9037k89r7lo6pn943uotb265a8sdii5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bbqbuddy",
+            "certificate_hash": "8221c9f8fc39f50a3d35fa359209d4180c1f9158"
+          }
+        },
+        {
+          "client_id": "733779945647-kejbg10stnsv4mj5m4gd4crjtoerrtrv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bbqbuddy",
+            "certificate_hash": "c97c59b42bf9dde763aea99fa4581bed6c35f89a"
+          }
+        },
+        {
+          "client_id": "733779945647-h8584c7cl2kkcsjhqs4a9vd7o1vmns96.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bbqbuddy",
+            "certificate_hash": "290c361bb20d6601deb0ea13b3a26428db8b69b7"
+          }
+        },
+        {
+          "client_id": "733779945647-3k3609abh9lmjeqjdc75neui3gfvfrbo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJFsK-UkKKMSBBX3fX9Bt69MPvjWIMvXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733779945647-3k3609abh9lmjeqjdc75neui3gfvfrbo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

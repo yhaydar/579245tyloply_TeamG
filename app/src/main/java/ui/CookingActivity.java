@@ -73,6 +73,50 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         Log.d(TAG, "Cooking Activity On Create Built");
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putLong("millisLeft", timeLeftInMilliseconds);
+        editor.putBoolean("timerRunning", timerRunning);
+        editor.putLong("endTime", endTime);
+
+        editor.apply();
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        blunoLibrary.scanLeDevice(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+
+        timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
+        timerRunning = prefs.getBoolean("timerRunning", false);
+
+        updateTimer();
+
+        if (timerRunning) {
+            endTime = prefs.getLong("endTime", 0);
+            timeLeftInMilliseconds = endTime - System.currentTimeMillis();
+
+            if (timeLeftInMilliseconds < 0) {
+                timeLeftInMilliseconds = 0;
+                timerRunning = false;
+                updateTimer();
+            }
+            else {
+                startTimer();
+            }
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -80,8 +124,6 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         super.onResume();
         blunoLibrary.onResumeProcess();
     }
-
-
 
     @Override
     protected void onDestroy() {
@@ -250,49 +292,6 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         notificationManager.notify(001,builder.build());
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putLong("millisLeft", timeLeftInMilliseconds);
-        editor.putBoolean("timerRunning", timerRunning);
-        editor.putLong("endTime", endTime);
-
-        editor.apply();
-
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
-
-        blunoLibrary.scanLeDevice(false);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-
-        timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
-        timerRunning = prefs.getBoolean("timerRunning", false);
-
-        updateTimer();
-
-        if (timerRunning) {
-            endTime = prefs.getLong("endTime", 0);
-            timeLeftInMilliseconds = endTime - System.currentTimeMillis();
-
-            if (timeLeftInMilliseconds < 0) {
-                timeLeftInMilliseconds = 0;
-                timerRunning = false;
-                updateTimer();
-            }
-            else {
-                startTimer();
-            }
-        }
-        }
-    }
+}
 

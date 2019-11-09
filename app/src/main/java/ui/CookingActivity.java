@@ -52,10 +52,11 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
     private CountDownTimer countDownTimer;
 
     private int finalTemp;
+    private int finalECT;
     private String meatFoodSpec;
     private boolean hasNotified;
 
-    private long startTimeInMillis = 310000;
+    private long startTimeInMillis = finalECT;
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
@@ -183,6 +184,14 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
             }
         };
 
+        //create observer for ECT
+        final Observer<String> finalECTObserver = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                finalECT = Integer.parseInt(s);
+            }
+        };
+
         //create observer for temperature
         final Observer<String> finalTempObserver = new Observer<String>() {
             @Override
@@ -193,6 +202,7 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
 
         model.getFinalTemp().observe(this, finalTempObserver);
         model.getInstructions().observe(this, instructionObserver);
+        model.getECT().observe(this, finalECTObserver);
 
         DatabaseController dbcontroller = new DatabaseController();
         String meatCut = getIntent().getStringExtra("meatCut");
@@ -209,6 +219,8 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
 
         String doneness = getIntent().getStringExtra("doneness");
         dbcontroller.readFinalTempFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,doneness, model);
+
+        dbcontroller.readECT("meatType",meatFoodSpec,model);
     }
 
     public void startStop(){

@@ -6,9 +6,17 @@ import androidx.lifecycle.ViewModel;
 public class CookingViewModel extends ViewModel {
     private MutableLiveData<String> instructions;
     private MutableLiveData<String> finalTemp;
+    private MutableLiveData<String> ECT;
 
     public CookingViewModel(){
 
+    }
+
+    public MutableLiveData<String> getECT() {
+        if(ECT == null){
+            ECT = new MutableLiveData<>();
+        }
+        return ECT;
     }
 
     public MutableLiveData<String> getInstructions(){
@@ -30,4 +38,7 @@ public class CookingViewModel extends ViewModel {
     public void loadInstructions(String instructions){
        this.instructions.postValue(instructions);
     }
+
+    public void loadECT(String ECT){ this.ECT.postValue(ECT);}
+
 }

@@ -80,7 +80,7 @@ public class DatabaseController implements Serializable {
                                 if(document.getId().equals(meatCut)){
                                     Log.d("DEBUG", "Matched: " + document.getId());
                                     String dbECT = document.getData().get("ECT").toString();
-                                    model.loadInstructions(dbECT);
+                                    model.loadECT(dbECT);
                                     Log.d("DEBUG", "Value: " + document.getData().get("ECT").toString());
                                 }
                                 Log.d("DEBUG", document.getId() + document.getData());

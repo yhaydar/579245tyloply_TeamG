@@ -57,7 +57,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     private boolean hasNotified;
 
 
-    private long startTimeInMillis = 3000;// (finalECT*60000);
+    private long startTimeInMillis = 3000; //(finalECT*60000);
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
@@ -154,7 +154,6 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
 
         hasNotified = false;
-
         //add listeners to the countdown button
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,7 +247,9 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
 
     public void startTimer() {
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
-
+        if (restTimerSet == false) {
+            timeLeftInMilliseconds = startTimeInMillis;
+        }
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
 
             // CountDownTimer(time left, countdown interval)

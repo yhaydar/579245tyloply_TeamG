@@ -30,7 +30,7 @@ import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
 
-public class CookingActivity extends AppCompatActivity  {//implements setTimerDialog.SetTimerDialogListener {
+public class CookingActivity extends AppCompatActivity {//implements setTimerDialog.SetTimerDialogListener {
     private static final String TAG = CookingActivity.class.getSimpleName();
 
     private CookingViewModel model;
@@ -38,7 +38,7 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
     private TextView countdownText;
     private TextView instructionsText;
 
-    private Button countdownButton;
+    private Button startButton;
     private Button resetButton;
 
     private TextView textReceived;
@@ -56,11 +56,14 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
     private String meatFoodSpec;
     private boolean hasNotified;
 
-    private long startTimeInMillis = finalECT;
+
+    private long startTimeInMillis = (finalECT*60000);
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
+    private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
+
 
 
     @Override
@@ -116,8 +119,7 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
                 timeLeftInMilliseconds = 0;
                 timerRunning = false;
                 updateTimer();
-            }
-            else {
+            } else {
                 startTimer();
             }
         }
@@ -140,9 +142,9 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
 
     private void setupActivity() {
         //setup ui components
-        countdownText   = findViewById(R.id.countdownText);
+        countdownText = findViewById(R.id.countdownText);
         instructionsText = findViewById(R.id.instructionSetTextView);
-        countdownButton = findViewById(R.id.countdownButton);
+        startButton = findViewById(R.id.startButton);
         resetButton = findViewById(R.id.resetButton);
 
         textReceived = findViewById(R.id.text_Received);
@@ -153,13 +155,13 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         hasNotified = false;
 
         //add listeners to the countdown button
-        countdownButton.setOnClickListener(new View.OnClickListener() {
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startStop();
             }
         });
-        resetButton.setOnClickListener(new View.OnClickListener(){
+        resetButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -208,22 +210,21 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         String meatCut = getIntent().getStringExtra("meatCut");
         String foodSpec = getIntent().getStringExtra("foodSpec");
 
-        if(foodSpec == null){
+        if (foodSpec == null) {
             meatFoodSpec = meatCut;
-        }
-        else{
-            meatFoodSpec = meatCut+"("+foodSpec+")";
+        } else {
+            meatFoodSpec = meatCut + "(" + foodSpec + ")";
         }
 
-        dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
+        dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, model);
 
         String doneness = getIntent().getStringExtra("doneness");
-        dbcontroller.readFinalTempFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,doneness, model);
+        dbcontroller.readFinalTempFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, doneness, model);
 
-        dbcontroller.readECT("meatType",meatFoodSpec,model);
+        dbcontroller.readECT(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
     }
 
-    public void startStop(){
+    public void startStop() {
         if (timerRunning) {
             stopTimer();
             resetButton.setVisibility(View.VISIBLE);
@@ -235,10 +236,10 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
 
     }
 
-    public void startTimer(){
+    public void startTimer() {
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
 
-        countDownTimer = new CountDownTimer(timeLeftInMilliseconds,1000) {
+        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
 
             // CountDownTimer(time left, countdown interval)
             @Override
@@ -251,16 +252,16 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
                 double currentTemp = 0;
                 //double currentTemp = blunoLibrary.getCurrentTemp();
 
-                if(timeLeftInMilliseconds % 300000 <1500){
+                if (timeLeftInMilliseconds % 300000 < 1500) {
                     currentTemp = 0.9 * finalTemp;
                 }
 
-                if(timeLeftInMilliseconds % 294000 < 1500){
+                if (timeLeftInMilliseconds % 294000 < 1500) {
                     currentTemp = finalTemp;
                 }
 
-                if(currentTemp >= (0.9 * finalTemp) && !hasNotified){
-                    Uri notificationAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.notification);
+                if (currentTemp >= (0.9 * finalTemp) && !hasNotified) {
+                    Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
@@ -269,12 +270,12 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
                     hasNotified = true;
                 }
 
-                if(currentTemp >= finalTemp){
-                    try{
-                        Uri finishedAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.alarm);
+                if (currentTemp >= finalTemp) {
+                    try {
+                        Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
                         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                         ringtone.play();
-                    } catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -284,29 +285,39 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
             public void onFinish() {
                 countdownText.setText("0:00");
                 timerRunning = false;
-                try{
-                    Uri finishedAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.alarm);
+                try {
+                    Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                     ringtone.play();
-                } catch(Exception e){
+                    startButton.setText("Set Rest Timer");
+                   // createRestTimer();
+                    startButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            createRestTimer();
+                        }
+                    });
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        .start();
+                .start();
 
-        countdownButton.setText("PAUSE");
+        startButton.setText("PAUSE");
         timerRunning = true;
 
     }
 
-    public void stopTimer(){
+    public void stopTimer() {
         countDownTimer.cancel();
-        countdownButton.setText("START");
+        startButton.setText("START");
         timerRunning = false;
     }
-    private void resetTimer(){
-        if(timerRunning == true) {
+
+    private void resetTimer() {
+        if (timerRunning == true) {
             stopTimer();
             timeLeftInMilliseconds = startTimeInMillis;
             updateTimer();
@@ -318,20 +329,20 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         }
     }
 
-    public void updateTimer(){
-            int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
-            int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+    public void updateTimer() {
+        int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+        int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
 
-            String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
-            countdownText.setText(timeLeftFormatted);
+        countdownText.setText(timeLeftFormatted);
 
     }
 
-    private void sendNotification(String mealName){
+    private void sendNotification(String mealName) {
         //sends a notifications with an intent that brings back to cooking activity
         Intent intent = new Intent(this, CookingActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
         int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
@@ -340,12 +351,27 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(mealName)
-                .setContentText("Your " + mealName + " has " +  timeLeftFormatted+ " left!")
+                .setContentText("Your " + mealName + " has " + timeLeftFormatted + " left!")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(001,builder.build());
+        notificationManager.notify(001, builder.build());
     }
+
+    private void createRestTimer() {
+        timeLeftInMilliseconds = restTime;
+        stopTimer();
+        updateTimer();
+        timerRunning = false;
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startStop();
+            }
+        });
+        resetButton.setVisibility(View.INVISIBLE);
+    }
+
 }
 

@@ -78,10 +78,16 @@ public class BlunoLibrary {
     }
 
     public void onResumeProcess(){
-        if(!bluetoothAdapter.isEnabled()){
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            ((Activity)mainContext).startActivity(enableBtIntent);
+        if(!(bluetoothAdapter == null)){
+            if(!bluetoothAdapter.isEnabled()){
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                ((Activity)mainContext).startActivity(enableBtIntent);
+            }
         }
+        else{
+            Toast.makeText(mainContext, "Bluetooth needs to be turned on", Toast.LENGTH_LONG).show();
+        }
+
 
         mainContext.registerReceiver(GattUpdateReceiver, makeGattUpdateIntentFilter());
     }
@@ -98,12 +104,15 @@ public class BlunoLibrary {
 
             System.out.println("mBluetoothAdapter.startLeScan");
 
-            if(!mScanning)
+            if(!mScanning && !(bluetoothAdapter == null))
             {
                 mConnectionState=connectionStateEnum.isScanning;
                 onConectionStateChange(mConnectionState);
                 mScanning = true;
                 bluetoothAdapter.startLeScan(mLeScanCallback);
+            }
+            else{
+                Toast.makeText(mainContext, "Bluetooth needs to be turned on", Toast.LENGTH_LONG).show();
             }
         } else {
             if(mScanning)

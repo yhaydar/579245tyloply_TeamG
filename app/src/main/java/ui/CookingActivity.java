@@ -57,12 +57,13 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     private boolean hasNotified;
 
 
-    private long startTimeInMillis = (finalECT*60000);
+    private long startTimeInMillis = 3000;// (finalECT*60000);
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
     private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
+    private boolean restTimerSet = false;
 
 
 
@@ -226,12 +227,21 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
 
     public void startStop() {
         if (timerRunning) {
-            stopTimer();
-            resetButton.setVisibility(View.VISIBLE);
-
+            if (restTimerSet == false) {
+                stopTimer();
+                resetButton.setVisibility(View.VISIBLE);
+            } else {
+                stopTimer();
+                resetButton.setVisibility(View.INVISIBLE);
+            }
         } else {
-            startTimer();
-            resetButton.setVisibility(View.VISIBLE);
+            if (restTimerSet == false) {
+                startTimer();
+                resetButton.setVisibility(View.VISIBLE);
+            } else {
+                startTimer();
+                resetButton.setVisibility(View.INVISIBLE);
+            }
         }
 
     }
@@ -370,7 +380,9 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
                 startStop();
             }
         });
+        restTimerSet =true;
         resetButton.setVisibility(View.INVISIBLE);
+
     }
 
 }

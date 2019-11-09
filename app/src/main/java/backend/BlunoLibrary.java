@@ -350,7 +350,15 @@ public class BlunoLibrary {
         }
     }
 
-    public int getCurrentTemp(){
+    public int getCurrentTemp() {
+        while(this.currentTemp == null){
+            try{
+                Thread.sleep(200);
+            }
+            catch(Exception e){
+                Log.d("DEBUG",e.getMessage());
+            }
+        }
         return Integer.parseInt(this.currentTemp);
     }
 

@@ -124,6 +124,7 @@ public class FoodSpecDialog extends DialogFragment {
                 }
                 else{
                     //if radiogroup is disabled, we can ignore it
+                    intent.putExtra("doneness", "Well");
                     radioButtonReq = true;
                 }
 

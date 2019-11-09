@@ -33,6 +33,7 @@ public class DatabaseController implements Serializable {
                                     String dbInstructions = document.getData().get("Instructions").toString();
                                     model.loadInstructions(dbInstructions);
                                     Log.d("DEBUG", "Value: " + document.getData().get("Instructions").toString());
+                                    break;
                                 }
                                 Log.d("DEBUG", document.getId() + document.getData());
                             }
@@ -52,9 +53,11 @@ public class DatabaseController implements Serializable {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot document: task.getResult()){
                                 if(document.getId().equals(meatCut)){
+                                    Log.d("DEBUG", doneness + " is the doneness");
                                     String dbtemp = document.getData().get(doneness).toString();
                                     model.loadFinalTemp(dbtemp);
                                     Log.d("DEBUG", "Value: " + document.getData().get("Instructions").toString());
+                                    break;
                                 }
                             }
                         } else{

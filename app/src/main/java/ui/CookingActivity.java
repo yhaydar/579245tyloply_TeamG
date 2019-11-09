@@ -235,16 +235,18 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
                 timeLeftInMilliseconds = millisUntilFinished;
                 updateTimer();
 
-                int currentTemp = blunoLibrary.getCurrentTemp();
+                //TODO remove this code
+                double currentTemp = 0;
+                //double currentTemp = blunoLibrary.getCurrentTemp();
 
-//                if(timeLeftInMilliseconds % 300000 < 1500){
-//                    Uri notificationAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.notification);
-//                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
-//                    ringtone.play();
-//
-//                    //TODO replace with temperature based solution
-//                    sendNotification("PORK ROAST");
-//                }
+                if(timeLeftInMilliseconds % 300000 <1500){
+                    currentTemp = 0.9 * finalTemp;
+                }
+
+                if(timeLeftInMilliseconds % 294000 < 1500){
+                    currentTemp = finalTemp;
+                }
+
                 if(currentTemp >= (0.9 * finalTemp) && !hasNotified){
                     Uri notificationAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
@@ -333,7 +335,5 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(001,builder.build());
     }
-
-
 }
 

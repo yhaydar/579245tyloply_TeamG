@@ -1,6 +1,9 @@
 package ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     CustomListView customListView;
     Integer[] imageIds;
 
+    Button temp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(customListView);
         initializeData();
 
+
+        temp = findViewById(R.id.tempButton);
+        temp.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+               openTimerList();
+            }
+        });
         }
 
     private void initializeData(){
@@ -73,5 +86,14 @@ public class MainActivity extends AppCompatActivity {
         listOptions.put(foodTypes.get(2),porkList);
         customListView.notifyDataSetChanged();
     }
+
+
+    //tempbutton
+    public void openTimerList(){
+        Intent intent = new Intent(this, TimerListView.class);
+        startActivity(intent);
+
+    }
+
 
 }

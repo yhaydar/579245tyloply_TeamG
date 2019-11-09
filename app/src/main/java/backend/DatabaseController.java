@@ -12,7 +12,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 
-
 public class DatabaseController implements Serializable {
     private FirebaseFirestore database;
 
@@ -20,30 +19,49 @@ public class DatabaseController implements Serializable {
         database = FirebaseFirestore.getInstance();
     }
 
-    public void readInstructionsFromDB(final String meatType, final String meatCut,final CookingViewModel model){
-        //final String instructions = new String();
-
+    public void readInstructionsFromDB(final String meatType, final String meatCut, final CookingViewModel model){
         database.collection(meatType)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()) {
-                        for(QueryDocumentSnapshot document :task.getResult()){
-                            Log.d("DEBUG", meatCut);
-                            if(document.getId().equals(meatCut)){
-                                Log.d("DEBUG", "Matched: " + document.getId());
-                                String dbInstructions = document.getData().get("Instructions").toString();
-                                model.loadInstructions(dbInstructions);
-                                Log.d("DEBUG", "Value: " + document.getData().get("Instructions").toString());
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot document :task.getResult()){
+                                Log.d("DEBUG", meatCut);
+                                if(document.getId().equals(meatCut)){
+                                    Log.d("DEBUG", "Matched: " + document.getId());
+                                    String dbInstructions = document.getData().get("Instructions").toString();
+                                    model.loadInstructions(dbInstructions);
+                                    Log.d("DEBUG", "Value: " + document.getData().get("Instructions").toString());
+                                }
+                                Log.d("DEBUG", document.getId() + document.getData());
                             }
-                            Log.d("DEBUG", document.getId() + document.getData());
+                        } else {
+                            Log.d("DEBUG", "Error reading from the database: " + task.getException());
                         }
-                    } else {
-                        Log.d("DEBUG", "Error reading from the database: " + task.getException());
                     }
-                }
-            });
-        //return meatInformation.getInstructions();
+                });
+    }
+
+    public void readFinalTempFromDB(final String meatType, final String meatCut, final String doneness, final CookingViewModel model){
+        database.collection(meatType)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document: task.getResult()){
+                                if(document.getId().equals(meatCut)){
+                                    String dbtemp = document.getData().get(doneness).toString();
+                                    model.loadFinalTemp(dbtemp);
+                                    Log.d("DEBUG", "Value: " + document.getData().get("Instructions").toString());
+                                }
+                            }
+                        } else{
+                            Log.d("DEBUG", "Error reading from the database: " + task.getException());
+                            //Toast.makeText(CookingActivity.class, "Error reading from the database: " + task.getException(), Toast.LENGTH_LONG);
+                        }
+                    }
+                });
     }
 }

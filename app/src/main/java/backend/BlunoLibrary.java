@@ -55,6 +55,8 @@ public class BlunoLibrary {
     public static final String CommandUUID="0000dfb2-0000-1000-8000-00805f9b34fb";
     public static final String ModelNumberStringUUID="00002a24-0000-1000-8000-00805f9b34fb";
 
+    private String currentTemp;
+
     private TextView textReceived;
     private TextView textStatus;
 
@@ -328,7 +330,7 @@ public class BlunoLibrary {
 
 //        char temp = theString.charAt(0);
 //        int i = (int) temp;
-
+        currentTemp = theString;
         textReceived.setText(theString);							//append the text into the EditText
     }
 
@@ -337,6 +339,10 @@ public class BlunoLibrary {
             mSCharacteristic.setValue(theString);
             mBluetoothLeService.writeCharacteristic(mSCharacteristic);
         }
+    }
+
+    public int getCurrentTemp(){
+        return Integer.parseInt(this.currentTemp);
     }
 
     private Runnable mConnectingOverTimeRunnable=new Runnable(){

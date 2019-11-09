@@ -24,9 +24,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.bbqbuddy.R;
 
-import backend.BlunoLibrary;
 import java.util.Locale;
 
+import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
 
@@ -50,6 +50,10 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
     private BlunoLibrary blunoLibrary;
 
     private CountDownTimer countDownTimer;
+
+    private int finalTemp;
+    private String meatFoodSpec;
+    private boolean hasNotified;
 
     private long startTimeInMillis = 310000;
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
@@ -145,7 +149,7 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         temperatureText = findViewById(R.id.temperatureText);
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
 
-
+        hasNotified = false;
 
         //add listeners to the countdown button
         countdownButton.setOnClickListener(new View.OnClickListener() {
@@ -179,19 +183,32 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
             }
         };
 
+        //create observer for temperature
+        final Observer<String> finalTempObserver = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                finalTemp = Integer.parseInt(s);
+            }
+        };
+
+        model.getFinalTemp().observe(this, finalTempObserver);
         model.getInstructions().observe(this, instructionObserver);
 
         DatabaseController dbcontroller = new DatabaseController();
         String meatCut = getIntent().getStringExtra("meatCut");
         String foodSpec = getIntent().getStringExtra("foodSpec");
-        String meatFoodSpec;
+
         if(foodSpec == null){
             meatFoodSpec = meatCut;
         }
         else{
             meatFoodSpec = meatCut+"("+foodSpec+")";
         }
+
         dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
+
+        String doneness = getIntent().getStringExtra("doneness");
+        dbcontroller.readFinalTempFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,doneness, model);
     }
 
     public void startStop(){
@@ -218,15 +235,35 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
                 timeLeftInMilliseconds = millisUntilFinished;
                 updateTimer();
 
-                if(timeLeftInMilliseconds % 300000 < 1500){
+                int currentTemp = blunoLibrary.getCurrentTemp();
+
+//                if(timeLeftInMilliseconds % 300000 < 1500){
+//                    Uri notificationAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.notification);
+//                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
+//                    ringtone.play();
+//
+//                    //TODO replace with temperature based solution
+//                    sendNotification("PORK ROAST");
+//                }
+                if(currentTemp >= (0.9 * finalTemp) && !hasNotified){
                     Uri notificationAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
-                    //TODO replace with temperature based solution
-                    sendNotification("PORK ROAST");
+                    String meatType = getIntent().getStringExtra("meatType");
+                    sendNotification(meatType + " " + meatFoodSpec);
+                    hasNotified = true;
                 }
 
+                if(currentTemp >= finalTemp){
+                    try{
+                        Uri finishedAlarm = Uri.parse("android.resource://"+ getPackageName() + "/" + R.raw.alarm);
+                        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
+                        ringtone.play();
+                    } catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
@@ -282,9 +319,14 @@ public class CookingActivity extends AppCompatActivity  {//implements setTimerDi
         Intent intent = new Intent(this, CookingActivity.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
 
+        int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+        int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(mealName)
+                .setContentText("Your " + mealName + " has " +  timeLeftFormatted+ " left!")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 

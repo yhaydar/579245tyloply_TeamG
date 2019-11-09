@@ -7,6 +7,7 @@ public class CookingViewModel extends ViewModel {
     private MutableLiveData<String> instructions;
     private MutableLiveData<String> finalTemp;
     private MutableLiveData<String> ECT;
+    private MutableLiveData<String> restTime;
 
     public CookingViewModel(){
 
@@ -33,12 +34,18 @@ public class CookingViewModel extends ViewModel {
         return finalTemp;
     }
 
-    public void loadFinalTemp(String finalTemp) { this.finalTemp.postValue(finalTemp); }
-
-    public void loadInstructions(String instructions){
-       this.instructions.postValue(instructions);
+    public MutableLiveData<String> getRestTime(){
+        if(restTime == null){
+            restTime = new MutableLiveData<>();
+        }
+        return restTime;
     }
 
-    public void loadECT(String ECT){ this.ECT.postValue(ECT);}
+    public void loadFinalTemp(String finalTemp) { this.finalTemp.postValue(finalTemp); }
 
+    public void loadInstructions(String instructions){ this.instructions.postValue(instructions); }
+
+    public void loadECT(String ECT){ this.ECT.postValue(ECT); }
+
+    public void loadRestTime(String restTime){ this.restTime.postValue(restTime); }
 }

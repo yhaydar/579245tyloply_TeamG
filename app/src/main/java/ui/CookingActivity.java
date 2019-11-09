@@ -53,6 +53,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
 
     private int finalTemp;
     private int finalECT;
+    private int restTime;
     private String meatFoodSpec;
     private boolean hasNotified;
 
@@ -61,7 +62,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
-    private long restTime = 31000;
+    //private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
     private boolean restTimerSet = false;
 
@@ -202,13 +203,22 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
             }
         };
 
+        final Observer<String> restTimeObserver = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                restTime = Integer.parseInt(s);
+            }
+        };
+
         model.getFinalTemp().observe(this, finalTempObserver);
         model.getInstructions().observe(this, instructionObserver);
         model.getECT().observe(this, finalECTObserver);
+        model.getRestTime().observe(this, restTimeObserver);
 
-        DatabaseController dbcontroller = new DatabaseController();
+        //get important values from the intent
         String meatCut = getIntent().getStringExtra("meatCut");
         String foodSpec = getIntent().getStringExtra("foodSpec");
+        String doneness = getIntent().getStringExtra("doneness");
 
         if (foodSpec == null) {
             meatFoodSpec = meatCut;
@@ -216,12 +226,12 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
             meatFoodSpec = meatCut + "(" + foodSpec + ")";
         }
 
-        dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, model);
-
-        String doneness = getIntent().getStringExtra("doneness");
+        //retrieve information from the database
+        DatabaseController dbcontroller = new DatabaseController();
         dbcontroller.readFinalTempFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, doneness, model);
-
+        dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, model);
         dbcontroller.readECT(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
+        dbcontroller.readRestTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,model);
     }
 
     public void startStop() {
@@ -371,7 +381,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     }
 
     private void createRestTimer() {
-        timeLeftInMilliseconds = restTime;
+        timeLeftInMilliseconds = restTime * 60000;//convert rest time to millis
         stopTimer();
         updateTimer();
         timerRunning = false;

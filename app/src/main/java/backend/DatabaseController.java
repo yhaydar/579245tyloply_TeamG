@@ -91,4 +91,28 @@ public class DatabaseController implements Serializable {
                     }
                 });
     }
+
+    public void readRestTimeFromDB(final String meatType, final String meatCut, final CookingViewModel model){
+        database.collection(meatType)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot document :task.getResult()){
+                                Log.d("DEBUG", meatCut);
+                                if(document.getId().equals(meatCut)){
+                                    Log.d("DEBUG", "Matched: " + document.getId());
+                                    String dbRestTime = document.getData().get("ERT").toString();
+                                    model.loadRestTime(dbRestTime);
+                                    Log.d("DEBUG", "Value: " + document.getData().get("ERT").toString());
+                                }
+                                Log.d("DEBUG", document.getId() + document.getData());
+                            }
+                        } else {
+                            Log.d("DEBUG", "Error reading from the database: " + task.getException());
+                        }
+                    }
+                });
+    }
 }

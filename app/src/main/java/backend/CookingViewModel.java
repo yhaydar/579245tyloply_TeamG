@@ -14,7 +14,7 @@ public class CookingViewModel extends ViewModel {
 
     }
 
-    public MutableLiveData<String> getECT() {
+    public MutableLiveData<String> getCookingTime() {
         if(cookingTime == null){
             cookingTime = new MutableLiveData<>();
         }

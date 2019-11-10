@@ -59,7 +59,6 @@ public class CookingActivity extends AppCompatActivity {
     private boolean hasNotified;
     private boolean hasFlipped;
 
-
     private long startTimeInMillis;
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
@@ -67,8 +66,6 @@ public class CookingActivity extends AppCompatActivity {
     //private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
     private boolean restTimerSet = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +106,7 @@ public class CookingActivity extends AppCompatActivity {
         super.onStart();
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        startTimeInMillis = 60000*cookingTime;//cookingTime * 60000;
-        Log.d("DEBUG", cookingTime + " THIS IS THE COOKING TIME");
+        startTimeInMillis = 60000 * cookingTime;
         timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
         timerRunning = prefs.getBoolean("timerRunning", false);
 
@@ -195,6 +191,13 @@ public class CookingActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 cookingTime = Integer.parseInt(s);
+                int cookingTimeMillis = cookingTime*60000;
+                int minutes = (cookingTimeMillis / 1000) / 60;
+                int seconds = (cookingTimeMillis / 1000) % 60;
+
+                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+                countdownText.setText(timeLeftFormatted);
             }
         };
 
@@ -222,7 +225,7 @@ public class CookingActivity extends AppCompatActivity {
 
         model.getFinalTemp().observe(this, finalTempObserver);
         model.getInstructions().observe(this, instructionObserver);
-        model.getECT().observe(this, cookingTimeObserver);
+        model.getCookingTime().observe(this, cookingTimeObserver);
         model.getRestTime().observe(this, restTimeObserver);
         model.getFlipTime().observe(this, flipTimeObserver);
 
@@ -264,7 +267,6 @@ public class CookingActivity extends AppCompatActivity {
                 resetButton.setVisibility(View.INVISIBLE);
             }
         }
-
     }
 
     public void startTimer() {

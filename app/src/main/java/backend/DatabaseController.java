@@ -68,7 +68,7 @@ public class DatabaseController implements Serializable {
                 });
     }
 
-    public void readECT(final String meatType, final String meatCut, final CookingViewModel model){
+    public void readCookingTimeFromDB(final String meatType, final String meatCut, final CookingViewModel model){
         database.collection(meatType)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -79,9 +79,10 @@ public class DatabaseController implements Serializable {
                                 Log.d("DEBUG", meatCut);
                                 if(document.getId().equals(meatCut)){
                                     Log.d("DEBUG", "Matched: " + document.getId());
-                                    String dbECT = document.getData().get("ECT").toString();
-                                    model.loadECT(dbECT);
-                                    Log.d("DEBUG", "Value: " + document.getData().get("ECT").toString());
+                                    String dbCookingTime = document.getData().get("ECT").toString();
+                                    model.loadCookingTime(dbCookingTime);
+                                    Log.d("DEBUG", "Value: " + dbCookingTime);
+                                    break;
                                 }
                                 Log.d("DEBUG", document.getId() + document.getData());
                             }
@@ -106,6 +107,7 @@ public class DatabaseController implements Serializable {
                                     String dbRestTime = document.getData().get("ERT").toString();
                                     model.loadRestTime(dbRestTime);
                                     Log.d("DEBUG", "Value: " + document.getData().get("ERT").toString());
+                                    break;
                                 }
                                 Log.d("DEBUG", document.getId() + document.getData());
                             }
@@ -130,6 +132,7 @@ public class DatabaseController implements Serializable {
                                     String dbFlipTime = document.getData().get("FlipTime").toString();
                                     model.loadFlipTime(dbFlipTime);
                                     Log.d("DEBUG", "Value: " + document.getData().get("FlipTime").toString());
+                                    break;
                                 }
                                 Log.d("DEBUG", document.getId() + document.getData());
                             }

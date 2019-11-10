@@ -52,7 +52,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     private CountDownTimer countDownTimer;
 
     private int finalTemp;
-    private int finalECT;
+    private int cookingTime;
     private int restTime;
     private int flipTime;
     private String meatFoodSpec;
@@ -109,7 +109,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
         super.onStart();
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-
+        startTimeInMillis = cookingTime * 60000;
         timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
         timerRunning = prefs.getBoolean("timerRunning", false);
 
@@ -190,10 +190,10 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
         };
 
         //create observer for ECT
-        final Observer<String> finalECTObserver = new Observer<String>() {
+        final Observer<String> cookingTimeObserver = new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                finalECT = Integer.parseInt(s);
+                cookingTime = Integer.parseInt(s);
             }
         };
 
@@ -221,7 +221,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
 
         model.getFinalTemp().observe(this, finalTempObserver);
         model.getInstructions().observe(this, instructionObserver);
-        model.getECT().observe(this, finalECTObserver);
+        model.getECT().observe(this, cookingTimeObserver);
         model.getRestTime().observe(this, restTimeObserver);
         model.getFlipTime().observe(this, flipTimeObserver);
 
@@ -240,7 +240,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
         DatabaseController dbcontroller = new DatabaseController();
         dbcontroller.readFinalTempFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, doneness, model);
         dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, model);
-        dbcontroller.readECT(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
+        dbcontroller.readCookingTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
         dbcontroller.readRestTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,model);
         dbcontroller.readFlippingTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,model);
     }

@@ -109,7 +109,8 @@ public class CookingActivity extends AppCompatActivity {
         super.onStart();
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        startTimeInMillis = cookingTime * 60000;
+        startTimeInMillis = 60000*cookingTime;//cookingTime * 60000;
+        Log.d("DEBUG", cookingTime + " THIS IS THE COOKING TIME");
         timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
         timerRunning = prefs.getBoolean("timerRunning", false);
 
@@ -269,7 +270,7 @@ public class CookingActivity extends AppCompatActivity {
     public void startTimer() {
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
         if (restTimerSet == false) {
-            startTimeInMillis = finalECT*60000;
+            startTimeInMillis = cookingTime*60000;
             timeLeftInMilliseconds = startTimeInMillis;
         }
 
@@ -277,6 +278,7 @@ public class CookingActivity extends AppCompatActivity {
             // CountDownTimer(time left, countdown interval)
             @Override
             public void onTick(long millisUntilFinished) {
+                Log.d("DEBUG", cookingTime + " THIS IS THE COOKING TIME");
                 //l is variable that contains remaining time
                 timeLeftInMilliseconds = millisUntilFinished;
                 updateTimer();

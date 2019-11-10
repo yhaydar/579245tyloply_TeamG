@@ -30,7 +30,7 @@ import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
 
-public class CookingActivity extends AppCompatActivity {//implements setTimerDialog.SetTimerDialogListener {
+public class CookingActivity extends AppCompatActivity {
     private static final String TAG = CookingActivity.class.getSimpleName();
 
     private CookingViewModel model;
@@ -60,7 +60,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     private boolean hasFlipped;
 
 
-    private long startTimeInMillis = 300000; //(finalECT*60000);
+    private long startTimeInMillis;
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
@@ -269,10 +269,11 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     public void startTimer() {
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
         if (restTimerSet == false) {
+            startTimeInMillis = finalECT*60000;
             timeLeftInMilliseconds = startTimeInMillis;
         }
-        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
 
+        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             // CountDownTimer(time left, countdown interval)
             @Override
             public void onTick(long millisUntilFinished) {
@@ -340,15 +341,16 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
                     Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                     ringtone.play();
-                    startButton.setText("Set Rest Timer");
-                   // createRestTimer();
-                    startButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            createRestTimer();
-                        }
-                    });
+                        startButton.setText("Set Rest Timer");
+                        // create RestTimer on click
+                        startButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                createRestTimer();
 
+                            }
+
+                        });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

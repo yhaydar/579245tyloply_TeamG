@@ -66,6 +66,8 @@ public class CookingActivity extends AppCompatActivity {
     //private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
     private boolean restTimerSet = false;
+    private boolean timerStarted = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,9 +274,14 @@ public class CookingActivity extends AppCompatActivity {
     public void startTimer() {
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
         if (restTimerSet == false) {
+            if (timerStarted == false){
             startTimeInMillis = cookingTime*60000;
             timeLeftInMilliseconds = startTimeInMillis;
+            updateTimer();
+            timerStarted = true;
+            }
         }
+
 
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             // CountDownTimer(time left, countdown interval)
@@ -335,6 +342,7 @@ public class CookingActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+
             }
 
             @Override

@@ -132,7 +132,6 @@ public class FoodSpecDialog extends DialogFragment {
                 if(radioButtonReq && spinnerReq){
                     startActivity(intent);
                 }
-
             }
         });
     }

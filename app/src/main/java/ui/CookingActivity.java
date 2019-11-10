@@ -54,11 +54,13 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
     private int finalTemp;
     private int finalECT;
     private int restTime;
+    private int flipTime;
     private String meatFoodSpec;
     private boolean hasNotified;
+    private boolean hasFlipped;
 
 
-    private long startTimeInMillis = 3000; //(finalECT*60000);
+    private long startTimeInMillis = 300000; //(finalECT*60000);
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
@@ -210,10 +212,18 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
             }
         };
 
+        final Observer<String> flipTimeObserver = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                flipTime = Integer.parseInt(s);
+            }
+        };
+
         model.getFinalTemp().observe(this, finalTempObserver);
         model.getInstructions().observe(this, instructionObserver);
         model.getECT().observe(this, finalECTObserver);
         model.getRestTime().observe(this, restTimeObserver);
+        model.getFlipTime().observe(this, flipTimeObserver);
 
         //get important values from the intent
         String meatCut = getIntent().getStringExtra("meatCut");
@@ -232,6 +242,7 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
         dbcontroller.readInstructionsFromDB(getIntent().getStringExtra("meatType"), meatFoodSpec, model);
         dbcontroller.readECT(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
         dbcontroller.readRestTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,model);
+        dbcontroller.readFlippingTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,model);
     }
 
     public void startStop() {
@@ -269,9 +280,10 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
                 timeLeftInMilliseconds = millisUntilFinished;
                 updateTimer();
 
-                //TODO remove this code
-                double currentTemp = 0;
                 //double currentTemp = blunoLibrary.getCurrentTemp();
+
+                //TODO remove this code only for testing without bluetooth
+                double currentTemp = 0;
 
                 if (timeLeftInMilliseconds % 300000 < 1500) {
                     currentTemp = 0.9 * finalTemp;
@@ -280,17 +292,35 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
                 if (timeLeftInMilliseconds % 294000 < 1500) {
                     currentTemp = finalTemp;
                 }
+                //todo end of test code
 
-                if (currentTemp >= (0.9 * finalTemp) && !hasNotified) {
+                //send notification for flipping meat
+                if(timeLeftInMilliseconds < (flipTime * 60000) && !hasFlipped){
                     Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
                     String meatType = getIntent().getStringExtra("meatType");
-                    sendNotification(meatType + " " + meatFoodSpec);
+                    sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has needs to be flipped!");
+                    hasFlipped = true;
+                }
+
+                //send notification when meat is 90% of final temp
+                if (currentTemp >= (0.9 * finalTemp) && !hasNotified) {
+                    Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
+                    ringtone.play();
+
+                    int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+                    int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+                    String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+                    String meatType = getIntent().getStringExtra("meatType");
+                    sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
                     hasNotified = true;
                 }
 
+                //send notification when meat is finished
                 if (currentTemp >= finalTemp) {
                     try {
                         Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
@@ -360,19 +390,15 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
 
     }
 
-    private void sendNotification(String mealName) {
+    private void sendNotification(String mealName, String message) {
         //sends a notifications with an intent that brings back to cooking activity
         Intent intent = new Intent(this, CookingActivity.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
-        int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(mealName)
-                .setContentText("Your " + mealName + " has " + timeLeftFormatted + " left!")
+                .setContentText(message)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
@@ -393,8 +419,6 @@ public class CookingActivity extends AppCompatActivity {//implements setTimerDia
         });
         restTimerSet =true;
         resetButton.setVisibility(View.INVISIBLE);
-
     }
-
 }
 

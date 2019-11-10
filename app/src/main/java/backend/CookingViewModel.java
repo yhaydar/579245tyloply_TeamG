@@ -8,6 +8,7 @@ public class CookingViewModel extends ViewModel {
     private MutableLiveData<String> finalTemp;
     private MutableLiveData<String> ECT;
     private MutableLiveData<String> restTime;
+    private MutableLiveData<String> flipTime;
 
     public CookingViewModel(){
 
@@ -41,6 +42,13 @@ public class CookingViewModel extends ViewModel {
         return restTime;
     }
 
+    public MutableLiveData<String> getFlipTime(){
+        if(flipTime == null){
+            flipTime = new MutableLiveData<>();
+        }
+        return flipTime;
+    }
+
     public void loadFinalTemp(String finalTemp) { this.finalTemp.postValue(finalTemp); }
 
     public void loadInstructions(String instructions){ this.instructions.postValue(instructions); }
@@ -48,4 +56,6 @@ public class CookingViewModel extends ViewModel {
     public void loadECT(String ECT){ this.ECT.postValue(ECT); }
 
     public void loadRestTime(String restTime){ this.restTime.postValue(restTime); }
+
+    public void loadFlipTime(String flipTime){ this.flipTime.postValue(flipTime);}
 }

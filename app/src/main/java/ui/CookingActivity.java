@@ -37,6 +37,7 @@ public class CookingActivity extends AppCompatActivity {
 
     private TextView countdownText;
     private TextView instructionsText;
+    private TextView typeOfMeatSelected;
 
     private Button startButton;
     private Button resetButton;
@@ -149,11 +150,14 @@ public class CookingActivity extends AppCompatActivity {
         instructionsText = findViewById(R.id.instructionSetTextView);
         startButton = findViewById(R.id.startButton);
         resetButton = findViewById(R.id.resetButton);
+        typeOfMeatSelected = findViewById(R.id.typeOfMeatTextView);
 
         textReceived = findViewById(R.id.text_Received);
         textStatus = findViewById(R.id.textStatus);
         temperatureText = findViewById(R.id.temperatureText);
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
+
+
 
         hasNotified = false;
         //add listeners to the countdown button

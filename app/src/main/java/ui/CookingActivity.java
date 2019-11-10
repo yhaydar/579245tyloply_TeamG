@@ -157,7 +157,9 @@ public class CookingActivity extends AppCompatActivity {
         temperatureText = findViewById(R.id.temperatureText);
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
 
-
+        String meatType = getIntent().getStringExtra("meatType");
+        String meatCut = getIntent().getStringExtra("meatCut");
+        typeOfMeatSelected.setText(meatType + " " + meatCut);
 
         hasNotified = false;
         //add listeners to the countdown button
@@ -346,7 +348,6 @@ public class CookingActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
             }
 
             @Override

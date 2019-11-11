@@ -1,5 +1,7 @@
 package ui;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -19,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -69,6 +73,8 @@ public class CookingActivity extends AppCompatActivity {
     private boolean restTimerSet = false;
     private boolean timerStarted = false;
 
+    private String CHANNEL_ID = "1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,7 @@ public class CookingActivity extends AppCompatActivity {
 
         setupViewModel();
         setupActivity();
+        createNotificationChannel();
 
         Log.d(TAG, "Cooking Activity On Create Built");
     }
@@ -298,22 +305,22 @@ public class CookingActivity extends AppCompatActivity {
                 timeLeftInMilliseconds = millisUntilFinished;
                 updateTimer();
 
-                //double currentTemp = blunoLibrary.getCurrentTemp();
+               // double currentTemp = blunoLibrary.getCurrentTemp();
 
                 //TODO remove this code only for testing without bluetooth
                 double currentTemp = 0;
 
-                if (timeLeftInMilliseconds % 300000 < 1500) {
+               if (timeLeftInMilliseconds % 300000 < 1500) {
                     currentTemp = 0.9 * finalTemp;
                 }
 
                 if (timeLeftInMilliseconds % 294000 < 1500) {
                     currentTemp = finalTemp;
                 }
-                //todo end of test code
+               //todo end of test code
 
                 //send notification for flipping meat
-                if(timeLeftInMilliseconds < (flipTime * 60000) && !hasFlipped){
+                if(timeLeftInMilliseconds < ((cookingTime - flipTime) * 60000) && !hasFlipped){
                     Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
@@ -414,15 +421,37 @@ public class CookingActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CookingActivity.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(mealName)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setAutoCancel(true);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(001, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Test";
+            String description = "Test";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void createRestTimer() {

@@ -40,19 +40,19 @@
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="283dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sizeTextView"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="78dp"
-        android:layout_marginLeft="78dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="50dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="50dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="34dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginRight="27dp" />
 
     <TextView
         android:id="@+id/subTitleTextView"
@@ -102,10 +102,10 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/donenessGroup"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="13dp"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:text="Done"

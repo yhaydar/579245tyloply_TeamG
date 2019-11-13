@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
@@ -15,7 +14,10 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -56,6 +58,8 @@ public class CookingActivity extends AppCompatActivity {
 
     private CountDownTimer countDownTimer;
 
+    private ProgressBar progressBar;
+
     private int finalTemp;
     private int cookingTime;
     private int restTime;
@@ -76,6 +80,7 @@ public class CookingActivity extends AppCompatActivity {
     private String CHANNEL_ID = "1";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +95,8 @@ public class CookingActivity extends AppCompatActivity {
         createNotificationChannel();
 
         Log.d(TAG, "Cooking Activity On Create Built");
+
+
     }
 
     @Override
@@ -158,6 +165,7 @@ public class CookingActivity extends AppCompatActivity {
         startButton = findViewById(R.id.startButton);
         resetButton = findViewById(R.id.resetButton);
         typeOfMeatSelected = findViewById(R.id.typeOfMeatTextView);
+        progressBar = findViewById(R.id.progressBar);
 
         textReceived = findViewById(R.id.text_Received);
         textStatus = findViewById(R.id.textStatus);
@@ -183,6 +191,12 @@ public class CookingActivity extends AppCompatActivity {
                 resetTimer();
             }
         });
+
+        //progress bar
+        Animation an = new RotateAnimation(0.0f, 270.0f, 250f, 273f);
+        an.setFillAfter(true);
+        progressBar.startAnimation(an);
+        progressBar.setProgress(100);
 
         blunoLibrary = new BlunoLibrary(this);
         blunoLibrary.scanLeDevice(true);
@@ -298,12 +312,21 @@ public class CookingActivity extends AppCompatActivity {
 
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             // CountDownTimer(time left, countdown interval)
+
             @Override
             public void onTick(long millisUntilFinished) {
                 Log.d("DEBUG", cookingTime + " THIS IS THE COOKING TIME");
                 //l is variable that contains remaining time
                 timeLeftInMilliseconds = millisUntilFinished;
+                int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+                int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                double barmax = (double) (startTimeInMillis);
+                double progress = (double) (timeLeftInMilliseconds);
+                double barVal = (progress / barmax *100);
+                progressBar.setProgress((int)barVal);
                 updateTimer();
+
 
                // double currentTemp = blunoLibrary.getCurrentTemp();
 
@@ -336,14 +359,14 @@ public class CookingActivity extends AppCompatActivity {
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
-                    int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
-                    int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
-                    String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
 
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
                     hasNotified = true;
                 }
+
+
 
                 //send notification when meat is finished
                 if (currentTemp >= finalTemp) {

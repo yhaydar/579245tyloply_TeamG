@@ -91,6 +91,8 @@ public class BlunoLibrary {
 
 
         mainContext.registerReceiver(GattUpdateReceiver, makeGattUpdateIntentFilter());
+
+        scanLeDevice(true);
     }
 
     public void onPauseProcess(){

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -112,8 +113,8 @@ public class CookingActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to go Back? \n" +
-                "This will cancel the current timer and return you to the main page.")
+        builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
+                "This will cancel the current timer and return you to the main page."))
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

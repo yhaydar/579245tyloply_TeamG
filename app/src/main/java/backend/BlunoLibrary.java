@@ -78,6 +78,7 @@ public class BlunoLibrary {
     }
 
     public void onResumeProcess(){
+        Log.d(TAG, "onResumeProcess");
         if(!(bluetoothAdapter == null)){
             if(!bluetoothAdapter.isEnabled()){
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -92,7 +93,22 @@ public class BlunoLibrary {
         mainContext.registerReceiver(GattUpdateReceiver, makeGattUpdateIntentFilter());
     }
 
+    public void onPauseProcess(){
+        mainContext.unregisterReceiver(GattUpdateReceiver);
+    }
+
     public void onDestroyProcess(){
+        Log.d(TAG, "onDestroyProcess");
+
+        if(mBluetoothLeService!=null)
+        {
+			mBluetoothLeService.disconnect();
+            mHandler.postDelayed(mDisonnectingOverTimeRunnable, 10000);
+            mHandler.removeCallbacks(mDisonnectingOverTimeRunnable);
+            mBluetoothLeService.close();
+        }
+        mSCharacteristic=null;
+
         mainContext.unbindService(serviceConnection);
         mBluetoothLeService = null;
     }
@@ -201,7 +217,7 @@ public class BlunoLibrary {
 
                     if(device.getName()==null || device.getAddress()==null)
                     {
-                        mConnectionState= connectionStateEnum.isToScan;
+                        mConnectionState= connectionStateEnum.isScanning;
                         onConectionStateChange(mConnectionState);
                     }
                     else if (device.getName().equals("Bluno")){
@@ -225,6 +241,9 @@ public class BlunoLibrary {
                             mConnectionState= connectionStateEnum.isToScan;
                             onConectionStateChange(mConnectionState);
                         }
+                    }
+                    else {
+                        Log.d(TAG, device.getName());
                     }
                 }
             });
@@ -313,13 +332,13 @@ public class BlunoLibrary {
                 textStatus.setText("Connecting");
                 break;
             case isToScan:
-                textStatus.setText("Connect");
+                textStatus.setText("Scan Required");
                 break;
             case isScanning:
                 textStatus.setText("Scanning");
                 break;
             case isDisconnecting:
-                textStatus.setText("isDisconnecting");
+                textStatus.setText("Disconnected");
                 break;
             default:
                 break;
@@ -376,8 +395,8 @@ public class BlunoLibrary {
 
         @Override
         public void run() {
-            if(mConnectionState== connectionStateEnum.isDisconnecting)
-                mConnectionState= connectionStateEnum.isToScan;
+            if(mConnectionState == connectionStateEnum.isDisconnecting)
+                mConnectionState = connectionStateEnum.isToScan;
             onConectionStateChange(mConnectionState);
             mBluetoothLeService.close();
         }};

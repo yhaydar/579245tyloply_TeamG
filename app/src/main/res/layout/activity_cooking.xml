@@ -202,5 +202,19 @@
         android:text="Temperature:"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/textBTDisconnect"
+        android:layout_width="330dp"
+        android:layout_height="47dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:text="Bluetooth Connection Lost"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
 
 </RelativeLayout>

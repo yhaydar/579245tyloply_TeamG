@@ -82,7 +82,7 @@ public class BlunoLibrary {
         if(!(bluetoothAdapter == null)){
             if(!bluetoothAdapter.isEnabled()){
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                ((Activity)mainContext).startActivity(enableBtIntent);
+                (mainContext).startActivity(enableBtIntent);
             }
         }
         else{
@@ -91,8 +91,6 @@ public class BlunoLibrary {
 
 
         mainContext.registerReceiver(GattUpdateReceiver, makeGattUpdateIntentFilter());
-
-        scanLeDevice(true);
     }
 
     public void onPauseProcess(){
@@ -130,7 +128,7 @@ public class BlunoLibrary {
                 bluetoothAdapter.startLeScan(mLeScanCallback);
             }
             else{
-                Toast.makeText(mainContext, "Bluetooth needs to be turned on", Toast.LENGTH_LONG).show();
+                //Toast.makeText(mainContext, "Bluetooth needs to be turned on", Toast.LENGTH_LONG).show();
             }
         } else {
             if(mScanning)
@@ -181,7 +179,7 @@ public class BlunoLibrary {
 
                     }
                     else {
-                        Toast.makeText(mainContext, "Please select DFRobot devices",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mainContext, "Please select DFRobot devices",Toast.LENGTH_SHORT).show();
                         mConnectionState = connectionStateEnum.isToScan;
                         onConectionStateChange(mConnectionState);
                     }
@@ -312,7 +310,7 @@ public class BlunoLibrary {
         }
 
         if (mModelNumberCharacteristic==null || mSerialPortCharacteristic==null || mCommandCharacteristic==null) {
-            Toast.makeText(mainContext, "Please select DFRobot devices",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mainContext, "Please select DFRobot devices",Toast.LENGTH_SHORT).show();
             mConnectionState = connectionStateEnum.isToScan;
             onConectionStateChange(mConnectionState);
         }
@@ -335,6 +333,7 @@ public class BlunoLibrary {
                 break;
             case isToScan:
                 textStatus.setText("Scan Required");
+                scanLeDevice(true);
                 break;
             case isScanning:
                 textStatus.setText("Scanning");

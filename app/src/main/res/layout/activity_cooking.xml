@@ -144,11 +144,13 @@
         android:layout_marginRight="139dp"
         android:layout_toEndOf="@+id/timerImage"
         android:layout_toRightOf="@+id/timerImage"
+
         android:text="@string/timer"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="36sp"
         android:textStyle="bold"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        />
 
 
     <TextView

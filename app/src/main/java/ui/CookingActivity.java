@@ -343,10 +343,7 @@ public class CookingActivity extends AppCompatActivity {
                 progressBar.setProgress((int)barVal);
                 updateTimer();
 
-                if(blunoLibrary.mConnectionState == BlunoLibrary.connectionStateEnum.isToScan ||
-                   blunoLibrary.mConnectionState == BlunoLibrary.connectionStateEnum.isDisconnecting ||
-                   blunoLibrary.mConnectionState == BlunoLibrary.connectionStateEnum.isNull ||
-                   blunoLibrary.mConnectionState == BlunoLibrary.connectionStateEnum.isScanning) {
+                if(blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
 
                     BluetoothAlert();
                 }

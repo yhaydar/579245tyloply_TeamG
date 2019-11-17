@@ -33,7 +33,7 @@ public class BlunoLibrary {
     private String mBaudrateBuffer = "AT+CURRUART="+mBaudrate+"\r\n";
 
     private static BluetoothGattCharacteristic mSCharacteristic, mModelNumberCharacteristic, mSerialPortCharacteristic, mCommandCharacteristic;
-    BluetoothLeService mBluetoothLeService;
+    public BluetoothLeService mBluetoothLeService;
 
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mScanning =false;
@@ -70,27 +70,36 @@ public class BlunoLibrary {
 
         if(bluetoothAdapter == null || !bluetoothAdapter.isEnabled()){
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            ((Activity)mainContext).startActivity(enableBtIntent);
+            (mainContext).startActivity(enableBtIntent);
         }
 
-        Intent gattServiceIntent = new Intent(mainContext, BluetoothLeService.class);
-        mainContext.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+            Intent gattServiceIntent = new Intent(mainContext, BluetoothLeService.class);
+            mainContext.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+            IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            mainContext.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
+        }
     }
 
     public void onResumeProcess(){
         Log.d(TAG, "onResumeProcess");
-        if(!(bluetoothAdapter == null)){
-            if(!bluetoothAdapter.isEnabled()){
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                (mainContext).startActivity(enableBtIntent);
-            }
-        }
-        else{
-            Toast.makeText(mainContext, "Bluetooth needs to be turned on", Toast.LENGTH_LONG).show();
-        }
+//        if(bluetoothAdapter == null || !bluetoothAdapter.isEnabled()){
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            (mainContext).startActivity(enableBtIntent);
+//        }
 
 
         mainContext.registerReceiver(GattUpdateReceiver, makeGattUpdateIntentFilter());
+
+        if(mBluetoothLeService != null) {
+            if (mBluetoothLeService.mConnectionState == 0) {
+                mConnectionState = connectionStateEnum.isScanning;
+                onConectionStateChange(mConnectionState);
+                scanLeDevice(true);
+            }
+        }
     }
 
     public void onPauseProcess(){
@@ -108,6 +117,8 @@ public class BlunoLibrary {
             mBluetoothLeService.close();
         }
         mSCharacteristic=null;
+
+        mainContext.unregisterReceiver(BTAdapterReceiver);
 
         mainContext.unbindService(serviceConnection);
         mBluetoothLeService = null;
@@ -150,6 +161,7 @@ public class BlunoLibrary {
                 mHandler.removeCallbacks(mConnectingOverTimeRunnable);
 
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                Log.d(TAG, "ACTION_GATT_DISCONNECTED");
                 mConnected = false;
                 mConnectionState = connectionStateEnum.isToScan;
                 onConectionStateChange(mConnectionState);
@@ -401,4 +413,30 @@ public class BlunoLibrary {
             onConectionStateChange(mConnectionState);
             mBluetoothLeService.close();
         }};
+
+    private final BroadcastReceiver BTAdapterReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if(action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+
+                switch(state) {
+                    case BluetoothAdapter.STATE_OFF:
+                        if(bluetoothAdapter == null || !bluetoothAdapter.isEnabled()){
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            (mainContext).startActivity(enableBtIntent);
+                        }
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        break;
+                }
+            }
+        }
+    };
 }

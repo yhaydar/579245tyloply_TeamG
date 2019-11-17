@@ -16,6 +16,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -115,8 +118,8 @@ public class CookingActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to go Back? \n" +
-                "This will cancel the current timer and return you to the main page.")
+        builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
+                "This will cancel the current timer and return you to the main page."))
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -399,6 +402,7 @@ public class CookingActivity extends AppCompatActivity {
 
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has needs to be flipped!");
+                    vibrate();
                     hasFlipped = true;
                 }
 
@@ -409,9 +413,9 @@ public class CookingActivity extends AppCompatActivity {
                     ringtone.play();
 
 
-
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
+                    vibrate();
                     hasNotified = true;
                 }
 
@@ -423,6 +427,7 @@ public class CookingActivity extends AppCompatActivity {
                         Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
                         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                         ringtone.play();
+                        vibrate();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -486,6 +491,15 @@ public class CookingActivity extends AppCompatActivity {
 
         countdownText.setText(timeLeftFormatted);
 
+    }
+    private void vibrate(){
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            vibrator.vibrate(VibrationEffect.createOneShot(500,VibrationEffect.DEFAULT_AMPLITUDE));
+        }
+        else{
+            vibrator.vibrate(500);
+        }
     }
 
     private void sendNotification(String mealName, String message) {

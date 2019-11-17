@@ -1,10 +1,12 @@
 package ui;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -69,6 +71,7 @@ public class CookingActivity extends AppCompatActivity {
     private String meatFoodSpec;
     private boolean hasNotified;
     private boolean hasFlipped;
+    private long system_time;
 
     private long startTimeInMillis;
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
@@ -119,6 +122,7 @@ public class CookingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         stopTimer();
+                        blunoLibrary.scanLeDevice(false);
                         CookingActivity.super.onBackPressed();
                     }
                 })
@@ -138,12 +142,15 @@ public class CookingActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "Cooking Activity On OnStop");
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
+        Log.d(TAG,"CookingActivity " + timeLeftInMilliseconds);
         editor.putLong("millisLeft", timeLeftInMilliseconds);
         editor.putBoolean("timerRunning", timerRunning);
         editor.putLong("endTime", endTime);
+        editor.putLong("systemtime",System.currentTimeMillis());
 
         editor.apply();
 
@@ -157,19 +164,22 @@ public class CookingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        Log.d(TAG, "Cooking Activity OnStart");
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         startTimeInMillis = 60000 * cookingTime;
         timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
+        Log.d(TAG, "Cooking Activity" + timeLeftInMilliseconds );
         timerRunning = prefs.getBoolean("timerRunning", false);
 
         updateTimer();
 
         if (timerRunning) {
             endTime = prefs.getLong("endTime", 0);
-            timeLeftInMilliseconds = endTime - System.currentTimeMillis();
-
+            system_time = prefs.getLong("systemtime",0);
+            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis()-system_time);
+            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds );
             if (timeLeftInMilliseconds < 0) {
+                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
                 timeLeftInMilliseconds = 0;
                 timerRunning = false;
                 updateTimer();
@@ -181,17 +191,20 @@ public class CookingActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "onResumeBegins");
+        Log.d(TAG, "Cooking Activity onResumeBegins");
         super.onResume();
         blunoLibrary.onResumeProcess();
     }
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "Cooking Activity onDestroy");
         super.onDestroy();
 
         blunoLibrary.onDestroyProcess();
     }
+
+
 
 
     private void setupActivity() {
@@ -364,10 +377,10 @@ public class CookingActivity extends AppCompatActivity {
                 updateTimer();
 
 
-               // double currentTemp = blunoLibrary.getCurrentTemp();
+               //double currentTemp = blunoLibrary.getCurrentTemp();
 
                 //TODO remove this code only for testing without bluetooth
-                double currentTemp = 0;
+               double currentTemp = 0;
 
                if (timeLeftInMilliseconds % 300000 < 1500) {
                     currentTemp = 0.9 * finalTemp;
@@ -527,5 +540,6 @@ public class CookingActivity extends AppCompatActivity {
         restTimerSet =true;
         resetButton.setVisibility(View.INVISIBLE);
     }
+
 }
 

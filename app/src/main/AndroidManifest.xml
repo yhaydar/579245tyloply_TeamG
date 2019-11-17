@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="ui.CookingActivity"
+            android:screenOrientation="portrait"
             android:label=" "
             android:parentActivityName="ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -26,6 +27,7 @@
         </activity>
         <activity
             android:name="ui.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

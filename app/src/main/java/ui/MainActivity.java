@@ -1,9 +1,13 @@
 package ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
+import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.bbqbuddy.R;
 
@@ -12,7 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    //temp switch
+    private Switch temporary;
 
     //Elements for the list view in main activity
     ExpandableListView listView;
@@ -23,8 +28,40 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.darktheme);
+        }
+        else setTheme(R.style.AppTheme);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //tempswtich
+        temporary = findViewById(R.id.tempswitch);
+        if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
+            temporary.setChecked(true);
+
+        }
+
+        temporary.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    restartApp();
+                }else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    restartApp();
+                }
+            }
+        });
+
+
+
+
+
+
 
         //initialize the containers and the list view
         listView = findViewById(R.id.foodView);
@@ -74,4 +111,9 @@ public class MainActivity extends AppCompatActivity {
         customListView.notifyDataSetChanged();
     }
 
+    public void restartApp(){
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
+        finish();
+    }
 }

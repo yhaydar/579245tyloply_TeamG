@@ -31,6 +31,7 @@ public class DatabaseController implements Serializable {
                                 if(document.getId().equals(meatCut)){
                                     Log.d("DEBUG", "Matched: " + document.getId());
                                     String dbInstructions = document.getData().get("Instructions").toString();
+                                    dbInstructions = dbInstructions.replaceAll("_n","\n");
                                     model.loadInstructions(dbInstructions);
                                     Log.d("DEBUG", "Value: " + document.getData().get("Instructions").toString());
                                     break;

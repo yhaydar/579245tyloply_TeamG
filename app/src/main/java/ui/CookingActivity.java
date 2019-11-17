@@ -39,6 +39,7 @@ import com.example.bbqbuddy.R;
 
 import java.util.Locale;
 
+import backend.BluetoothLeService;
 import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
@@ -124,8 +125,9 @@ public class CookingActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        if(timerRunning){
                         stopTimer();
-                        blunoLibrary.scanLeDevice(false);
+                        }
                         CookingActivity.super.onBackPressed();
                     }
                 })

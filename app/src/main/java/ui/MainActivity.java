@@ -2,10 +2,14 @@ package ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -27,6 +31,22 @@ public class MainActivity extends AppCompatActivity {
     Integer[] imageIds;
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.settingsItem){
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
             setTheme(R.style.darktheme);
@@ -41,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         temporary = findViewById(R.id.tempswitch);
         if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
             temporary.setChecked(true);
-
         }
 
         temporary.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -57,12 +76,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
         //initialize the containers and the list view
         listView = findViewById(R.id.foodView);
         foodTypes = new ArrayList<>();
@@ -72,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(customListView);
         initializeData();
 
-        }
+    }
 
     private void initializeData(){
         //add food categories to list

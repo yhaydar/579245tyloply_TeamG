@@ -438,8 +438,14 @@ public class CookingActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                countdownText.setText("0:00");
+                Log.d("DEBUG", " THIS IS THE onFinish");
+                countdownText.setText("00:00");
                 timerRunning = false;
+
+                if(restTime==0){
+                    createRestTimer();
+                }
+
                 try {
                     Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
@@ -545,6 +551,26 @@ public class CookingActivity extends AppCompatActivity {
     private void createRestTimer() {
         timeLeftInMilliseconds = restTime * 60000;//convert rest time to millis
         stopTimer();
+
+        if(restTime==0){
+            timerRunning = false;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
+                    .setCancelable(false)
+                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if(timerRunning){
+                                stopTimer();
+                            }
+                            CookingActivity.super.onBackPressed();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+
         updateTimer();
         timerRunning = false;
         startButton.setOnClickListener(new View.OnClickListener() {

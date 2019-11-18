@@ -395,7 +395,7 @@ public class BlunoLibrary extends Activity {
 //        char temp = theString.charAt(0);
 //        int i = (int) temp;
         currentTemp = theString;
-        textReceived.setText(theString);							//append the text into the EditText
+        textReceived.setText(theString+"°C");							//append the text into the EditText
     }
 
     public void serialSend(String theString){

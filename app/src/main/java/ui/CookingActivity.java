@@ -59,6 +59,7 @@ public class CookingActivity extends AppCompatActivity {
 
     private TextView bluetoothStatus;
     private TextView temperatureText;
+    private TextView target_temp;
 
     private BlunoLibrary blunoLibrary;
 
@@ -104,10 +105,10 @@ public class CookingActivity extends AppCompatActivity {
         });
 
 
+
         setupViewModel();
         setupActivity();
         createNotificationChannel();
-
         Log.d(TAG, "Cooking Activity On Create Built");
 
 
@@ -124,8 +125,10 @@ public class CookingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(timerRunning){
-                        stopTimer();
+                            Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
+                            stopTimer();
                         }
+                        Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
                         CookingActivity.super.onBackPressed();
                     }
                 })
@@ -202,9 +205,9 @@ public class CookingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.d(TAG, "Cooking Activity onDestroy");
-        super.onDestroy();
-
         blunoLibrary.onDestroyProcess();
+        timerRunning = false;
+        super.onDestroy();
     }
 
 
@@ -216,17 +219,19 @@ public class CookingActivity extends AppCompatActivity {
         instructionsText = findViewById(R.id.instructionSetTextView);
         startButton = findViewById(R.id.startButton);
         resetButton = findViewById(R.id.resetButton);
-        typeOfMeatSelected = findViewById(R.id.typeOfMeatTextView);
         progressBar = findViewById(R.id.progressBar);
+
 
         textReceived = findViewById(R.id.text_Received);
         textStatus = findViewById(R.id.textStatus);
         temperatureText = findViewById(R.id.temperatureText);
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
+        target_temp = findViewById(R.id.t_temp);
 
         String meatType = getIntent().getStringExtra("meatType");
         String meatCut = getIntent().getStringExtra("meatCut");
-        typeOfMeatSelected.setText(meatType + " " + meatCut);
+        getSupportActionBar().setTitle(meatType + " " + meatCut);
+
 
         hasNotified = false;
         //add listeners to the countdown button
@@ -287,6 +292,7 @@ public class CookingActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 finalTemp = Integer.parseInt(s);
+                target_temp.setText(finalTemp + "°C"); //To view temp on app
             }
         };
 
@@ -351,6 +357,7 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     public void startTimer() {
+        Log.d("DEBUG", " THIS IS THE startTimer");
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
         if (restTimerSet == false) {
             if (timerStarted == false){
@@ -562,6 +569,8 @@ public class CookingActivity extends AppCompatActivity {
                             if(timerRunning){
                                 stopTimer();
                             }
+                            cookingTime = 0;
+                            timeLeftInMilliseconds = 0;
                             CookingActivity.super.onBackPressed();
                         }
                     });

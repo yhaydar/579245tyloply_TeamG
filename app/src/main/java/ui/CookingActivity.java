@@ -1,6 +1,5 @@
 package ui;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -39,7 +38,6 @@ import com.example.bbqbuddy.R;
 
 import java.util.Locale;
 
-import backend.BluetoothLeService;
 import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
@@ -435,6 +433,7 @@ public class CookingActivity extends AppCompatActivity {
                     }
                 }
             }
+
 
             @Override
             public void onFinish() {

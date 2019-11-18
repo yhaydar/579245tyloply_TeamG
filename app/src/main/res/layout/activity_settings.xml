@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="ui.SettingsActivity">
+
+    <Switch
+        android:id="@+id/themeSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:checked="false"
+        android:contentDescription="Turn dark theme on or off"
+        android:text="Dark Theme" />
+
+    <Switch
+        android:id="@+id/weightUnitSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_below="@+id/themeSwitch"
+        android:layout_marginTop="0dp"
+        android:text="Weight units in kg" />
+
+    <Switch
+        android:id="@+id/tempUnitSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_below="@+id/weightUnitSwitch"
+        android:layout_marginTop="0dp"
+        android:text="Weight in Celsius" />
+
+</LinearLayout>

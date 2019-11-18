@@ -1,7 +1,5 @@
 package ui;
 
-import android.content.Intent;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
@@ -9,11 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
-import android.util.Log;
 import android.widget.ExpandableListView;
 import android.widget.Switch;
 
@@ -86,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         //initialize the containers and the list view
         listView = findViewById(R.id.foodView);
         foodTypes = new ArrayList<>();
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
 
         }
-    }
+
 
     private void initializeData(){
         //add food categories to list

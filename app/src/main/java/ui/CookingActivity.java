@@ -88,6 +88,8 @@ public class CookingActivity extends AppCompatActivity {
     private boolean restTimerSet = false;
     private boolean timerStarted = false;
 
+    private boolean DegressC = false;
+
     private String CHANNEL_ID = "1";
 
     private Context cookingContext = this;

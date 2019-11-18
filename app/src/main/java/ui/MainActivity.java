@@ -1,6 +1,14 @@
 package ui;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ExpandableListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     CustomListView customListView;
     Integer[] imageIds;
 
+    BluetoothAdapter bluetoothAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +44,18 @@ public class MainActivity extends AppCompatActivity {
         customListView = new CustomListView(this, foodTypes,listOptions,imageIds,this.getSupportFragmentManager());
         listView.setAdapter(customListView);
         initializeData();
+
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bluetoothAdapter = bluetoothManager.getAdapter();
+
+        if(bluetoothAdapter == null || !bluetoothAdapter.isEnabled()){
+            Log.d("BluetoothLE", "REQUEST BLE ENABLE");
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(enableBtIntent);
+        }
+
+        IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
 
         }
 
@@ -73,5 +95,31 @@ public class MainActivity extends AppCompatActivity {
         listOptions.put(foodTypes.get(2),porkList);
         customListView.notifyDataSetChanged();
     }
+
+    private final BroadcastReceiver BTAdapterReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivity(enableBtIntent);
+                        }
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        break;
+                }
+            }
+        }
+    };
 
 }

@@ -24,7 +24,7 @@ import com.example.bbqbuddy.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlunoLibrary {
+public class BlunoLibrary extends Activity {
     private BluetoothAdapter bluetoothAdapter;
     private Context mainContext;
 
@@ -69,19 +69,30 @@ public class BlunoLibrary {
         bluetoothAdapter = bluetoothManager.getAdapter();
 
         if(bluetoothAdapter == null || !bluetoothAdapter.isEnabled()){
+            Log.d(TAG, "REQUEST BLE ENABLE");
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            (mainContext).startActivity(enableBtIntent);
+            ((Activity) mainContext).startActivityForResult(enableBtIntent, 1);
         }
-
-
-        if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+        else
+        {
             Intent gattServiceIntent = new Intent(mainContext, BluetoothLeService.class);
             mainContext.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
             IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
             mainContext.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
         }
+
+//
+//        if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+//            Intent gattServiceIntent = new Intent(mainContext, BluetoothLeService.class);
+//            mainContext.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+//
+//            IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+//            mainContext.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
+//        }
     }
+
+
 
     public void onResumeProcess(){
         Log.d(TAG, "onResumeProcess");
@@ -93,6 +104,14 @@ public class BlunoLibrary {
 
         mainContext.registerReceiver(GattUpdateReceiver, makeGattUpdateIntentFilter());
 
+        if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+            Intent gattServiceIntent = new Intent(mainContext, BluetoothLeService.class);
+            mainContext.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+            IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            mainContext.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
+        }
+
         if(mBluetoothLeService != null) {
             if (mBluetoothLeService.mConnectionState == 0) {
                 mConnectionState = connectionStateEnum.isScanning;
@@ -100,6 +119,8 @@ public class BlunoLibrary {
                 scanLeDevice(true);
             }
         }
+
+        scanLeDevice(true);
     }
 
     public void onPauseProcess(){
@@ -118,7 +139,9 @@ public class BlunoLibrary {
         }
         mSCharacteristic=null;
 
-        mainContext.unregisterReceiver(BTAdapterReceiver);
+        if(bluetoothAdapter.isEnabled()) {
+            mainContext.unregisterReceiver(BTAdapterReceiver);
+        }
 
         mainContext.unbindService(serviceConnection);
         mBluetoothLeService = null;
@@ -269,7 +292,7 @@ public class BlunoLibrary {
             System.out.println("mServiceConnection onServiceConnected");
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
             if (!mBluetoothLeService.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
+                Log.d(TAG, "Unable to initialize Bluetooth");
                 //((Activity) mainContext).finish();
             }
         }

@@ -120,7 +120,13 @@ public class BlunoLibrary extends Activity {
             }
         }
 
-        scanLeDevice(true);
+        if(mConnectionState == mConnectionState.isConnected) {
+            onConectionStateChange(connectionStateEnum.isToScan);
+        }
+        else{
+            scanLeDevice(true);
+        }
+
     }
 
     public void onPauseProcess(){

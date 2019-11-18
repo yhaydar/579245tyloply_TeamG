@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -56,11 +57,14 @@ public class CookingActivity extends AppCompatActivity {
 
     private TextView textReceived;
     private TextView textStatus;
+    private TextView textBTDisconnect;
 
     private TextView bluetoothStatus;
     private TextView temperatureText;
 
     private BlunoLibrary blunoLibrary;
+    private AlertDialog alertDialogBT;
+    private boolean hasBeenAlerted = false;
 
     private CountDownTimer countDownTimer;
 
@@ -85,6 +89,8 @@ public class CookingActivity extends AppCompatActivity {
     private boolean timerStarted = false;
 
     private String CHANNEL_ID = "1";
+
+    private Context cookingContext = this;
 
 
 
@@ -200,6 +206,13 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        blunoLibrary.onPauseProcess();
+    }
+
+    @Override
     protected void onDestroy() {
         Log.d(TAG, "Cooking Activity onDestroy");
         super.onDestroy();
@@ -223,6 +236,7 @@ public class CookingActivity extends AppCompatActivity {
         textStatus = findViewById(R.id.textStatus);
         temperatureText = findViewById(R.id.temperatureText);
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
+        textBTDisconnect = findViewById(R.id.textBTDisconnect);
 
         String meatType = getIntent().getStringExtra("meatType");
         String meatCut = getIntent().getStringExtra("meatCut");
@@ -378,6 +392,15 @@ public class CookingActivity extends AppCompatActivity {
                 double barVal = (progress / barmax *100);
                 progressBar.setProgress((int)barVal);
                 updateTimer();
+
+                if(blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
+
+                    BluetoothAlert();
+                }
+                else{
+                    hasBeenAlerted = false;
+                    textBTDisconnect.setVisibility(View.INVISIBLE);
+                }
 
 
                //double currentTemp = blunoLibrary.getCurrentTemp();
@@ -582,5 +605,27 @@ public class CookingActivity extends AppCompatActivity {
         resetButton.setVisibility(View.INVISIBLE);
     }
 
+    private void BluetoothAlert(){
+        if(!hasBeenAlerted) {
+            hasBeenAlerted = true;
+            alertDialogBT = new AlertDialog.Builder(cookingContext)
+                    .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
+                    .setTitle("Bluetooth Connection Lost")
+                    .setMessage("BBQ Buddy is no longer able to communicate" +
+                            "with the Bluetooth device and is trying to " +
+                            "reconnect. Please make sure that the device " +
+                            "is turned on.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+            textBTDisconnect.setVisibility(View.VISIBLE);
+            blunoLibrary.scanLeDevice(true);
+            Log.d("BluetoothLE", "scanLeDevice from onTick");
+        }
+    }
 }
 

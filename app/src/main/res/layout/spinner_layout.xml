@@ -3,5 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="30dp"
-    android:textColor="#0A0A0E"
-    android:textSize="20sp" />
+    android:textColor="?attr/textcolor"
+    android:textSize="20sp"
+    android:background="?attr/dropdown"
+    />

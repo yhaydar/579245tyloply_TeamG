@@ -27,7 +27,7 @@
         android:checked="false"
         android:contentDescription="Turn dark theme on or off"
         android:text="Dark Theme"
-        android:textColor="android"
+        android:textColor="?attr/textcolor"
         />
 
     <Switch
@@ -39,7 +39,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="9dp"
-        android:text="Weight units in kg" />
+        android:text="Weight units in kg"
+        android:textColor="?attr/textcolor"/>
 
     <Switch
         android:id="@+id/tempUnitSwitch"
@@ -49,7 +50,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="9dp"
-        android:text="Weight in Celsius" />
+        android:text="Weight in Celsius"
+        android:textColor="?attr/textcolor"/>
 
     <Button
         android:id="@+id/settingsSaveButton"

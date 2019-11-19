@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
     CustomListView customListView;
     Integer[] imageIds;
 
+    public static final String shrdP = "shrdP";
+    public static final String ThmSwitch = "themeSwitch";
+
+    private boolean thmSwitchOnOff;
+
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.settingsItem){
@@ -61,16 +68,18 @@ public class MainActivity extends AppCompatActivity {
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
             setTheme(R.style.darktheme);
         }
-        else setTheme(R.style.AppTheme);
-
-
+        else {
+            setTheme(R.style.AppTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //Switch initialization
         tmpswitch = findViewById(R.id.tmpswitch);
         thmSwitch = findViewById(R.id.thmswitch);
         wtSwitch = findViewById(R.id.wtswitch);
+
 
         //retrieve boolean value from settings page
         Boolean thmChecked = getIntent().getBooleanExtra("themeKey",false);
@@ -82,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         tmpswitch.setChecked(tmpChecked);
         wtSwitch.setChecked(wtChecked);
 
-        //setting Dark Mode when thmSwitch is on
         if (thmSwitch.isChecked()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
@@ -110,8 +118,33 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
 
+
         }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = getSharedPreferences(shrdP, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(ThmSwitch,thmSwitch.isChecked());
+        editor.apply();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        SharedPreferences sharedPreferences = getSharedPreferences(shrdP,MODE_PRIVATE);
+        thmSwitchOnOff = sharedPreferences.getBoolean(ThmSwitch, false);
+
+        thmSwitch.setChecked(thmSwitchOnOff);
+        if (thmSwitch.isChecked()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+    }
 
     private void initializeData(){
         //add food categories to list

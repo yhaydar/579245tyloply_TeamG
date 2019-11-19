@@ -31,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
     private boolean tempUnitSwitchOnOff;
     private boolean weightUnitSwitchOnOff;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //setting up dark mode if checked.
@@ -109,14 +110,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void saveData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putBoolean(ThemeSwitch,themeSwitch.isChecked());
-        editor.putBoolean(TempUnitSwitch,tempUnitSwitch.isChecked());
-        editor.putBoolean(WeightUnitSwitch,weightUnitSwitch.isChecked());
-
-        editor.apply();
 
         Boolean thmChkd = themeSwitch.isChecked();
         Boolean tmpChkd = tempUnitSwitch.isChecked();
@@ -127,6 +121,15 @@ public class SettingsActivity extends AppCompatActivity {
         settingsIntent.putExtra("tempKey", tmpChkd);
         settingsIntent.putExtra("weightKey", wtChkd);
         this.startActivity(settingsIntent);
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(ThemeSwitch,themeSwitch.isChecked());
+        editor.putBoolean(TempUnitSwitch,tempUnitSwitch.isChecked());
+        editor.putBoolean(WeightUnitSwitch,weightUnitSwitch.isChecked());
+
+        editor.commit();
 
     }
 

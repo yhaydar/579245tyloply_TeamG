@@ -6,8 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/textColorLightPrimary</item>
+        <item name="textcolor">@color/textColorLightPrimary</item>
+        <item name="listviewbackground">@color/lvcolorlight</item>
         <item name="android:windowBackground">@drawable/background</item>
+        <item name="backgroundcolor">@color/backgroundlight</item>
+        <item name="dropdown">@color/dropdownlight</item>
     </style>
 
     <style name="darktheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -15,8 +18,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/textColorDarkPrimary</item>
+        <item name="textcolor">@color/textColorDarkPrimary</item>
         <item name="android:windowBackground">@drawable/darkmode</item>
+        <item name="listviewbackground">@color/lvcolordark</item>
+        <item name="backgroundcolor">@color/backgrounddark</item>
+        <item name="dropdown">@color/dropdowndark</item>
 
     </style>
 

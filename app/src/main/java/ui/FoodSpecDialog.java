@@ -80,6 +80,8 @@ public class FoodSpecDialog extends DialogFragment {
             ViewGroup layout = (ViewGroup) radioGroup.getParent();
             layout.removeView(radioGroup);
             layout.removeView(subTitle);
+            radioGroup = null;
+            subTitle =  null;
         }
     }
 
@@ -97,44 +99,22 @@ public class FoodSpecDialog extends DialogFragment {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean spinnerReq = false;
-                boolean radioButtonReq = false;
-
                 //Make intent and send all the cooking values to cooking activity
                 Intent intent = new Intent(getActivity(), CookingActivity.class);
                 intent.putExtra("meatType", meatType);
                 intent.putExtra("meatCut", meatCut);
-                if(spinner.isEnabled()) {
-                    if(!(spinner.getSelectedItem() == null)) {
-                        intent.putExtra("foodSpec", spinner.getSelectedItem().toString());
-                        spinnerReq = true;
-                    }
-                    else{
-                        spinnerReq = false;
-                    }
-                }
-                else{
-                    //if spinner is disabled, we ignore its input
-                    spinnerReq = true;
-                }
-                if(radioGroup.isEnabled()) {
-                    if(!(radioGroup.getCheckedRadioButtonId() == -1)) {
+                intent.putExtra("foodSpec", spinner.getSelectedItem().toString());
+
+                if(radioGroup != null) {
+                    if(radioGroup.getCheckedRadioButtonId() != -1) {
                         RadioButton clickedButton = view.findViewById(radioGroup.getCheckedRadioButtonId());
                         intent.putExtra("doneness", clickedButton.getText().toString());
-                        radioButtonReq = true;
-                    }
-                    else{
-                        radioButtonReq = false;
+                        startActivity(intent);
                     }
                 }
                 else{
                     //if radiogroup is disabled, we can ignore it
                     intent.putExtra("doneness", "Well");
-                    radioButtonReq = true;
-                }
-
-                //if both the spinner and radio button requirements are good, we can start the intent
-                if(radioButtonReq && spinnerReq){
                     startActivity(intent);
                 }
             }

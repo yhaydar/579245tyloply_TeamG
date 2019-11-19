@@ -26,7 +26,9 @@
         android:layout_marginTop="175dp"
         android:checked="false"
         android:contentDescription="Turn dark theme on or off"
-        android:text="Dark Theme" />
+        android:text="Dark Theme"
+        android:textColor="android"
+        />
 
     <Switch
         android:id="@+id/weightUnitSwitch"
@@ -61,7 +63,7 @@
         android:text="Save" />
 
     <Button
-        android:id="@+id/settingsCancelButton"
+        android:id="@+id/settingsResetButton"
         android:layout_width="128dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -69,6 +71,6 @@
         android:layout_marginStart="248dp"
         android:layout_marginBottom="75dp"
         android:background="@drawable/custom_button"
-        android:text="@android:string/cancel" />
+        android:text="Reset Defaults" />
 
 </RelativeLayout>

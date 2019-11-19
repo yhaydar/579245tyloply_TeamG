@@ -37,7 +37,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="18dp"
         android:layout_marginTop="75dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:text="Switch" />
 
     <Switch
@@ -49,7 +49,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="145dp"
         android:text="Switch"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <Switch
         android:id="@+id/wtswitch"
@@ -60,7 +60,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="110dp"
         android:text="Switch"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

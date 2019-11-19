@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.bbqbuddy.R;
 
@@ -19,7 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
     Switch weightUnitSwitch;
 
     Button settingsSaveButton;
-    Button settingsCancelButton;
+    Button settingsResetButton;
 
     public static final String SHARED_PREFS  = "sharedPrefs";
     public static final String ThemeSwitch = "themeSwitch";
@@ -32,6 +33,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //setting up dark mode if checked.
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.darktheme);
+        }
+        else setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -40,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         tempUnitSwitch = findViewById(R.id.tempUnitSwitch);
         weightUnitSwitch = findViewById(R.id.weightUnitSwitch);
 
-        settingsCancelButton = findViewById(R.id.settingsCancelButton);
+        settingsResetButton = findViewById(R.id.settingsResetButton);
         settingsSaveButton = findViewById(R.id.settingsSaveButton);
 
         setupSwitches();
@@ -53,7 +60,11 @@ public class SettingsActivity extends AppCompatActivity {
         themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                if (isChecked){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
 
             }
         });
@@ -82,9 +93,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
-        settingsCancelButton.setOnClickListener(new View.OnClickListener() {
+        settingsResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
+                resetDefault();
             }
         });
     }
@@ -128,6 +140,12 @@ public class SettingsActivity extends AppCompatActivity {
         themeSwitch.setChecked(themeSwitchOnOff);
         tempUnitSwitch.setChecked(tempUnitSwitchOnOff);
         weightUnitSwitch.setChecked(weightUnitSwitchOnOff);
+    }
 
+    public void resetDefault(){
+        themeSwitch.setChecked(false);
+        tempUnitSwitch.setChecked(false);
+        weightUnitSwitch.setChecked(false);
+        saveData();
     }
 }

@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //tempswtich
+        //Switch initialization
         tmpswitch = findViewById(R.id.tmpswitch);
         thmSwitch = findViewById(R.id.thmswitch);
         wtSwitch = findViewById(R.id.wtswitch);
@@ -81,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
         thmSwitch.setChecked(thmChecked);
         tmpswitch.setChecked(tmpChecked);
         wtSwitch.setChecked(wtChecked);
+
+        //setting Dark Mode when thmSwitch is on
+        if (thmSwitch.isChecked()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         //initialize the containers and the list view
         listView = findViewById(R.id.foodView);

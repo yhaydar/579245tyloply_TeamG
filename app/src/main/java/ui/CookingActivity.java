@@ -111,6 +111,10 @@ public class CookingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.darkactionbartheme);
+        }else setTheme(R.style.lightactionbartheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cooking);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -159,31 +163,61 @@ public class CookingActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
-                "This will cancel the current timer and return you to the main page."))
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if(timerRunning){
-                            Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
-                            stopTimer();
+        if (cThmSwitch.isChecked()){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+            builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
+                    "This will cancel the current timer and return you to the main page."))
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (timerRunning) {
+                                Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
+                                stopTimer();
+                            }
+                            Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
+                            CookingActivity.super.onBackPressed();
                         }
-                        Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
-                        CookingActivity.super.onBackPressed();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
+                    "This will cancel the current timer and return you to the main page."))
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (timerRunning) {
+                                Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
+                                stopTimer();
+                            }
+                            Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
+                            CookingActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+        }
     }
 
 

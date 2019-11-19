@@ -32,8 +32,28 @@
 
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="darkactionbartheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="textcolor">@color/textColorDarkPrimary</item>
+    <item name="android:windowBackground">@drawable/darkmode</item>
+    <item name="listviewbackground">@color/lvcolordark</item>
+    <item name="backgroundcolor">@color/backgrounddark</item>
+    <item name="dropdown">@color/dropdowndark</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="lightactionbartheme" parent="ThemeOverlay.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="textcolor">@color/textColorLightPrimary</item>
+        <item name="listviewbackground">@color/lvcolorlight</item>
+        <item name="android:windowBackground">@drawable/background</item>
+        <item name="backgroundcolor">@color/backgroundlight</item>
+        <item name="dropdown">@color/dropdownlight</item>
+    </style>
 
 </resources>

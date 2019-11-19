@@ -1,88 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="false"
     android:background="?attr/backgroundcolor"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/specTitleTextView"
-        android:layout_width="313dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="50dp"
-        android:foregroundGravity="clip_horizontal"
-        android:gravity="center_horizontal"
+        android:layout_gravity="center"
         android:text="Meat Specifications"
+        android:layout_marginTop="5dp"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="28sp"
-        android:textColor="?attr/textcolor"/>
+        android:textColor="?attr/textcolor"
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/sizeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/specTitleTextView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="132dp"
-        android:layout_marginLeft="132dp"
-        android:layout_marginTop="6dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
         android:text="Select Size"
-        android:textColor="?attr/textcolor"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="?attr/textcolor"
         android:textSize="20sp" />
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sizeTextView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="34dp"
-        android:layout_marginLeft="34dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginRight="27dp"
+        android:layout_width="279dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
         android:background="?attr/dropdown"
-        android:popupBackground="?attr/dropdown"
-        />
+        android:popupBackground="?attr/dropdown" />
 
     <TextView
         android:id="@+id/subTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="131dp"
-        android:layout_marginLeft="131dp"
-        android:layout_marginTop="18dp"
-        android:textColor="?attr/textcolor"
         android:text="Select Doneness"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="?attr/textcolor"
         android:textSize="20sp" />
 
     <RadioGroup
         android:id="@+id/donenessGroup"
         android:layout_width="137dp"
         android:layout_height="108dp"
-        android:layout_below="@+id/subTitleTextView"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_marginTop="25dp"
         android:outlineSpotShadowColor="@color/colorPrimary">
 
@@ -91,53 +63,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Rare"
-            android:textColor="?attr/textcolor"
-            />
+            android:textColor="?attr/textcolor" />
 
         <RadioButton
             android:id="@+id/mediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Medium"
-            android:textColor="?attr/textcolor"/>
+            android:textColor="?attr/textcolor" />
 
         <RadioButton
             android:id="@+id/wellButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Well"
-            android:textColor="?attr/textcolor"/>
+            android:textColor="?attr/textcolor" />
     </RadioGroup>
 
-
-    <Button
-        android:id="@+id/doneButton"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/donenessGroup"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:text="Done"
-        android:textColor="@color/colorPrimary" />
+        android:layout_gravity="right"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/cancelButton"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/doneButton"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_toStartOf="@+id/doneButton"
-        android:layout_toLeftOf="@+id/doneButton"
-        android:includeFontPadding="false"
-        android:text="@android:string/cancel"
-        android:textColor="@color/colorPrimary"/>
+        <Button
+            android:id="@+id/cancelButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="5dp"
+            android:includeFontPadding="false"
+            android:text="@android:string/cancel"
+            android:textColor="@color/colorPrimary" />
 
-
-</RelativeLayout>
+        <Button
+            android:id="@+id/doneButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:text="Done"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+</LinearLayout>

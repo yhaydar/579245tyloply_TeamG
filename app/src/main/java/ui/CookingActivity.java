@@ -98,6 +98,7 @@ public class CookingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cooking);
         Toolbar toolbar = findViewById(R.id.toolbar);

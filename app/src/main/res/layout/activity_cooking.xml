@@ -232,5 +232,39 @@
         android:visibility="invisible"
         />
 
+    <Switch
+        android:id="@+id/cTmpswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="75dp"
+        android:visibility="invisible"
+        android:text="Switch" />
+
+    <Switch
+        android:id="@+id/cThmswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="145dp"
+        android:text="Switch"
+        android:visibility="invisible" />
+
+    <Switch
+        android:id="@+id/cWtswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="110dp"
+        android:text="Switch"
+        android:visibility="invisible" />
+
+
 
 </RelativeLayout>

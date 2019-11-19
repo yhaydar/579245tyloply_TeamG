@@ -1,5 +1,6 @@
 package ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -110,26 +111,16 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void saveData(){
-
-
-        Boolean thmChkd = themeSwitch.isChecked();
-        Boolean tmpChkd = tempUnitSwitch.isChecked();
-        Boolean wtChkd = weightUnitSwitch.isChecked();
-
         Intent settingsIntent = new Intent(this, MainActivity.class);
-        settingsIntent.putExtra("themeKey", thmChkd);
-        settingsIntent.putExtra("tempKey", tmpChkd);
-        settingsIntent.putExtra("weightKey", wtChkd);
         this.startActivity(settingsIntent);
 
-
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(ThemeSwitch,themeSwitch.isChecked());
         editor.putBoolean(TempUnitSwitch,tempUnitSwitch.isChecked());
         editor.putBoolean(WeightUnitSwitch,weightUnitSwitch.isChecked());
 
-        editor.commit();
+        editor.apply();
 
     }
 

@@ -25,11 +25,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static ui.SettingsActivity.SHARED_PREFS;
+import static ui.SettingsActivity.TempUnitSwitch;
+import static ui.SettingsActivity.ThemeSwitch;
+import static ui.SettingsActivity.WeightUnitSwitch;
+
 public class MainActivity extends AppCompatActivity {
 
     //invisible Switch Setup
     Switch thmSwitch;
-    Switch tmpswitch;
+    Switch tmpSwitch;
     Switch wtSwitch;
 
     //Elements for the list view in main activity
@@ -38,12 +43,6 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String,List<String>> listOptions;
     CustomListView customListView;
     Integer[] imageIds;
-
-    public static final String shrdP = "shrdP";
-    public static final String ThmSwitch = "themeSwitch";
-
-    private boolean thmSwitchOnOff;
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -67,28 +66,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
             setTheme(R.style.darktheme);
-        }
-        else {
-            setTheme(R.style.AppTheme);
-        }
+        }else setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
         //Switch initialization
-        tmpswitch = findViewById(R.id.tmpswitch);
+        tmpSwitch = findViewById(R.id.tmpswitch);
         thmSwitch = findViewById(R.id.thmswitch);
         wtSwitch = findViewById(R.id.wtswitch);
 
-
         //retrieve boolean value from settings page
-        Boolean thmChecked = getIntent().getBooleanExtra("themeKey",false);
-        Boolean tmpChecked = getIntent().getBooleanExtra("tempKey",false);
-        Boolean wtChecked = getIntent().getBooleanExtra("weightKey",false);
+        Boolean thmChecked;
+        Boolean tmpChecked;
+        Boolean wtChecked;
+
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        thmChecked = preferences.getBoolean(ThemeSwitch,false);
+        tmpChecked = preferences.getBoolean(TempUnitSwitch, false);
+        wtChecked = preferences.getBoolean(WeightUnitSwitch, false);
 
         //set the hidden switches to value of settings page
         thmSwitch.setChecked(thmChecked);
-        tmpswitch.setChecked(tmpChecked);
+        tmpSwitch.setChecked(tmpChecked);
         wtSwitch.setChecked(wtChecked);
 
         if (thmSwitch.isChecked()) {
@@ -120,31 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        SharedPreferences sharedPreferences = getSharedPreferences(shrdP, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(ThmSwitch,thmSwitch.isChecked());
-        editor.apply();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        SharedPreferences sharedPreferences = getSharedPreferences(shrdP,MODE_PRIVATE);
-        thmSwitchOnOff = sharedPreferences.getBoolean(ThmSwitch, false);
-
-        thmSwitch.setChecked(thmSwitchOnOff);
-        if (thmSwitch.isChecked()) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-
-    }
 
     private void initializeData(){
         //add food categories to list
@@ -182,13 +158,6 @@ public class MainActivity extends AppCompatActivity {
         listOptions.put(foodTypes.get(2),porkList);
         customListView.notifyDataSetChanged();
     }
-
-    public void restartApp(){
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(i);
-        finish();
-    }
-
 
     private final BroadcastReceiver BTAdapterReceiver = new BroadcastReceiver() {
         @Override

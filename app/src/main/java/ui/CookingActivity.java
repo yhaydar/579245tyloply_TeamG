@@ -24,10 +24,12 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -41,6 +43,11 @@ import java.util.Locale;
 import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
+
+import static ui.SettingsActivity.SHARED_PREFS;
+import static ui.SettingsActivity.TempUnitSwitch;
+import static ui.SettingsActivity.ThemeSwitch;
+import static ui.SettingsActivity.WeightUnitSwitch;
 
 public class CookingActivity extends AppCompatActivity {
     private static final String TAG = CookingActivity.class.getSimpleName();
@@ -94,11 +101,16 @@ public class CookingActivity extends AppCompatActivity {
 
     private Context cookingContext = this;
 
+    private Switch cThmSwitch;
+    private Switch cTmpSwitch;
+    private Switch cWtSwitch;
+
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cooking);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -112,14 +124,37 @@ public class CookingActivity extends AppCompatActivity {
             }
         });
 
+        //Switch initialization
+        cThmSwitch = findViewById(R.id.cThmswitch);
+        cTmpSwitch = findViewById(R.id.cTmpswitch);
+        cWtSwitch = findViewById(R.id.cWtswitch);
 
+        Log.d(TAG, "Cooking Activity On Create Built");
+
+        //retrieve boolean value from settings page
+        Boolean cThmChecked;
+        Boolean cTmpChecked;
+        Boolean cWtChecked;
+
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        cThmChecked = preferences.getBoolean(ThemeSwitch,false);
+        cTmpChecked = preferences.getBoolean(TempUnitSwitch, false);
+        cWtChecked = preferences.getBoolean(WeightUnitSwitch, false);
+
+        //set the hidden switches to value of settings page
+        cThmSwitch.setChecked(cThmChecked);
+        cTmpSwitch.setChecked(cTmpChecked);
+        cWtSwitch.setChecked(cWtChecked);
+
+        if (cThmSwitch.isChecked()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         setupViewModel();
         setupActivity();
         createNotificationChannel();
-        Log.d(TAG, "Cooking Activity On Create Built");
-
-
     }
 
     @Override
@@ -243,6 +278,8 @@ public class CookingActivity extends AppCompatActivity {
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
         textBTDisconnect = findViewById(R.id.textBTDisconnect);
         target_temp = findViewById(R.id.t_temp);
+
+
 
         String meatType = getIntent().getStringExtra("meatType");
         String meatCut = getIntent().getStringExtra("meatCut");

@@ -56,7 +56,6 @@ public class CookingActivity extends AppCompatActivity {
 
     private TextView countdownText;
     private TextView instructionsText;
-    private TextView typeOfMeatSelected;
 
     private Button startButton;
     private Button resetButton;
@@ -90,7 +89,6 @@ public class CookingActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
 
-    //private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
     private boolean restTimerSet = false;
     private boolean timerStarted = false;
@@ -104,9 +102,6 @@ public class CookingActivity extends AppCompatActivity {
     private Switch cThmSwitch;
     private Switch cTmpSwitch;
     private Switch cWtSwitch;
-
-
-
 
 
     @Override
@@ -667,27 +662,48 @@ public class CookingActivity extends AppCompatActivity {
         timeLeftInMilliseconds = restTime * 60000;//convert rest time to millis
         stopTimer();
 
-        if(restTime==0){
+        if(restTime==0) {
             timerRunning = false;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
-                    .setCancelable(false)
-                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(timerRunning){
-                                stopTimer();
+            if (cThmSwitch.isChecked()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this,AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+                builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
+                        .setCancelable(false)
+                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (timerRunning) {
+                                    stopTimer();
+                                }
+                                cookingTime = 0;
+                                timeLeftInMilliseconds = 0;
+                                CookingActivity.super.onBackPressed();
                             }
-                            cookingTime = 0;
-                            timeLeftInMilliseconds = 0;
-                            CookingActivity.super.onBackPressed();
-                        }
-                    });
+                        });
 
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
+                        .setCancelable(false)
+                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (timerRunning) {
+                                    stopTimer();
+                                }
+                                cookingTime = 0;
+                                timeLeftInMilliseconds = 0;
+                                CookingActivity.super.onBackPressed();
+                            }
+                        });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            }
         }
-
         updateTimer();
         timerRunning = false;
         startButton.setOnClickListener(new View.OnClickListener() {

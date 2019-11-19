@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="ui.SettingsActivity">
+
+
+    <ImageView
+        android:id="@+id/imageLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="163dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        app:srcCompat="@drawable/logo_main_activity" />
 
     <Switch
         android:id="@+id/themeSwitch"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="175dp"
         android:checked="false"
         android:contentDescription="Turn dark theme on or off"
         android:text="Dark Theme" />
@@ -21,7 +33,10 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_below="@+id/themeSwitch"
-        android:layout_marginTop="0dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="9dp"
         android:text="Weight units in kg" />
 
     <Switch
@@ -29,7 +44,31 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_below="@+id/weightUnitSwitch"
-        android:layout_marginTop="0dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="9dp"
         android:text="Weight in Celsius" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/settingsSaveButton"
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="41dp"
+        android:layout_marginBottom="74dp"
+        android:background="@drawable/custom_button"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/settingsCancelButton"
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="248dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/custom_button"
+        android:text="@android:string/cancel" />
+
+</RelativeLayout>

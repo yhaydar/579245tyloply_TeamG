@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -15,6 +17,9 @@ public class SettingsActivity extends AppCompatActivity {
     Switch themeSwitch;
     Switch tempUnitSwitch;
     Switch weightUnitSwitch;
+
+    Button settingsSaveButton;
+    Button settingsCancelButton;
 
     public static final String SHARED_PREFS  = "sharedPrefs";
     public static final String ThemeSwitch = "themeSwitch";
@@ -35,7 +40,11 @@ public class SettingsActivity extends AppCompatActivity {
         tempUnitSwitch = findViewById(R.id.tempUnitSwitch);
         weightUnitSwitch = findViewById(R.id.weightUnitSwitch);
 
+        settingsCancelButton = findViewById(R.id.settingsCancelButton);
+        settingsSaveButton = findViewById(R.id.settingsSaveButton);
+
         setupSwitches();
+        setupButtons();
         loadData();
         updateViews();
     }
@@ -44,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                saveData();
+
 
             }
         });
@@ -52,14 +61,30 @@ public class SettingsActivity extends AppCompatActivity {
         tempUnitSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                saveData();
+
             }
         });
 
         weightUnitSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        });
+    }
+
+    public void setupButtons(){
+        settingsSaveButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
                 saveData();
+            }
+        });
+
+
+        settingsCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
             }
         });
     }
@@ -80,6 +105,17 @@ public class SettingsActivity extends AppCompatActivity {
         editor.putBoolean(WeightUnitSwitch,weightUnitSwitch.isChecked());
 
         editor.apply();
+
+        Boolean thmChkd = themeSwitch.isChecked();
+        Boolean tmpChkd = tempUnitSwitch.isChecked();
+        Boolean wtChkd = weightUnitSwitch.isChecked();
+
+        Intent settingsIntent = new Intent(this, MainActivity.class);
+        settingsIntent.putExtra("themeKey", thmChkd);
+        settingsIntent.putExtra("tempKey", tmpChkd);
+        settingsIntent.putExtra("weightKey", wtChkd);
+        this.startActivity(settingsIntent);
+
     }
 
     public void loadData(){

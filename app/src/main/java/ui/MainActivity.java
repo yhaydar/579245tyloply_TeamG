@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.Switch;
 
@@ -26,8 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //temp switch
-    private Switch temporary;
+
+    //invisible Switch Setup
+    Switch thmSwitch;
+    Switch tmpswitch;
+    Switch wtSwitch;
 
     //Elements for the list view in main activity
     ExpandableListView listView;
@@ -66,24 +68,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //tempswtich
-        temporary = findViewById(R.id.tempswitch);
-        if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
-            temporary.setChecked(true);
-        }
+        tmpswitch = findViewById(R.id.tmpswitch);
+        thmSwitch = findViewById(R.id.thmswitch);
+        wtSwitch = findViewById(R.id.wtswitch);
 
-        temporary.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    restartApp();
-                }else{
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    restartApp();
-                }
-            }
-        });
+        //retrieve boolean value from settings page
+        Boolean thmChecked = getIntent().getBooleanExtra("themeKey",false);
+        Boolean tmpChecked = getIntent().getBooleanExtra("tempKey",false);
+        Boolean wtChecked = getIntent().getBooleanExtra("weightKey",false);
 
+        //set the hidden switches to value of settings page
+        thmSwitch.setChecked(thmChecked);
+        tmpswitch.setChecked(tmpChecked);
+        wtSwitch.setChecked(wtChecked);
 
         //initialize the containers and the list view
         listView = findViewById(R.id.foodView);
@@ -151,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
+
     private final BroadcastReceiver BTAdapterReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -70,18 +70,12 @@ public class FoodSpecDialog extends DialogFragment {
         //disable checkboxes for rare, medium, well if it isn't beef
         Log.d("debug", meatType);
 
-        if(!(meatType.equals(getString(R.string.beef)))){
-            //radioGroup.setEnabled(false);
-            //for(int i = 0; i< radioGroup.getChildCount(); i++){
-            //    radioGroup.getChildAt(i).setEnabled(false);
-            //}
-            //subTitle.setVisibility(View.INVISIBLE);
-            //radioGroup.setVisibility(View.INVISIBLE);
+        if(!(meatType.equals(getString(R.string.beef))) || meatCut.equals("GroundPatty")) {
             ViewGroup layout = (ViewGroup) radioGroup.getParent();
             layout.removeView(radioGroup);
             layout.removeView(subTitle);
             radioGroup = null;
-            subTitle =  null;
+            subTitle = null;
         }
     }
 

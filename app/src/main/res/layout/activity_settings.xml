@@ -50,7 +50,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="9dp"
-        android:text="Weight in Celsius"
+        android:text="Temperature in °F"
         android:textColor="?attr/textcolor"/>
 
     <Button

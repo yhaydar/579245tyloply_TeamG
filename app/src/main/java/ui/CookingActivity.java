@@ -156,6 +156,12 @@ public class CookingActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
+        if(cTmpSwitch.isChecked()){
+            DegressC = false;
+        }else{
+            DegressC = true;
+        }
+
         setupViewModel();
         setupActivity();
         createNotificationChannel();
@@ -378,8 +384,13 @@ public class CookingActivity extends AppCompatActivity {
         final Observer<String> finalTempObserver = new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                finalTemp = Integer.parseInt(s);
-                target_temp.setText(finalTemp + "°C"); //To view temp on app
+                if(DegressC) {
+                    finalTemp = Integer.parseInt(s);
+                    target_temp.setText(finalTemp + "°C"); //To view temp on app
+                }else {
+                    finalTemp = Integer.parseInt(s) * (9/5) + 32;
+                    target_temp.setText(finalTemp + ("°F"));
+                }
             }
         };
 

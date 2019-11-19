@@ -721,26 +721,25 @@ public class CookingActivity extends AppCompatActivity {
                 textBTDisconnect.setVisibility(View.VISIBLE);
                 blunoLibrary.scanLeDevice(true);
                 Log.d("BluetoothLE", "scanLeDevice from onTick");
+            } else {
+                alertDialogBT = new AlertDialog.Builder(cookingContext)
+                        .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
+                        .setTitle("Bluetooth Connection Lost")
+                        .setMessage("BBQ Buddy is no longer able to communicate" +
+                                "with the Bluetooth device and is trying to " +
+                                "reconnect. Please make sure that the device " +
+                                "is turned on.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+                textBTDisconnect.setVisibility(View.VISIBLE);
+                blunoLibrary.scanLeDevice(true);
+                Log.d("BluetoothLE", "scanLeDevice from onTick");
             }
-        }else{
-            alertDialogBT = new AlertDialog.Builder(cookingContext)
-                    .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
-                    .setTitle("Bluetooth Connection Lost")
-                    .setMessage("BBQ Buddy is no longer able to communicate" +
-                            "with the Bluetooth device and is trying to " +
-                            "reconnect. Please make sure that the device " +
-                            "is turned on.")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .show();
-            textBTDisconnect.setVisibility(View.VISIBLE);
-            blunoLibrary.scanLeDevice(true);
-            Log.d("BluetoothLE", "scanLeDevice from onTick");
-
         }
     }
 }

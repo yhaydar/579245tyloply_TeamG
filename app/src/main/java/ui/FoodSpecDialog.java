@@ -117,6 +117,7 @@ public class FoodSpecDialog extends DialogFragment {
                     intent.putExtra("doneness", "Well");
                     startActivity(intent);
                 }
+                getDialog().dismiss();
             }
         });
     }

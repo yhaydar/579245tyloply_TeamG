@@ -401,13 +401,15 @@ public class CookingActivity extends AppCompatActivity {
                 progressBar.setProgress((int)barVal);
                 updateTimer();
 
-                if(blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
+                //if the app is run on the emulator
+                if(blunoLibrary.mBluetoothLeService != null) {
+                    if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
 
-                    BluetoothAlert();
-                }
-                else{
-                    hasBeenAlerted = false;
-                    textBTDisconnect.setVisibility(View.INVISIBLE);
+                        BluetoothAlert();
+                    } else {
+                        hasBeenAlerted = false;
+                        textBTDisconnect.setVisibility(View.INVISIBLE);
+                    }
                 }
 
 

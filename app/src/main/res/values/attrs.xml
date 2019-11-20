@@ -7,8 +7,5 @@
         <attr name="tintcolor" format="color"/>
         <attr name="buttoncolor" format="color"/>
         <attr name="dropdown" format="color"/>
-
-
     </declare-styleable>
-
 </resources>

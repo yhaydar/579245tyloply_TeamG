@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:background="#ffffff"
+        android:background="?attr/listviewbackground"
         android:padding="15dp">
 
         <ImageView
@@ -18,7 +18,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginStart="27dp"
             android:layout_marginLeft="25dp"
-            android:layout_weight="0.11" />
+            android:layout_weight="0.11"
+            />
 
         <TextView
             android:id="@+id/foodName"
@@ -30,7 +31,7 @@
             android:layout_marginTop="24dp"
             android:layout_toEndOf="@+id/imageView"
             android:layout_toRightOf="@+id/imageView"
-            android:textColor="#0A0A0E"
+            android:textColor="?attr/textcolor"
             android:textSize="25dp"
             android:textStyle="bold" />
     </RelativeLayout>

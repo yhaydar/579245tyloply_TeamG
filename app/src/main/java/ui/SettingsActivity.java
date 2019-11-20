@@ -1,13 +1,17 @@
 package ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.bbqbuddy.R;
 
@@ -15,6 +19,9 @@ public class SettingsActivity extends AppCompatActivity {
     Switch themeSwitch;
     Switch tempUnitSwitch;
     Switch weightUnitSwitch;
+
+    Button settingsSaveButton;
+    Button settingsResetButton;
 
     public static final String SHARED_PREFS  = "sharedPrefs";
     public static final String ThemeSwitch = "themeSwitch";
@@ -25,8 +32,15 @@ public class SettingsActivity extends AppCompatActivity {
     private boolean tempUnitSwitchOnOff;
     private boolean weightUnitSwitchOnOff;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //setting up dark mode if checked.
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.darktheme);
+        }
+        else setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -35,7 +49,11 @@ public class SettingsActivity extends AppCompatActivity {
         tempUnitSwitch = findViewById(R.id.tempUnitSwitch);
         weightUnitSwitch = findViewById(R.id.weightUnitSwitch);
 
+        settingsResetButton = findViewById(R.id.settingsResetButton);
+        settingsSaveButton = findViewById(R.id.settingsSaveButton);
+
         setupSwitches();
+        setupButtons();
         loadData();
         updateViews();
     }
@@ -44,7 +62,11 @@ public class SettingsActivity extends AppCompatActivity {
         themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                saveData();
+                if (isChecked){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
 
             }
         });
@@ -52,14 +74,31 @@ public class SettingsActivity extends AppCompatActivity {
         tempUnitSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                saveData();
+
             }
         });
 
         weightUnitSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        });
+    }
+
+    public void setupButtons(){
+        settingsSaveButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
                 saveData();
+            }
+        });
+
+
+        settingsResetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                resetDefault();
             }
         });
     }
@@ -72,14 +111,17 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void saveData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Intent settingsIntent = new Intent(this, MainActivity.class);
+        this.startActivity(settingsIntent);
 
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(ThemeSwitch,themeSwitch.isChecked());
         editor.putBoolean(TempUnitSwitch,tempUnitSwitch.isChecked());
         editor.putBoolean(WeightUnitSwitch,weightUnitSwitch.isChecked());
 
         editor.apply();
+
     }
 
     public void loadData(){
@@ -92,6 +134,12 @@ public class SettingsActivity extends AppCompatActivity {
         themeSwitch.setChecked(themeSwitchOnOff);
         tempUnitSwitch.setChecked(tempUnitSwitchOnOff);
         weightUnitSwitch.setChecked(weightUnitSwitchOnOff);
+    }
 
+    public void resetDefault(){
+        themeSwitch.setChecked(false);
+        tempUnitSwitch.setChecked(false);
+        weightUnitSwitch.setChecked(false);
+        saveData();
     }
 }

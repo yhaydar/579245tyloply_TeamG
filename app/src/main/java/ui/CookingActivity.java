@@ -24,10 +24,12 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -42,6 +44,11 @@ import backend.BlunoLibrary;
 import backend.CookingViewModel;
 import backend.DatabaseController;
 
+import static ui.SettingsActivity.SHARED_PREFS;
+import static ui.SettingsActivity.TempUnitSwitch;
+import static ui.SettingsActivity.ThemeSwitch;
+import static ui.SettingsActivity.WeightUnitSwitch;
+
 public class CookingActivity extends AppCompatActivity {
     private static final String TAG = "CookingActivity";
 
@@ -49,7 +56,6 @@ public class CookingActivity extends AppCompatActivity {
 
     private TextView countdownText;
     private TextView instructionsText;
-    private TextView typeOfMeatSelected;
 
     private Button startButton;
     private Button resetButton;
@@ -89,7 +95,6 @@ public class CookingActivity extends AppCompatActivity {
     private long timeInterval;
 
 
-    //private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
     private boolean restTimerSet = false;
     private boolean timerStarted = false;
@@ -100,10 +105,17 @@ public class CookingActivity extends AppCompatActivity {
 
     private Context cookingContext = this;
 
+    private Switch cThmSwitch;
+    private Switch cTmpSwitch;
+    private Switch cWtSwitch;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.darkactionbartheme);
+        }else setTheme(R.style.lightactionbartheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cooking);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -117,43 +129,102 @@ public class CookingActivity extends AppCompatActivity {
             }
         });
 
+        //Switch initialization
+        cThmSwitch = findViewById(R.id.cThmswitch);
+        cTmpSwitch = findViewById(R.id.cTmpswitch);
+        cWtSwitch = findViewById(R.id.cWtswitch);
 
+        Log.d(TAG, "Cooking Activity On Create Built");
+
+        //retrieve boolean value from settings page
+        Boolean cThmChecked;
+        Boolean cTmpChecked;
+        Boolean cWtChecked;
+
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        cThmChecked = preferences.getBoolean(ThemeSwitch,false);
+        cTmpChecked = preferences.getBoolean(TempUnitSwitch, false);
+        cWtChecked = preferences.getBoolean(WeightUnitSwitch, false);
+
+        //set the hidden switches to value of settings page
+        cThmSwitch.setChecked(cThmChecked);
+        cTmpSwitch.setChecked(cTmpChecked);
+        cWtSwitch.setChecked(cWtChecked);
+
+        if (cThmSwitch.isChecked()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        if(cTmpSwitch.isChecked()){
+            DegressC = false;
+        }else{
+            DegressC = true;
+        }
 
         setupViewModel();
         setupActivity();
         createNotificationChannel();
-        Log.d(TAG, "Cooking Activity On Create Built");
-
-
     }
 
     @Override
     public void onBackPressed() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
-                "This will cancel the current timer and return you to the main page."))
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if(timerRunning){
-                            Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
-                            stopTimer();
+        if (cThmSwitch.isChecked()){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+            builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
+                    "This will cancel the current timer and return you to the main page."))
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (timerRunning) {
+                                Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
+                                stopTimer();
+                            }
+                            Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
+                            CookingActivity.super.onBackPressed();
                         }
-                        Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
-                        CookingActivity.super.onBackPressed();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back?</b>" + " <br> </br>" +
+                    "This will cancel the current timer and return you to the main page."))
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (timerRunning) {
+                                Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
+                                stopTimer();
+                            }
+                            Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
+                            CookingActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+        }
     }
 
 
@@ -247,6 +318,8 @@ public class CookingActivity extends AppCompatActivity {
         textBTDisconnect = findViewById(R.id.textBTDisconnect);
         target_temp = findViewById(R.id.t_temp);
 
+
+
         String meatType = getIntent().getStringExtra("meatType");
         String meatCut = getIntent().getStringExtra("meatCut");
         getSupportActionBar().setTitle(meatType + " " + meatCut);
@@ -310,8 +383,13 @@ public class CookingActivity extends AppCompatActivity {
         final Observer<String> finalTempObserver = new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                finalTemp = Integer.parseInt(s);
-                target_temp.setText(finalTemp + "°C"); //To view temp on app
+                if(DegressC) {
+                    finalTemp = Integer.parseInt(s);
+                    target_temp.setText(finalTemp + "°C"); //To view temp on app
+                }else {
+                    finalTemp = Integer.parseInt(s) * (9/5) + 32;
+                    target_temp.setText(finalTemp + ("°F"));
+                }
             }
         };
 
@@ -406,13 +484,15 @@ public class CookingActivity extends AppCompatActivity {
                 progressBar.setProgress((int)barVal);
                 updateTimer();
 
-                if(blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
+                //if the app is run on the emulator
+                if(blunoLibrary.mBluetoothLeService != null) {
+                    if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
 
-                    BluetoothAlert();
-                }
-                else{
-                    hasBeenAlerted = false;
-                    textBTDisconnect.setVisibility(View.INVISIBLE);
+                        BluetoothAlert();
+                    } else {
+                        hasBeenAlerted = false;
+                        textBTDisconnect.setVisibility(View.INVISIBLE);
+                    }
                 }
 
 
@@ -610,27 +690,48 @@ public class CookingActivity extends AppCompatActivity {
         timeLeftInMilliseconds = restTime * 60000;//convert rest time to millis
         stopTimer();
 
-        if(restTime==0){
+        if(restTime==0) {
             timerRunning = false;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
-                    .setCancelable(false)
-                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if(timerRunning){
-                                stopTimer();
+            if (cThmSwitch.isChecked()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this,AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+                builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
+                        .setCancelable(false)
+                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (timerRunning) {
+                                    stopTimer();
+                                }
+                                cookingTime = 0;
+                                timeLeftInMilliseconds = 0;
+                                CookingActivity.super.onBackPressed();
                             }
-                            cookingTime = 0;
-                            timeLeftInMilliseconds = 0;
-                            CookingActivity.super.onBackPressed();
-                        }
-                    });
+                        });
 
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
+                        .setCancelable(false)
+                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (timerRunning) {
+                                    stopTimer();
+                                }
+                                cookingTime = 0;
+                                timeLeftInMilliseconds = 0;
+                                CookingActivity.super.onBackPressed();
+                            }
+                        });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            }
         }
-
         updateTimer();
         timerRunning = false;
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -650,23 +751,43 @@ public class CookingActivity extends AppCompatActivity {
     private void BluetoothAlert(){
         if(!hasBeenAlerted) {
             hasBeenAlerted = true;
-            alertDialogBT = new AlertDialog.Builder(cookingContext)
-                    .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
-                    .setTitle("Bluetooth Connection Lost")
-                    .setMessage("BBQ Buddy is no longer able to communicate" +
-                            "with the Bluetooth device and is trying to " +
-                            "reconnect. Please make sure that the device " +
-                            "is turned on.")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+            if (cThmSwitch.isChecked()) {
+                alertDialogBT = new AlertDialog.Builder(cookingContext,AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                        .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
+                        .setTitle("Bluetooth Connection Lost")
+                        .setMessage("BBQ Buddy is no longer able to communicate" +
+                                "with the Bluetooth device and is trying to " +
+                                "reconnect. Please make sure that the device " +
+                                "is turned on.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    })
-                    .show();
-            textBTDisconnect.setVisibility(View.VISIBLE);
-            blunoLibrary.scanLeDevice(true);
-            Log.d("BluetoothLE", "scanLeDevice from onTick");
+                            }
+                        })
+                        .show();
+                textBTDisconnect.setVisibility(View.VISIBLE);
+                blunoLibrary.scanLeDevice(true);
+                Log.d("BluetoothLE", "scanLeDevice from onTick");
+            } else {
+                alertDialogBT = new AlertDialog.Builder(cookingContext)
+                        .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
+                        .setTitle("Bluetooth Connection Lost")
+                        .setMessage("BBQ Buddy is no longer able to communicate" +
+                                "with the Bluetooth device and is trying to " +
+                                "reconnect. Please make sure that the device " +
+                                "is turned on.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+                textBTDisconnect.setVisibility(View.VISIBLE);
+                blunoLibrary.scanLeDevice(true);
+                Log.d("BluetoothLE", "scanLeDevice from onTick");
+            }
         }
     }
 }

@@ -142,14 +142,15 @@ public class BlunoLibrary extends Activity {
             mHandler.postDelayed(mDisonnectingOverTimeRunnable, 10000);
             mHandler.removeCallbacks(mDisonnectingOverTimeRunnable);
             mBluetoothLeService.close();
+
+            if(bluetoothAdapter.isEnabled()) {
+                mainContext.unregisterReceiver(BTAdapterReceiver);
+            }
+
+            mainContext.unbindService(serviceConnection);
         }
         mSCharacteristic=null;
 
-        if(bluetoothAdapter.isEnabled()) {
-            mainContext.unregisterReceiver(BTAdapterReceiver);
-        }
-
-        mainContext.unbindService(serviceConnection);
         mBluetoothLeService = null;
     }
 

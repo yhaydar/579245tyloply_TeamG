@@ -6,12 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.Switch;
 
@@ -25,9 +25,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static ui.SettingsActivity.SHARED_PREFS;
+import static ui.SettingsActivity.TempUnitSwitch;
+import static ui.SettingsActivity.ThemeSwitch;
+import static ui.SettingsActivity.WeightUnitSwitch;
+
 public class MainActivity extends AppCompatActivity {
-    //temp switch
-    private Switch temporary;
+
+    //invisible Switch Setup
+    Switch thmSwitch;
+    Switch tmpSwitch;
+    Switch wtSwitch;
 
     //Elements for the list view in main activity
     ExpandableListView listView;
@@ -58,32 +66,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
             setTheme(R.style.darktheme);
-        }
-        else setTheme(R.style.AppTheme);
-
+        }else setTheme(R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //tempswtich
-        temporary = findViewById(R.id.tempswitch);
-        if (AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
-            temporary.setChecked(true);
+
+        //Switch initialization
+        tmpSwitch = findViewById(R.id.tmpswitch);
+        thmSwitch = findViewById(R.id.thmswitch);
+        wtSwitch = findViewById(R.id.wtswitch);
+
+        //retrieve boolean value from settings page
+        Boolean thmChecked;
+        Boolean tmpChecked;
+        Boolean wtChecked;
+
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        thmChecked = preferences.getBoolean(ThemeSwitch,false);
+        tmpChecked = preferences.getBoolean(TempUnitSwitch, false);
+        wtChecked = preferences.getBoolean(WeightUnitSwitch, false);
+
+        //set the hidden switches to value of settings page
+        thmSwitch.setChecked(thmChecked);
+        tmpSwitch.setChecked(tmpChecked);
+        wtSwitch.setChecked(wtChecked);
+
+        if (thmSwitch.isChecked()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-
-        temporary.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    restartApp();
-                }else{
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    restartApp();
-                }
-            }
-        });
-
 
         //initialize the containers and the list view
         listView = findViewById(R.id.foodView);
@@ -106,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
 
-        }
 
+        }
 
     private void initializeData(){
         //add food categories to list
@@ -146,11 +159,6 @@ public class MainActivity extends AppCompatActivity {
         customListView.notifyDataSetChanged();
     }
 
-    public void restartApp(){
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(i);
-        finish();
-    }
     private final BroadcastReceiver BTAdapterReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

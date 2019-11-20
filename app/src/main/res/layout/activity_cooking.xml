@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ui.CookingActivity"
-   style="@style/darktheme"
     >
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -27,6 +26,7 @@
         layout="@layout/content_cooking"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
 
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -82,7 +82,8 @@
         android:text="@string/instructionsText"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="?attr/textcolor"/>
 
     <TextView
         android:id="@+id/instructionSetTextView"
@@ -97,7 +98,8 @@
         android:layout_marginLeft="7dp"
         android:layout_marginTop="13dp"
         android:layout_marginBottom="33dp"
-        android:singleLine="false" />
+        android:singleLine="false"
+        android:textColor="?attr/textcolor"/>
 
     <Button
         android:id="@+id/startButton"
@@ -135,7 +137,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="36sp"
         android:textStyle="bold"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+       />
 
     <TextView
         android:id="@+id/text_Received"
@@ -149,7 +152,8 @@
         android:layout_marginLeft="199dp"
         android:layout_marginEnd="57dp"
         android:layout_marginBottom="335dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="?attr/textcolor"/>
 
     <TextView
         android:id="@+id/textStatus"
@@ -162,7 +166,8 @@
         android:layout_marginEnd="44dp"
         android:layout_marginRight="44dp"
         android:layout_marginBottom="367dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="?attr/textcolor"/>
 
     <TextView
         android:id="@+id/bluetoothStatus"
@@ -173,7 +178,8 @@
         android:layout_marginStart="78dp"
         android:layout_marginBottom="366dp"
         android:text="Bluetooth Status:"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="?attr/textcolor"/>
 
     <TextView
         android:id="@+id/temperatureText"
@@ -185,7 +191,8 @@
         android:layout_marginStart="77dp"
         android:layout_marginBottom="334dp"
         android:text="Temperature:"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="?attr/textcolor"/>
 
     <TextView
         android:id="@+id/target_temp"
@@ -195,7 +202,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="82dp"
         android:text="Target Tempature:"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="?attr/textcolor"/>
 
     <TextView
         android:id="@+id/t_temp"
@@ -206,7 +214,8 @@
         android:layout_marginStart="19dp"
         android:layout_marginTop="324dp"
         android:layout_toEndOf="@+id/target_temp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="?attr/textcolor"/>
 
     <TextView
         android:id="@+id/textBTDisconnect"
@@ -217,10 +226,45 @@
         android:layout_marginBottom="30dp"
         android:gravity="center"
         android:text="Bluetooth Connection Lost"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/textcolor"
         android:textSize="25sp"
         android:textStyle="bold"
+        android:visibility="invisible"
+        />
+
+    <Switch
+        android:id="@+id/cTmpswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="75dp"
+        android:visibility="invisible"
+        android:text="Switch" />
+
+    <Switch
+        android:id="@+id/cThmswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="145dp"
+        android:text="Switch"
         android:visibility="invisible" />
+
+    <Switch
+        android:id="@+id/cWtswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="110dp"
+        android:text="Switch"
+        android:visibility="invisible" />
+
 
 
 </RelativeLayout>

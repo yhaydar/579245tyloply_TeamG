@@ -109,6 +109,9 @@ public class CookingActivity extends AppCompatActivity {
     private Switch cTmpSwitch;
     private Switch cWtSwitch;
 
+    private boolean isthereconnecion;
+    private double currentTemp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -489,15 +492,20 @@ public class CookingActivity extends AppCompatActivity {
                     if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
 
                         BluetoothAlert();
+                        isthereconnecion = false;
                     } else {
                         hasBeenAlerted = false;
+                        isthereconnecion = true;
                         textBTDisconnect.setVisibility(View.INVISIBLE);
                     }
                 }
 
-
-               double currentTemp = blunoLibrary.getCurrentTemp();
-
+                if(isthereconnecion) {
+                    currentTemp = blunoLibrary.getCurrentTemp();
+                }
+                else{
+                    currentTemp = 0;
+                }
                 //TODO remove this code only for testing without bluetooth
             /*   double currentTemp = 0;
 

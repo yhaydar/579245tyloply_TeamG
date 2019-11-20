@@ -43,7 +43,7 @@ import backend.CookingViewModel;
 import backend.DatabaseController;
 
 public class CookingActivity extends AppCompatActivity {
-    private static final String TAG = CookingActivity.class.getSimpleName();
+    private static final String TAG = "CookingActivity";
 
     private CookingViewModel model;
 
@@ -71,17 +71,23 @@ public class CookingActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private int finalTemp;
+    private double tempRate;
     private int cookingTime;
     private int restTime;
     private int flipTime;
+    private long nextFlipTime;
     private String meatFoodSpec;
     private boolean hasNotified;
-    private boolean hasFlipped;
+    private boolean doneFlipping = false;
     private long system_time;
 
     private long startTimeInMillis;
     private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
+    private boolean measuredFirstTime = false;
+    private boolean measuredSecondTime = false;
+    private long timeInterval;
+
 
     //private long restTime = 31000;
     private boolean timerRunning; // tells us if timer is running
@@ -223,8 +229,6 @@ public class CookingActivity extends AppCompatActivity {
         timerRunning = false;
         super.onDestroy();
     }
-
-
 
 
     private void setupActivity() {
@@ -374,6 +378,7 @@ public class CookingActivity extends AppCompatActivity {
     public void startTimer() {
         Log.d("DEBUG", " THIS IS THE startTimer");
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
+        nextFlipTime = cookingTime - flipTime;
         if (restTimerSet == false) {
             if (timerStarted == false){
             startTimeInMillis = cookingTime*60000;
@@ -411,10 +416,10 @@ public class CookingActivity extends AppCompatActivity {
                 }
 
 
-               //double currentTemp = blunoLibrary.getCurrentTemp();
+               double currentTemp = blunoLibrary.getCurrentTemp();
 
                 //TODO remove this code only for testing without bluetooth
-               double currentTemp = 0;
+            /*   double currentTemp = 0;
 
                if (timeLeftInMilliseconds % 300000 < 1500) {
                     currentTemp = 0.9 * finalTemp;
@@ -423,10 +428,11 @@ public class CookingActivity extends AppCompatActivity {
                 if (timeLeftInMilliseconds % 294000 < 1500) {
                     currentTemp = finalTemp;
                 }
-               //todo end of test code
+              */ //todo end of test code
 
                 //send notification for flipping meat
-                if(timeLeftInMilliseconds < ((cookingTime - flipTime) * 60000) && !hasFlipped){
+                if(((timeLeftInMilliseconds <= 1.02*((nextFlipTime) * 60000)) &&
+                        (timeLeftInMilliseconds >= 0.98*((nextFlipTime) * 60000))) && !doneFlipping){
                     Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
@@ -434,23 +440,43 @@ public class CookingActivity extends AppCompatActivity {
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has needs to be flipped!");
                     vibrate();
-                    hasFlipped = true;
+                    nextFlipTime = nextFlipTime - flipTime;
+                    Log.d(TAG, "Next flip Time: " + nextFlipTime);
+
+                    if (nextFlipTime* 60000 > timeLeftInMilliseconds)
+                        doneFlipping = true;
+
                 }
 
-                //send notification when meat is 90% of final temp
-                if (currentTemp >= (0.9 * finalTemp) && !hasNotified) {
+
+                if ((currentTemp >= (0.7 * finalTemp) && !measuredFirstTime)) {
+                    timeInterval = timeLeftInMilliseconds;
+                    measuredFirstTime = true;
+                    Log.d(TAG, "First time measurement   " + timeInterval);
+                }
+
+                if ((currentTemp >= (0.9 * finalTemp) && !measuredSecondTime)) {
+                    timeInterval = timeInterval - timeLeftInMilliseconds;
+                    tempRate = (finalTemp*(0.9 - 0.7)/timeInterval);
+                    timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate);
+                    Log.d(TAG, "Second time measurement   " + timeLeftInMilliseconds);
+                    measuredSecondTime = true;
+
                     Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
+                    minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+                    seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+
+                    timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
                     vibrate();
-                    hasNotified = true;
+
+                    ChangeTime();
                 }
-
-
 
                 //send notification when meat is finished
                 if (currentTemp >= finalTemp) {
@@ -459,6 +485,7 @@ public class CookingActivity extends AppCompatActivity {
                         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                         ringtone.play();
                         vibrate();
+                        onFinish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -530,6 +557,7 @@ public class CookingActivity extends AppCompatActivity {
         countdownText.setText(timeLeftFormatted);
 
     }
+
     private void vibrate(){
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -615,6 +643,10 @@ public class CookingActivity extends AppCompatActivity {
         resetButton.setVisibility(View.INVISIBLE);
     }
 
+    private void ChangeTime(){
+        stopTimer();
+        startStop();
+    }
     private void BluetoothAlert(){
         if(!hasBeenAlerted) {
             hasBeenAlerted = true;

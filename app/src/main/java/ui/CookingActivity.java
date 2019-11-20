@@ -320,7 +320,9 @@ public class CookingActivity extends AppCompatActivity {
         super.onDestroy();
     }
     private void startService(){
-        startService(new Intent(this, TimerService.class));
+        Intent startIntent = new Intent(this, TimerService.class);
+        startIntent.putExtra("cookingTime",cookingTime);
+        startService(startIntent);
     }
 
     private void setupActivity() {

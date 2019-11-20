@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -72,7 +73,7 @@ public class TimerService extends Service {
     private long system_time;
 
     private long startTimeInMillis;
-    private long timeLeftInMilliseconds = 60000; //10 mins is 600000 milliseconds
+    private long timeLeftInMilliseconds; //10 mins is 600000 milliseconds
     private long endTime;
     private boolean measuredFirstTime = false;
     private boolean measuredSecondTime = false;
@@ -113,44 +114,45 @@ public class TimerService extends Service {
 
         createNotificationChannel();
 
-        //TODO probably don't need any of the shared pref stuff anymore
         //Log.d(TAG, "Cooking Activity OnStart");
-        //SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         startTimeInMillis = 60000 * cookingTime;
-        timeLeftInMilliseconds = 600000;//prefs.getLong("millisLeft", startTimeInMillis);
-        //Log.d(TAG, "Cooking Activity" + timeLeftInMilliseconds );
-        //timerRunning = prefs.getBoolean("timerRunning", false);
+        timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
+        Log.d(TAG, "Cooking Activity" + timeLeftInMilliseconds );
+        timerRunning = prefs.getBoolean("timerRunning", false);
 
-        //updateTimer();
+        updateTimer();
         startTimer();
 
-//        if (timerRunning) {
-//            endTime = prefs.getLong("endTime", 0);
-//            system_time = prefs.getLong("systemtime",0);
-//            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis()-system_time);
-//            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds );
-//            if (timeLeftInMilliseconds < 0) {
-//                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
-//                timeLeftInMilliseconds = 0;
-//                timerRunning = false;
-//                updateTimer();
-//            } else {
-//                startTimer();
-//            }
-//        }
+        if (timerRunning) {
+            endTime = prefs.getLong("endTime", 0);
+            system_time = prefs.getLong("systemtime",0);
+            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis()-system_time);
+            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds );
+            if (timeLeftInMilliseconds < 0) {
+                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
+                timeLeftInMilliseconds = 0;
+                timerRunning = false;
+                updateTimer();
+            } else {
+                startTimer();
+            }
+        }
     }
 
     @Override
     public void onDestroy() {
         countDownTimer.cancel();
         Log.i(TAG, "Timer cancelled");
-        blunoLibrary.onDestroyProcess();
+//        blunoLibrary.onDestroyProcess();
         timerRunning = false;
         super.onDestroy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        cookingTime = intent.getIntExtra("cookingTime",0);
+        timeLeftInMilliseconds = cookingTime * 60000;
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -319,7 +321,7 @@ public class TimerService extends Service {
                     Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                     ringtone.play();
-                    startButton.setText("Set Rest Timer");
+//                    startButton.setText("Set Rest Timer");
                     // create RestTimer on click
                     startButton.setOnClickListener(new View.OnClickListener() {
                         @Override

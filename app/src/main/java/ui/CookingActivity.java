@@ -76,7 +76,7 @@ public class CookingActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
-    private int finalTemp;
+    private double finalTemp;
     private double tempRate;
     private int cookingTime;
     private int restTime;
@@ -99,7 +99,7 @@ public class CookingActivity extends AppCompatActivity {
     private boolean restTimerSet = false;
     private boolean timerStarted = false;
 
-    private boolean DegressC = false;
+    private boolean DegreesC = false;
 
     private String CHANNEL_ID = "1";
 
@@ -109,7 +109,7 @@ public class CookingActivity extends AppCompatActivity {
     private Switch cTmpSwitch;
     private Switch cWtSwitch;
 
-    private boolean isthereconnecion;
+    private boolean isthereconnection;
     private double currentTemp;
 
 
@@ -161,9 +161,9 @@ public class CookingActivity extends AppCompatActivity {
         }
 
         if(cTmpSwitch.isChecked()){
-            DegressC = false;
+            DegreesC = false;
         }else{
-            DegressC = true;
+            DegreesC = true;
         }
 
         setupViewModel();
@@ -386,11 +386,11 @@ public class CookingActivity extends AppCompatActivity {
         final Observer<String> finalTempObserver = new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(DegressC) {
-                    finalTemp = Integer.parseInt(s);
+                if(DegreesC) {
+                    finalTemp = Double.parseDouble(s);
                     target_temp.setText(finalTemp + "°C"); //To view temp on app
                 }else {
-                    finalTemp = Integer.parseInt(s) * (9/5) + 32;
+                    finalTemp = Double.parseDouble(s) * (1.8) + 32;
                     target_temp.setText(finalTemp + ("°F"));
                 }
             }
@@ -492,18 +492,24 @@ public class CookingActivity extends AppCompatActivity {
                     if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
 
                         BluetoothAlert();
-                        isthereconnecion = false;
+                        isthereconnection = false;
                     } else {
                         hasBeenAlerted = false;
-                        isthereconnecion = true;
+                        isthereconnection = true;
                         textBTDisconnect.setVisibility(View.INVISIBLE);
                     }
                 }
 
-                if(isthereconnecion) {
-                    currentTemp = blunoLibrary.getCurrentTemp();
-                }
-                else{
+
+                double currentTempInC = blunoLibrary.getCurrentTemp();
+                double currentTempInF = blunoLibrary.getCurrentTemp() * 1.8 + 32;
+                if(isthereconnection) {
+                    if(DegreesC){
+                        currentTemp = currentTempInC;
+                    }else{
+                        currentTemp = currentTempInF;
+                    }
+                } else{
                     currentTemp = 0;
                 }
                 //TODO remove this code only for testing without bluetooth

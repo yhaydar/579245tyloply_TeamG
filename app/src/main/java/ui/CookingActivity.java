@@ -321,6 +321,8 @@ public class CookingActivity extends AppCompatActivity {
     private void startService(){
         Intent startIntent = new Intent(this, TimerService.class);
         startIntent.putExtra("cookingTime",cookingTime);
+        startIntent.putExtra("finalTemp",finalTemp);
+        startIntent.putExtra("flipTime",flipTime);
         startService(startIntent);
     }
 

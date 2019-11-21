@@ -42,22 +42,22 @@
 
     <ImageView
         android:id="@+id/imageMeat"
-        android:layout_width="177dp"
-        android:layout_height="160dp"
-        android:layout_alignTop="@id/progressBar"
+        android:layout_width="191dp"
+        android:layout_height="177dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="44dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="207dp"
-        android:layout_height="232dp"
+        android:layout_width="221dp"
+        android:layout_height="255dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginBottom="390dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginBottom="358dp"
         android:indeterminate="false"
         android:progress="90"
         android:progressDrawable="@drawable/cpd" />

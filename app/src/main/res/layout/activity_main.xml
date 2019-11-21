@@ -23,11 +23,11 @@
 
     <ImageView
         android:id="@+id/imageLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="163dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="9dp"
         app:srcCompat="@drawable/logo_main_activity" />
 
     <Switch

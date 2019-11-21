@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="textcolor">@color/textColorLightPrimary</item>
         <item name="listviewbackground">@color/lvcolorlight</item>
-        <item name="android:windowBackground">@drawable/backgroud_formatted</item>
+        <item name="android:windowBackground">@drawable/background2</item>
         <item name="backgroundcolor">@color/backgroundlight</item>
         <item name="dropdown">@color/dropdownlight</item>
     </style>
@@ -19,7 +19,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="textcolor">@color/textColorDarkPrimary</item>
-        <item name="android:windowBackground">@drawable/dark_formatted</item>
+        <item name="android:windowBackground">@drawable/darkmode2</item>
         <item name="listviewbackground">@color/lvcolordark</item>
         <item name="backgroundcolor">@color/backgrounddark</item>
         <item name="dropdown">@color/dropdowndark</item>
@@ -38,7 +38,7 @@
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
     <item name="textcolor">@color/textColorDarkPrimary</item>
-    <item name="android:windowBackground">@drawable/dark_formatted</item>
+    <item name="android:windowBackground">@drawable/darkmode2</item>
     <item name="listviewbackground">@color/lvcolordark</item>
     <item name="backgroundcolor">@color/backgrounddark</item>
     <item name="dropdown">@color/dropdowndark</item>
@@ -51,7 +51,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="textcolor">@color/textColorLightPrimary</item>
         <item name="listviewbackground">@color/lvcolorlight</item>
-        <item name="android:windowBackground">@drawable/backgroud_formatted</item>
+        <item name="android:windowBackground">@drawable/background2</item>
         <item name="backgroundcolor">@color/backgroundlight</item>
         <item name="dropdown">@color/dropdownlight</item>
     </style>

@@ -780,7 +780,7 @@ public class CookingActivity extends AppCompatActivity {
                 alertDialogBT = new AlertDialog.Builder(cookingContext,AlertDialog.THEME_DEVICE_DEFAULT_DARK)
                         .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
                         .setTitle("Bluetooth Connection Lost")
-                        .setMessage("BBQ Buddy is no longer able to communicate" +
+                        .setMessage("BBQ Buddy is no longer able to communicate " +
                                 "with the Bluetooth device and is trying to " +
                                 "reconnect. Please make sure that the device " +
                                 "is turned on.")

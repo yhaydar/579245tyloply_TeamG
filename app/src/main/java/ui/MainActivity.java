@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         if(bluetoothAdapter == null || !bluetoothAdapter.isEnabled()){
             Log.d("BluetoothLE", "REQUEST BLE ENABLE");
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivity(enableBtIntent);
+            startActivityForResult(enableBtIntent, 1);
         }
 
         if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        }
+    }
 
     private void initializeData(){
         //add food categories to list
@@ -194,6 +194,26 @@ public class MainActivity extends AppCompatActivity {
         if(bluetoothAdapter != null) {
             if (bluetoothAdapter.isEnabled()) {
                 this.unregisterReceiver(BTAdapterReceiver);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("BluetoothLE", "onActivityResult");
+        // Check which request we're responding to
+        if (requestCode == 1) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+            else if(resultCode == RESULT_CANCELED) {
+                Log.d("BluetoothLE", "REQUEST BLE ENABLE");
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
             }
         }
     }

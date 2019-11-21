@@ -64,8 +64,10 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    //restartApp();
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    //restartApp();
                 }
 
             }
@@ -141,5 +143,12 @@ public class SettingsActivity extends AppCompatActivity {
         tempUnitSwitch.setChecked(false);
         weightUnitSwitch.setChecked(false);
         saveData();
+    }
+
+    public void restartApp(){
+        Intent restartIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+        startActivity(restartIntent);
+        finish();
+
     }
 }

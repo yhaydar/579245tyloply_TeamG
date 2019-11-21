@@ -512,9 +512,15 @@ public class CookingActivity extends AppCompatActivity {
                         currentTemp = currentTempInF;
                     }
                 } else{
-                    currentTempInC = 0;
-                    currentTempInF = 0;
-                    currentTemp = 0;
+
+                    /*Let temperature values remain what they were before.
+                    If bluetooth is disconnected, it is better to keep temp
+                    values at what they were and not reset them to 0.
+                    */
+
+                    //currentTempInC = 0;
+                    //currentTempInF = 0;
+                    //currentTemp = 0;
                 }
                 //TODO remove this code only for testing without bluetooth
             /*   double currentTemp = 0;

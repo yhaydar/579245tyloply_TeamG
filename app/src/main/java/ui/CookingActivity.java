@@ -503,15 +503,17 @@ public class CookingActivity extends AppCompatActivity {
                 }
 
 
-                currentTempInC = blunoLibrary.getCurrentTemp();
-                currentTempInF = blunoLibrary.getCurrentTemp() * 1.8 + 32;
                 if(isthereconnection) {
+                    currentTempInC = blunoLibrary.getCurrentTemp();
+                    currentTempInF = blunoLibrary.getCurrentTemp() * 1.8 + 32;
                     if(DegreesC){
                         currentTemp = currentTempInC;
                     }else{
                         currentTemp = currentTempInF;
                     }
                 } else{
+                    currentTempInC = 0;
+                    currentTempInF = 0;
                     currentTemp = 0;
                 }
                 //TODO remove this code only for testing without bluetooth
@@ -765,6 +767,7 @@ public class CookingActivity extends AppCompatActivity {
         startStop();
     }
     private void BluetoothAlert(){
+        Log.d("BluetoothLE", "BluetoothAlert() started");
         if(!hasBeenAlerted) {
             hasBeenAlerted = true;
             if (cThmSwitch.isChecked()) {

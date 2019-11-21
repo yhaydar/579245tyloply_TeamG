@@ -55,7 +55,7 @@ public class BlunoLibrary extends Activity {
     public static final String CommandUUID="0000dfb2-0000-1000-8000-00805f9b34fb";
     public static final String ModelNumberStringUUID="00002a24-0000-1000-8000-00805f9b34fb";
 
-    private String currentTemp;
+    public String currentTemp = "0";
 
     private TextView textReceived;
     private TextView textStatus;

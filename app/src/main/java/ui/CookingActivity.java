@@ -300,21 +300,21 @@ public class CookingActivity extends AppCompatActivity {
         Log.d(TAG, "Cooking Activity onResumeBegins");
         super.onResume();
         registerReceiver(timerReceiver, new IntentFilter(TimerService.COUNTDOWN_BR));
-        //blunoLibrary.onResumeProcess();
+        blunoLibrary.onResumeProcess();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(timerReceiver);
-        //blunoLibrary.onPauseProcess();
+        blunoLibrary.onPauseProcess();
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "Cooking Activity onDestroy");
-        //blunoLibrary.onDestroyProcess();
-        //timerRunning = false;
+        blunoLibrary.onDestroyProcess();
+        timerRunning = false;
         stopService(new Intent(this, TimerService.class));
         super.onDestroy();
     }
@@ -362,6 +362,7 @@ public class CookingActivity extends AppCompatActivity {
                     Log.i(TAG,"Started service");
                 }
                 if(timerRunning){
+
                     //TODO make the thing pause
                 }
             }
@@ -378,8 +379,9 @@ public class CookingActivity extends AppCompatActivity {
         an.setFillAfter(true);
         progressBar.startAnimation(an);
         progressBar.setProgress(100);
-//        blunoLibrary = new BlunoLibrary(this);
-//        blunoLibrary.scanLeDevice(true);
+
+        blunoLibrary = new BlunoLibrary(this);
+        blunoLibrary.scanLeDevice(true);
     }
 
     private void setupViewModel() {

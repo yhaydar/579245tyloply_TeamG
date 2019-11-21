@@ -111,17 +111,12 @@ public class TimerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-//        blunoLibrary = new BlunoLibrary(this);
-     //   blunoLibrary.scanLeDevice(true);
-
-
     }
 
     @Override
     public void onDestroy() {
         countDownTimer.cancel();
         Log.i(TAG, "Timer cancelled");
-//        blunoLibrary.onDestroyProcess();
         timerRunning = false;
         super.onDestroy();
     }
@@ -137,18 +132,6 @@ public class TimerService extends Service {
         updateTimerUI();
         startTimer();
 
-//        if (timerRunning) {
-//            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis()-system_time);
-//            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds );
-//            if (timeLeftInMilliseconds < 0) {
-//                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
-//                timeLeftInMilliseconds = 0;
-//                timerRunning = false;
-//                updateTimerUI();
-//            } else {
-//                startTimer();
-//            }
-//        }
         createNotificationChannel();
         return super.onStartCommand(intent, flags, startId);
     }

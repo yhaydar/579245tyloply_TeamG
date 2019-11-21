@@ -1,9 +1,12 @@
 package ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         themeSwitch = findViewById(R.id.themeSwitch);
         tempUnitSwitch = findViewById(R.id.tempUnitSwitch);
@@ -106,9 +110,59 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (themeSwitch.isChecked()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+            builder.setMessage(Html.fromHtml("<b>Are you sure you want to go Back without saving?</b>"
+            ))
+                    .setCancelable(false)
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            saveData();
+                            SettingsActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(Html.fromHtml("<b>Are you sure you want to go back without saving?</b>"
+                    ))
+                    .setCancelable(false)
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            saveData();
+                            SettingsActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        onBackPressed();
         return true;
     }
 
@@ -142,7 +196,6 @@ public class SettingsActivity extends AppCompatActivity {
         themeSwitch.setChecked(false);
         tempUnitSwitch.setChecked(false);
         weightUnitSwitch.setChecked(false);
-        saveData();
     }
 
     public void restartApp(){

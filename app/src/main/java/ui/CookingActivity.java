@@ -78,6 +78,8 @@ public class CookingActivity extends AppCompatActivity {
 
     private double finalTemp;
     private double tempRate;
+    private double currentTempInF;
+    private  double currentTempInC;
     private int cookingTime;
     private int restTime;
     private int flipTime;
@@ -501,8 +503,8 @@ public class CookingActivity extends AppCompatActivity {
                 }
 
 
-                double currentTempInC = blunoLibrary.getCurrentTemp();
-                double currentTempInF = blunoLibrary.getCurrentTemp() * 1.8 + 32;
+                currentTempInC = blunoLibrary.getCurrentTemp();
+                currentTempInF = blunoLibrary.getCurrentTemp() * 1.8 + 32;
                 if(isthereconnection) {
                     if(DegreesC){
                         currentTemp = currentTempInC;

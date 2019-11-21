@@ -116,8 +116,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(enableBtIntent);
         }
 
-        IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
+        if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+            IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
+        }
 
 
         }
@@ -185,4 +187,14 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(bluetoothAdapter != null) {
+            if (bluetoothAdapter.isEnabled()) {
+                this.unregisterReceiver(BTAdapterReceiver);
+            }
+        }
+    }
 }

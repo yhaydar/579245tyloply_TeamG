@@ -652,6 +652,25 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     private void resetTimer() {
+        startButton.setText("Start");
+
+        int cookingTimeMillis = cookingTime*60000;
+        int minutes = (cookingTimeMillis / 1000) / 60;
+        int seconds = (cookingTimeMillis / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+        countdownText.setText(timeLeftFormatted);
+        serviceStarted = false;
+
+        try{
+            unregisterReceiver(timerReceiver);
+            stopService(new Intent(this, TimerService.class));
+        } catch(Exception e){
+
+        }
+        super.onStop();
+
 //        if (timerRunning == true) {
 //            stopTimer();
 //            timeLeftInMilliseconds = startTimeInMillis;

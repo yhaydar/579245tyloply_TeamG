@@ -102,6 +102,7 @@ public class CookingActivity extends AppCompatActivity {
 
     private boolean isthereconnecion;
     private double currentTemp;
+    private boolean serviceStarted = false;
 
 
     @Override
@@ -174,9 +175,7 @@ public class CookingActivity extends AppCompatActivity {
 
     private void updateGUI(Intent intent){
         if(intent.getExtras() != null){
-            long millis = intent.getLongExtra("countdown", 0);
-            Log.i(TAG, "Countdown seconds remaining " + millis);
-            countdownText.setText(intent.getStringExtra("countdown"));
+            countdownText.setText(intent.getStringExtra("time"));
         }
     }
 
@@ -278,7 +277,7 @@ public class CookingActivity extends AppCompatActivity {
 //        Log.d(TAG, "Cooking Activity" + timeLeftInMilliseconds );
 //        timerRunning = prefs.getBoolean("timerRunning", false);
 //
-//        updateTimer();
+//        updateTimerUI();
 //
 //        if (timerRunning) {
 //            endTime = prefs.getLong("endTime", 0);
@@ -289,7 +288,7 @@ public class CookingActivity extends AppCompatActivity {
 //                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
 //                timeLeftInMilliseconds = 0;
 //                timerRunning = false;
-//                updateTimer();
+//                updateTimerUI();
 //            } else {
 //                startTimer();
 //            }
@@ -353,8 +352,16 @@ public class CookingActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startService();
-                Log.i(TAG,"Started service");
+                if(!serviceStarted){
+                    serviceStarted = true;
+                    timerRunning = true;
+                    startButton.setText("Pause");
+                    startService();
+                    Log.i(TAG,"Started service");
+                }
+                if(timerRunning){
+                    //TODO make the thing pause
+                }
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -483,7 +490,7 @@ public class CookingActivity extends AppCompatActivity {
 //            if (timerStarted == false){
 //            startTimeInMillis = cookingTime*60000;
 //            timeLeftInMilliseconds = startTimeInMillis;
-//            updateTimer();
+//            updateTimerUI();
 //            timerStarted = true;
 //            }
 //        }
@@ -504,7 +511,7 @@ public class CookingActivity extends AppCompatActivity {
 //                double progress = (double) (timeLeftInMilliseconds);
 //                double barVal = (progress / barmax *100);
 //                progressBar.setProgress((int)barVal);
-//                updateTimer();
+//                updateTimerUI();
 //
 //                //if the app is run on the emulator
 //                if(blunoLibrary.mBluetoothLeService != null) {
@@ -646,11 +653,11 @@ public class CookingActivity extends AppCompatActivity {
 //        if (timerRunning == true) {
 //            stopTimer();
 //            timeLeftInMilliseconds = startTimeInMillis;
-//            updateTimer();
+//            updateTimerUI();
 //            timerRunning = false;
 //        } else {
 //            timeLeftInMilliseconds = startTimeInMillis;
-//            updateTimer();
+//            updateTimerUI();
 //            timerRunning = false;
 //        }
     }
@@ -758,7 +765,7 @@ public class CookingActivity extends AppCompatActivity {
 //
 //            }
 //        }
-//        updateTimer();
+//        updateTimerUI();
 //        timerRunning = false;
 //        startButton.setOnClickListener(new View.OnClickListener() {
 //            @Override

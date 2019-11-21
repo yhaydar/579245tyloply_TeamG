@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String,List<String>> listOptions;
     CustomListView customListView;
     Integer[] imageIds;
+    boolean emulator = true;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -110,15 +111,18 @@ public class MainActivity extends AppCompatActivity {
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
 
-        if(bluetoothAdapter == null || !bluetoothAdapter.isEnabled()){
-            Log.d("BluetoothLE", "REQUEST BLE ENABLE");
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 1);
-        }
+        if(!emulator) {
 
-        if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-            IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
+            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+                Log.d("BluetoothLE", "REQUEST BLE ENABLE");
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            }
+
+            if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+                IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+                this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
+            }
         }
 
 

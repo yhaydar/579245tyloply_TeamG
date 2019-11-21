@@ -167,7 +167,7 @@ void loop() {
   }
 
   //Send data when y is received
-  if(i=='y'){  
+  if(i=='1'){  
     //Serial.println(voltage);
     Serial.print(temp_result);
     //Serial.println(value);

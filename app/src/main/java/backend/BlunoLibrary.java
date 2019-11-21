@@ -121,7 +121,7 @@ public class BlunoLibrary extends Activity {
         }
 
         if(mConnectionState == mConnectionState.isConnected) {
-            onConectionStateChange(connectionStateEnum.isToScan);
+            onConectionStateChange(connectionStateEnum.isConnected);
         }
         else{
             scanLeDevice(true);

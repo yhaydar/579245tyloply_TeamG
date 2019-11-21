@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -113,6 +114,8 @@ public class CookingActivity extends AppCompatActivity {
 
     private boolean isthereconnection;
     private double currentTemp;
+
+    private ImageView meatImage;
 
 
     @Override
@@ -419,9 +422,13 @@ public class CookingActivity extends AppCompatActivity {
         model.getFlipTime().observe(this, flipTimeObserver);
 
         //get important values from the intent
+        String meatType = getIntent().getStringExtra("meatType");
         String meatCut = getIntent().getStringExtra("meatCut");
         String foodSpec = getIntent().getStringExtra("foodSpec");
         String doneness = getIntent().getStringExtra("doneness");
+
+        meatImage = findViewById(R.id.imageMeat);
+        setMeatImage(meatType, meatCut, doneness);
 
         if (foodSpec == null) {
             meatFoodSpec = meatCut;
@@ -813,6 +820,78 @@ public class CookingActivity extends AppCompatActivity {
                 blunoLibrary.scanLeDevice(true);
                 Log.d("BluetoothLE", "scanLeDevice from onTick");
             }
+        }
+    }
+
+    private void setMeatImage(String meatType, String meatCut, String doneness)
+    {
+        Log.d("meatImage", "meatImage started with " + meatType + " " + meatCut + " " + doneness);
+        switch (meatType) {
+            case "Poultry":
+                switch(meatCut){
+                    case "Drumstick":
+                        Log.d("meatImage", "PoultryDrumStick");
+                        meatImage.setImageResource(R.drawable.poultry_drumstick);
+                        break;
+                    case "Breast":
+                        meatImage.setImageResource(R.drawable.poultry_breast);
+                        break;
+                    case "Wings":
+                        meatImage.setImageResource(R.drawable.poultry_wings);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case "Beef":
+                switch(meatCut) {
+                    case "Steak":
+                        Log.d("meatImage", "."+doneness+".");
+                        if(doneness.equals("Rare")){
+                            meatImage.setImageResource(R.drawable.steak_rare);
+                        }
+                        else if(doneness.equals("Medium")){
+                            meatImage.setImageResource(R.drawable.steak_medium);
+                        }
+                        else if(doneness.equals("Well")){
+                            meatImage.setImageResource(R.drawable.steak_well);
+                        }
+                        break;
+                    case "Tenderloin":
+                        if(doneness.equals("Rare")){
+                            meatImage.setImageResource(R.drawable.tenderloin_rare);
+                        }
+                        else if(doneness.equals("Medium")){
+                            meatImage.setImageResource(R.drawable.tenderloin_medium);
+                        }
+                        else if(doneness.equals("Well")){
+                            meatImage.setImageResource(R.drawable.tenderloin_well);
+                        }
+                        break;
+                    case "GroundPatty":
+                        meatImage.setImageResource(R.drawable.beef_patty);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case "Pork":
+                switch(meatCut) {
+                    case "HamSlices":
+                        meatImage.setImageResource(R.drawable.pork_slices);
+                        break;
+                    case "Chop":
+                        meatImage.setImageResource(R.drawable.pork_chop);
+                        break;
+                    case "Tenderloin":
+                        meatImage.setImageResource(R.drawable.pork_tenderloin);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
         }
     }
 }

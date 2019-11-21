@@ -40,6 +40,13 @@
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="11dp" />
 
+    <ImageView
+        android:id="@+id/imageMeat"
+        android:layout_width="177dp"
+        android:layout_height="160dp"
+        android:layout_alignTop="@id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -49,8 +56,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="101dp"
-        android:layout_marginBottom="388dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="390dp"
         android:indeterminate="false"
         android:progress="90"
         android:progressDrawable="@drawable/cpd" />
@@ -138,6 +145,8 @@
         android:textSize="36sp"
         android:textStyle="bold"
         tools:visibility="visible"
+
+        style="@style/TimerTextStyle"
        />
 
     <TextView
@@ -153,7 +162,7 @@
         android:layout_marginEnd="57dp"
         android:layout_marginBottom="335dp"
         android:textSize="18sp"
-        android:textColor="?attr/textcolor"/>
+        android:textColor="?attr/textcolor" />
 
     <TextView
         android:id="@+id/textStatus"
@@ -264,6 +273,8 @@
         android:layout_marginTop="110dp"
         android:text="Switch"
         android:visibility="invisible" />
+
+
 
 
 

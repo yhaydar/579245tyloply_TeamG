@@ -21,7 +21,7 @@ import com.example.bbqbuddy.R;
 public class SettingsActivity extends AppCompatActivity {
     Switch themeSwitch;
     Switch tempUnitSwitch;
-    Switch weightUnitSwitch;
+    Switch vibrateSwitch;
 
     Button settingsSaveButton;
     Button settingsResetButton;
@@ -29,11 +29,11 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String SHARED_PREFS  = "sharedPrefs";
     public static final String ThemeSwitch = "themeSwitch";
     public static final String TempUnitSwitch = "tempUnitSwitch";
-    public static final String WeightUnitSwitch = "weightUnitSwitch";
+    public static final String VibrateSwitch = "vibrateSwitch";
 
     private boolean themeSwitchOnOff;
     private boolean tempUnitSwitchOnOff;
-    private boolean weightUnitSwitchOnOff;
+    private boolean vibrateSwitchOnOff;
 
 
     @Override
@@ -51,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         themeSwitch = findViewById(R.id.themeSwitch);
         tempUnitSwitch = findViewById(R.id.tempUnitSwitch);
-        weightUnitSwitch = findViewById(R.id.weightUnitSwitch);
+        vibrateSwitch = findViewById(R.id.vibrateSwitch);
 
         settingsResetButton = findViewById(R.id.settingsResetButton);
         settingsSaveButton = findViewById(R.id.settingsSaveButton);
@@ -84,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        weightUnitSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        vibrateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
@@ -174,7 +174,7 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(ThemeSwitch,themeSwitch.isChecked());
         editor.putBoolean(TempUnitSwitch,tempUnitSwitch.isChecked());
-        editor.putBoolean(WeightUnitSwitch,weightUnitSwitch.isChecked());
+        editor.putBoolean(VibrateSwitch,vibrateSwitch.isChecked());
 
         editor.apply();
 
@@ -184,18 +184,18 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         themeSwitchOnOff = sharedPreferences.getBoolean(ThemeSwitch, false);
         tempUnitSwitchOnOff = sharedPreferences.getBoolean(TempUnitSwitch,false);
-        weightUnitSwitchOnOff = sharedPreferences.getBoolean(WeightUnitSwitch,false);
+        vibrateSwitchOnOff = sharedPreferences.getBoolean(VibrateSwitch,false);
     }
     public void updateViews(){
         themeSwitch.setChecked(themeSwitchOnOff);
         tempUnitSwitch.setChecked(tempUnitSwitchOnOff);
-        weightUnitSwitch.setChecked(weightUnitSwitchOnOff);
+        vibrateSwitch.setChecked(vibrateSwitchOnOff);
     }
 
     public void resetDefault(){
         themeSwitch.setChecked(false);
         tempUnitSwitch.setChecked(false);
-        weightUnitSwitch.setChecked(false);
+        vibrateSwitch.setChecked(false);
     }
 
     public void restartApp(){

@@ -28,14 +28,14 @@ import java.util.List;
 import static ui.SettingsActivity.SHARED_PREFS;
 import static ui.SettingsActivity.TempUnitSwitch;
 import static ui.SettingsActivity.ThemeSwitch;
-import static ui.SettingsActivity.WeightUnitSwitch;
+import static ui.SettingsActivity.VibrateSwitch;
 
 public class MainActivity extends AppCompatActivity {
 
     //invisible Switch Setup
     Switch thmSwitch;
     Switch tmpSwitch;
-    Switch wtSwitch;
+    Switch vibrateSwitch;
 
     //Elements for the list view in main activity
     ExpandableListView listView;
@@ -75,22 +75,22 @@ public class MainActivity extends AppCompatActivity {
         //Switch initialization
         tmpSwitch = findViewById(R.id.tmpswitch);
         thmSwitch = findViewById(R.id.thmswitch);
-        wtSwitch = findViewById(R.id.wtswitch);
+        vibrateSwitch = findViewById(R.id.vibrateswitch);
 
         //retrieve boolean value from settings page
         Boolean thmChecked;
         Boolean tmpChecked;
-        Boolean wtChecked;
+        Boolean vibrateChecked;
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         thmChecked = preferences.getBoolean(ThemeSwitch,false);
         tmpChecked = preferences.getBoolean(TempUnitSwitch, false);
-        wtChecked = preferences.getBoolean(WeightUnitSwitch, false);
+        vibrateChecked = preferences.getBoolean(VibrateSwitch, false);
 
         //set the hidden switches to value of settings page
         thmSwitch.setChecked(thmChecked);
         tmpSwitch.setChecked(tmpChecked);
-        wtSwitch.setChecked(wtChecked);
+        vibrateSwitch.setChecked(vibrateChecked);
 
         if (thmSwitch.isChecked()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);

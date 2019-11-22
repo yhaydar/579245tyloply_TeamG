@@ -48,7 +48,7 @@ import backend.DatabaseController;
 import static ui.SettingsActivity.SHARED_PREFS;
 import static ui.SettingsActivity.TempUnitSwitch;
 import static ui.SettingsActivity.ThemeSwitch;
-import static ui.SettingsActivity.WeightUnitSwitch;
+import static ui.SettingsActivity.VibrateSwitch;
 
 public class CookingActivity extends AppCompatActivity {
     private static final String TAG = "CookingActivity";
@@ -106,6 +106,7 @@ public class CookingActivity extends AppCompatActivity {
     private boolean timerStarted = false;
 
     private boolean DegreesC = false;
+    private boolean vibrateMode;
 
     private String CHANNEL_ID = "1";
 
@@ -113,7 +114,7 @@ public class CookingActivity extends AppCompatActivity {
 
     private Switch cThmSwitch;
     private Switch cTmpSwitch;
-    private Switch cWtSwitch;
+    private Switch cVibrateSwitch;
 
     private boolean isThereConnection;
     private double currentTemp;
@@ -143,24 +144,24 @@ public class CookingActivity extends AppCompatActivity {
         //Switch initialization
         cThmSwitch = findViewById(R.id.cThmswitch);
         cTmpSwitch = findViewById(R.id.cTmpswitch);
-        cWtSwitch = findViewById(R.id.cWtswitch);
+        cVibrateSwitch = findViewById(R.id.cVibrateswitch);
 
         Log.d(TAG, "Cooking Activity On Create Built");
 
         //retrieve boolean value from settings page
         Boolean cThmChecked;
         Boolean cTmpChecked;
-        Boolean cWtChecked;
+        Boolean cVibrateChecked;
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         cThmChecked = preferences.getBoolean(ThemeSwitch,false);
         cTmpChecked = preferences.getBoolean(TempUnitSwitch, false);
-        cWtChecked = preferences.getBoolean(WeightUnitSwitch, false);
+        cVibrateChecked = preferences.getBoolean(VibrateSwitch, false);
 
         //set the hidden switches to value of settings page
         cThmSwitch.setChecked(cThmChecked);
         cTmpSwitch.setChecked(cTmpChecked);
-        cWtSwitch.setChecked(cWtChecked);
+        cVibrateSwitch.setChecked(cVibrateChecked);
 
         if (cThmSwitch.isChecked()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -173,6 +174,14 @@ public class CookingActivity extends AppCompatActivity {
         }else{
             DegreesC = true;
         }
+
+        if (cVibrateSwitch.isChecked()) {
+            vibrateMode = true;
+        } else {
+            vibrateMode = false;
+            }
+
+
 
         setupViewModel();
         setupActivity();
@@ -553,7 +562,9 @@ public class CookingActivity extends AppCompatActivity {
 
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " needs to be flipped!");
-                    vibrate();
+                    if (vibrateMode) {
+                        vibrate();
+                    }
                     nextFlipTime = nextFlipTime - flipTime;
                     Log.d(TAG, "Next flip Time: " + nextFlipTime);
 
@@ -587,7 +598,9 @@ public class CookingActivity extends AppCompatActivity {
 
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
-                    vibrate();
+                    if (vibrateMode) {
+                        vibrate();
+                    }
 
                     ChangeTime();
                 }
@@ -616,7 +629,9 @@ public class CookingActivity extends AppCompatActivity {
 
                     String meatType = getIntent().getStringExtra("meatType");
                     sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
-                    vibrate();
+                    if (vibrateMode) {
+                        vibrate();
+                    }
 
                     ChangeTime();
                 }
@@ -691,10 +706,12 @@ public class CookingActivity extends AppCompatActivity {
             stopTimer();
             timeLeftInMilliseconds = startTimeInMillis;
             updateTimer();
+            progressBar.setProgress(100);
             timerRunning = false;
         } else {
             timeLeftInMilliseconds = startTimeInMillis;
             updateTimer();
+            progressBar.setProgress(100);
             timerRunning = false;
         }
     }

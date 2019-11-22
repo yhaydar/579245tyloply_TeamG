@@ -78,7 +78,9 @@ public class CookingActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private double finalTemp;
+    private double startingTemp;
     private double tempRate;
+    private double minTempRate = 5.55E-6;
     private double currentTempInF;
     private  double currentTempInC;
     private int cookingTime;
@@ -469,6 +471,7 @@ public class CookingActivity extends AppCompatActivity {
         Log.d("DEBUG", " THIS IS THE startTimer");
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
         nextFlipTime = cookingTime - flipTime;
+        startingTemp = currentTemp;
         if (restTimerSet == false) {
             if (timerStarted == false){
             startTimeInMillis = cookingTime*60000;
@@ -543,13 +546,13 @@ public class CookingActivity extends AppCompatActivity {
 
                 //send notification for flipping meat
                 if(((timeLeftInMilliseconds <= 1.02*((nextFlipTime) * 60000)) &&
-                        (timeLeftInMilliseconds >= 0.98*((nextFlipTime) * 60000))) && !doneFlipping){
+                        (timeLeftInMilliseconds >= 0.98*((nextFlipTime) * 60000))) && !doneFlipping && (restTimerSet == false)){
                     Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
                     String meatType = getIntent().getStringExtra("meatType");
-                    sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has needs to be flipped!");
+                    sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " needs to be flipped!");
                     vibrate();
                     nextFlipTime = nextFlipTime - flipTime;
                     Log.d(TAG, "Next flip Time: " + nextFlipTime);
@@ -577,9 +580,38 @@ public class CookingActivity extends AppCompatActivity {
                     Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                     ringtone.play();
 
+                    //Doing this because update time function wont use latest timeleftinmilliseconds
                     minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
                     seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+                    timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
+                    String meatType = getIntent().getStringExtra("meatType");
+                    sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
+                    vibrate();
+
+                    ChangeTime();
+                }
+
+                if ((currentTemp < 0.9*finalTemp)&& (timeLeftInMilliseconds < 10000)&&(restTimerSet == false)) {
+                    if (currentTemp > 0.65*finalTemp) {
+                        measuredFirstTime = true;
+                        measuredSecondTime = true;
+                    }
+                    timeInterval = cookingTime*60000;
+                    tempRate = ((currentTemp - startingTemp)/timeInterval);
+
+                    if (tempRate > minTempRate)
+                        timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate);
+                    else
+                        timeLeftInMilliseconds = cookingTime*60000;
+
+                    Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
+                    ringtone.play();
+
+                    //Doing this because update time function wont use latest timeleftinmilliseconds
+                    minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+                    seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
                     timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
                     String meatType = getIntent().getStringExtra("meatType");
@@ -590,12 +622,8 @@ public class CookingActivity extends AppCompatActivity {
                 }
 
                 //send notification when meat is finished
-                if (currentTemp >= finalTemp) {
+                if ((currentTemp >= finalTemp)&&(restTimerSet == false)) {
                     try {
-                        Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
-                        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
-                        ringtone.play();
-                        vibrate();
                         onFinish();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -615,19 +643,31 @@ public class CookingActivity extends AppCompatActivity {
                 }
 
                 try {
-                    Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
-                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
-                    ringtone.play();
-                        startButton.setText("Set Rest Timer");
-                        // create RestTimer on click
-                        startButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                createRestTimer();
-
-                            }
-
-                        });
+                        if(restTimerSet == false) {
+                            String meatType = getIntent().getStringExtra("meatType");
+                            sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " is done cooking");
+                            Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
+                            Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
+                            ringtone.play();
+                            countDownTimer.cancel();
+                            startButton.setText("Set Rest Timer");
+                            // create RestTimer on click
+                            startButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    createRestTimer();
+                                }
+                            });
+                        }
+                        else {
+                            String meatType = getIntent().getStringExtra("meatType");
+                            sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " is done cooking");
+                            Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
+                            Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
+                            ringtone.play();
+                            restTime=0;
+                            createRestTimer();
+                        }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

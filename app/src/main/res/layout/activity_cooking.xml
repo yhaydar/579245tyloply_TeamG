@@ -233,14 +233,13 @@
         android:layout_height="47dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="0dp"
         android:gravity="center"
         android:text="Bluetooth Connection Lost"
         android:textColor="?attr/textcolor"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
 
     <Switch
         android:id="@+id/cTmpswitch"

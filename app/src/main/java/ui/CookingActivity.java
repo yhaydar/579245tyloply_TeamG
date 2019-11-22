@@ -873,10 +873,8 @@ public class CookingActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            if (timerRunning) {
-                                Log.d(TAG, "Cooking Activity pause message, if statement");
-                                resetTimer();
-                            }
+
+                            resetTimer();
                             dialogInterface.dismiss();
                         }
                     })
@@ -899,10 +897,8 @@ public class CookingActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            if (timerRunning) {
-                                Log.d(TAG, "Cooking Activity if pause message" );
-                                resetTimer();
-                            }
+
+                            resetTimer();
                             dialogInterface.dismiss();
                         }
                     })

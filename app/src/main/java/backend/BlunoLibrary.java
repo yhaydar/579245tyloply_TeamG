@@ -13,16 +13,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.bbqbuddy.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ui.SettingsActivity.SHARED_PREFS;
+import static ui.SettingsActivity.TempUnitSwitch;
 
 public class BlunoLibrary extends Activity {
     private BluetoothAdapter bluetoothAdapter;
@@ -59,6 +62,8 @@ public class BlunoLibrary extends Activity {
 
     private TextView textReceived;
     private TextView textStatus;
+
+    private boolean DegreesC;
 
     public BlunoLibrary(Context mainContext) {
         this.mainContext = mainContext;
@@ -401,8 +406,28 @@ public class BlunoLibrary extends Activity {
 
 //        char temp = theString.charAt(0);
 //        int i = (int) temp;
-        currentTemp = theString;
-        textReceived.setText(theString+"°C");							//append the text into the EditText
+
+        Boolean cTmpChecked;
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        cTmpChecked = preferences.getBoolean(TempUnitSwitch, false);
+
+        if(cTmpChecked){
+            DegreesC = false;
+
+        }else{
+            DegreesC = true;
+        }
+
+        double currentTempInC = Double.parseDouble(theString);
+        double currentTempInF = currentTempInC *1.8 +32;
+
+        if(DegreesC){
+            currentTemp = Double.toString(currentTempInC);
+            textReceived.setText(currentTemp +"°C");
+        }else {
+            currentTemp = Double.toString(currentTempInF);
+            textReceived.setText(currentTemp + "°C");        //append the text into the EditText
+        }
     }
 
     public void serialSend(String theString){
@@ -412,7 +437,7 @@ public class BlunoLibrary extends Activity {
         }
     }
 
-    public int getCurrentTemp() {
+    public double getCurrentTemp() {
         while(this.currentTemp == null){
             try{
                 Thread.sleep(200);
@@ -421,7 +446,7 @@ public class BlunoLibrary extends Activity {
                 Log.d("DEBUG",e.getMessage());
             }
         }
-        return Integer.parseInt(this.currentTemp);
+        return Double.parseDouble(this.currentTemp);
     }
 
     private Runnable mConnectingOverTimeRunnable=new Runnable(){

@@ -98,6 +98,7 @@ public class CookingActivity extends AppCompatActivity {
     private boolean measuredFirstTime = false;
     private boolean measuredSecondTime = false;
     private long timeInterval;
+    private long timeBuffer = 60000;
 
 
     private boolean timerRunning; // tells us if timer is running
@@ -572,7 +573,7 @@ public class CookingActivity extends AppCompatActivity {
                 if ((currentTemp >= (0.9 * finalTemp) && !measuredSecondTime)) {
                     timeInterval = timeInterval - timeLeftInMilliseconds;
                     tempRate = (finalTemp*(0.9 - 0.7)/timeInterval);
-                    timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate);
+                    timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate) + timeBuffer;
                     Log.d(TAG, "Second time measurement   " + timeLeftInMilliseconds);
                     measuredSecondTime = true;
 
@@ -601,7 +602,7 @@ public class CookingActivity extends AppCompatActivity {
                     tempRate = ((currentTemp - startingTemp)/timeInterval);
 
                     if (tempRate > minTempRate)
-                        timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate);
+                        timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate) + timeBuffer;
                     else
                         timeLeftInMilliseconds = cookingTime*60000;
 

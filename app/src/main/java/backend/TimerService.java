@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -172,113 +173,117 @@ public class TimerService extends Service {
 
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             // CountDownTimer(time left, countdown interval)
-
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.d("DEBUG", cookingTime + " THIS IS THE COOKING TIME");
-                //l is variable that contains remaining time
-                timeLeftInMilliseconds = millisUntilFinished;
-                Log.d("TIME",""+timeLeftInMilliseconds);
-                int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
-                int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
-                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-                //double barmax = (double) (startTimeInMillis);
-                //double progress = (double) (timeLeftInMilliseconds);
-               // double barVal = (progress / barmax *100);
-//                progressBar.setProgress((int)barVal);
-                updateTimerUI();
+                SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                boolean isPaused = prefs.getBoolean("isPaused", false);
+                Log.d("DEBUG", "isPaused is : " + isPaused);
+                //TODO timer counts down even if paused
+                if(!isPaused){
+                    //l is variable that contains remaining time
+                    timeLeftInMilliseconds = millisUntilFinished;
+                    Log.d("TIME",""+timeLeftInMilliseconds);
+                    int minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+                    int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+                    String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                    //double barmax = (double) (startTimeInMillis);
+                    //double progress = (double) (timeLeftInMilliseconds);
+                   // double barVal = (progress / barmax *100);
+    //                progressBar.setProgress((int)barVal);
+                    updateTimerUI();
 
-                //if the app is run on the emulator
-//                if(blunoLibrary.mBluetoothLeService != null) {
-//                    if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
-//
-//                        BluetoothAlert();
-//                        isthereconnecion = false;
-//                    } else {
-//                        hasBeenAlerted = false;
-//                        isthereconnecion = true;
-//                        textBTDisconnect.setVisibility(View.INVISIBLE);
-//                    }
-//                }
+                    //if the app is run on the emulator
+    //                if(blunoLibrary.mBluetoothLeService != null) {
+    //                    if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
+    //
+    //                        BluetoothAlert();
+    //                        isthereconnecion = false;
+    //                    } else {
+    //                        hasBeenAlerted = false;
+    //                        isthereconnecion = true;
+    //                        textBTDisconnect.setVisibility(View.INVISIBLE);
+    //                    }
+    //                }
 
-                if(isthereconnecion) {
-                    currentTemp = blunoLibrary.getCurrentTemp();
-                }
-                else{
-                    currentTemp = 0;
-                }
-                //TODO remove this code only for testing without bluetooth
-            /*   double currentTemp = 0;
+                    if(isthereconnecion) {
+                        currentTemp = blunoLibrary.getCurrentTemp();
+                    }
+                    else{
+                        currentTemp = 0;
+                    }
+                    //TODO remove this code only for testing without bluetooth
+                /*   double currentTemp = 0;
 
-               if (timeLeftInMilliseconds % 300000 < 1500) {
-                    currentTemp = 0.9 * finalTemp;
-                }
+                   if (timeLeftInMilliseconds % 300000 < 1500) {
+                        currentTemp = 0.9 * finalTemp;
+                    }
 
-                if (timeLeftInMilliseconds % 294000 < 1500) {
-                    currentTemp = finalTemp;
-                }
-              */ //todo end of test code
+                    if (timeLeftInMilliseconds % 294000 < 1500) {
+                        currentTemp = finalTemp;
+                    }
+                  */ //todo end of test code
 
-                //send notification for flipping meat
-                if(((timeLeftInMilliseconds <= 1.02*((nextFlipTime) * 60000)) &&
-                        (timeLeftInMilliseconds >= 0.98*((nextFlipTime) * 60000))) && !doneFlipping){
-                    Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
-                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
-                    ringtone.play();
-
-                    String meatType = "chicken";// getIntent().getStringExtra("meatType"); TODO add intent for meat type
-                    sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has needs to be flipped!");
-                    vibrate();
-                    nextFlipTime = nextFlipTime - flipTime;
-                    Log.d(TAG, "Next flip Time: " + nextFlipTime);
-
-                    if (nextFlipTime* 60000 > timeLeftInMilliseconds)
-                        doneFlipping = true;
-
-                }
-
-
-                if ((currentTemp >= (0.7 * finalTemp) && !measuredFirstTime)) {
-                    timeInterval = timeLeftInMilliseconds;
-                    measuredFirstTime = true;
-                    Log.d(TAG, "First time measurement   " + timeInterval);
-                }
-
-                if ((currentTemp >= (0.9 * finalTemp) && !measuredSecondTime)) {
-                    timeInterval = timeInterval - timeLeftInMilliseconds;
-                    tempRate = (finalTemp*(0.9 - 0.7)/timeInterval);
-                    timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate);
-                    Log.d(TAG, "Second time measurement   " + timeLeftInMilliseconds);
-                    measuredSecondTime = true;
-
-                    Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
-                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
-                    ringtone.play();
-
-                    minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
-                    seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
-
-                    timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-
-                    String meatType = "Chicken";//getIntent().getStringExtra("meatType"); TODO add intent for meat type
-                    sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
-                    vibrate();
-
-                    ChangeTime();
-                }
-
-                //send notification when meat is finished
-                if (currentTemp >= finalTemp) {
-                    try {
-                        Log.d("TEMP",currentTemp + " Current temp");
-                        Log.d("TEMP",finalTemp + " final temp");
-                        Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
-                        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
+                    //send notification for flipping meat
+                    if(((timeLeftInMilliseconds <= 1.02*((nextFlipTime) * 60000)) &&
+                            (timeLeftInMilliseconds >= 0.98*((nextFlipTime) * 60000))) && !doneFlipping){
+                        Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
+                        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
                         ringtone.play();
+
+                        String meatType = "chicken";// getIntent().getStringExtra("meatType"); TODO add intent for meat type
+                        sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has needs to be flipped!");
                         vibrate();
-                        onFinish();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        nextFlipTime = nextFlipTime - flipTime;
+                        Log.d(TAG, "Next flip Time: " + nextFlipTime);
+
+                        if (nextFlipTime* 60000 > timeLeftInMilliseconds)
+                            doneFlipping = true;
+
+                    }
+
+
+                    if ((currentTemp >= (0.7 * finalTemp) && !measuredFirstTime)) {
+                        timeInterval = timeLeftInMilliseconds;
+                        measuredFirstTime = true;
+                        Log.d(TAG, "First time measurement   " + timeInterval);
+                    }
+
+                    if ((currentTemp >= (0.9 * finalTemp) && !measuredSecondTime)) {
+                        timeInterval = timeInterval - timeLeftInMilliseconds;
+                        tempRate = (finalTemp*(0.9 - 0.7)/timeInterval);
+                        timeLeftInMilliseconds = (long) ((finalTemp - currentTemp)/tempRate);
+                        Log.d(TAG, "Second time measurement   " + timeLeftInMilliseconds);
+                        measuredSecondTime = true;
+
+                        Uri notificationAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
+                        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notificationAlarm);
+                        ringtone.play();
+
+                        minutes = (int) (timeLeftInMilliseconds / 1000) / 60;
+                        seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+
+                        timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+                        String meatType = "Chicken";//getIntent().getStringExtra("meatType"); TODO add intent for meat type
+                        sendNotification(meatType + " " + meatFoodSpec, "Your " + meatType + " " + meatFoodSpec + " has " + timeLeftFormatted + " left!");
+                        vibrate();
+
+                        ChangeTime();
+                    }
+
+                    //send notification when meat is finished
+                    if (currentTemp >= finalTemp) {
+                        try {
+                            Log.d("TEMP",currentTemp + " Current temp");
+                            Log.d("TEMP",finalTemp + " final temp");
+                            Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
+                            Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
+                            ringtone.play();
+                            vibrate();
+                            onFinish();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

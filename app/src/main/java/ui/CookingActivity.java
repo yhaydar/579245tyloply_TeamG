@@ -86,7 +86,7 @@ public class CookingActivity extends AppCompatActivity {
     private long timeInterval;
 
 
-    private boolean timerRunning; // tells us if timer is running
+    private boolean timerRunning = false; // tells us if timer is running
     private boolean restTimerSet = false;
     private boolean timerStarted = false;
 
@@ -103,6 +103,9 @@ public class CookingActivity extends AppCompatActivity {
     private boolean isthereconnecion;
     private double currentTemp;
     private boolean serviceStarted = false;
+    private boolean isPaused = false;
+
+    SharedPreferences servicePref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,8 +163,6 @@ public class CookingActivity extends AppCompatActivity {
 
         setupViewModel();
         setupActivity();
-
-        //TODO send timer information to the service
     }
 
     private BroadcastReceiver timerReceiver = new BroadcastReceiver(){
@@ -346,39 +347,12 @@ public class CookingActivity extends AppCompatActivity {
         textBTDisconnect = findViewById(R.id.textBTDisconnect);
         target_temp = findViewById(R.id.t_temp);
 
-
-
         String meatType = getIntent().getStringExtra("meatType");
         String meatCut = getIntent().getStringExtra("meatCut");
         getSupportActionBar().setTitle(meatType + " " + meatCut);
 
 
         hasNotified = false;
-        //add listeners to the countdown button
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!serviceStarted){
-                    serviceStarted = true;
-                    timerRunning = true;
-                    startButton.setText("Pause");
-                    startService();
-                    Log.i(TAG,"Started service");
-                }
-                if(timerRunning){
-
-                    //TODO make the thing pause
-                }
-            }
-        });
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timerRunning = false;
-                serviceStarted = false;
-                resetTimer();
-            }
-        });
 
         //progress bar
         Animation an = new RotateAnimation(0.0f, 270.0f, 250f, 273f);
@@ -475,7 +449,45 @@ public class CookingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        startService();
+        //startService();
+
+        //reset paused shared preference
+        setPaused(false);
+
+        //add listeners to the countdown button
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //pause the timer
+                if(timerRunning && !isPaused){
+                    setPaused(true);
+                    startButton.setText("Start");
+                }
+                //unpause the timer
+                else if(timerRunning && isPaused){
+                    Log.d("DEBUG","trying to unpause");
+                    setPaused(false);
+                    startButton.setText("Pause");
+                }
+                //if service hasn't started, start
+                if(!serviceStarted){
+                    serviceStarted = true;
+                    timerRunning = true;
+                    startButton.setText("Pause");
+                    startService();
+                    Log.i(TAG,"Started service");
+                }
+
+            }
+        });
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timerRunning = false;
+                serviceStarted = false;
+                resetTimer();
+            }
+        });
 //        Log.d(TAG, "Cooking Activity OnStart");
 //        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
 //        startTimeInMillis = 60000 * cookingTime;
@@ -499,6 +511,14 @@ public class CookingActivity extends AppCompatActivity {
 //                startTimer();
 //            }
 //        }
+    }
+
+    public void setPaused(boolean paused){
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isPaused", paused);
+        editor.apply();
+        isPaused = paused;
     }
 
     public void startStop() {

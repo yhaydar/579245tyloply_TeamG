@@ -115,7 +115,7 @@ public class CookingActivity extends AppCompatActivity {
     private Switch cTmpSwitch;
     private Switch cWtSwitch;
 
-    private boolean isthereconnection;
+    private boolean isThereConnection;
     private double currentTemp;
 
     private ImageView meatImage;
@@ -506,16 +506,16 @@ public class CookingActivity extends AppCompatActivity {
                     if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
 
                         BluetoothAlert();
-                        isthereconnection = false;
+                        isThereConnection = false;
                     } else {
                         hasBeenAlerted = false;
-                        isthereconnection = true;
+                        isThereConnection = true;
                         textBTDisconnect.setVisibility(View.INVISIBLE);
                     }
                 }
 
 
-                if(isthereconnection) {
+                if(isThereConnection) {
                     currentTempInC = blunoLibrary.getCurrentTemp();
                     currentTempInF = blunoLibrary.getCurrentTemp() * 1.8 + 32;
                     if(DegreesC){

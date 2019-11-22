@@ -22,6 +22,7 @@ public class FoodSpecDialog extends DialogFragment {
     View view;
     TextView specTitle;
     TextView subTitle;
+    TextView sizeTitle;
     Spinner spinner;
     RadioGroup radioGroup;
     Button cancelButton;
@@ -37,6 +38,7 @@ public class FoodSpecDialog extends DialogFragment {
         //map the objects to their values in the layout
         specTitle = view.findViewById(R.id.specTitleTextView);
         subTitle = view.findViewById(R.id.subTitleTextView);
+        sizeTitle = view.findViewById(R.id.sizeTextView);
         radioGroup = view.findViewById(R.id.donenessGroup);
         cancelButton = view.findViewById(R.id.cancelButton);
         doneButton = view.findViewById(R.id.doneButton);
@@ -79,6 +81,13 @@ public class FoodSpecDialog extends DialogFragment {
             layout.removeView(subTitle);
             radioGroup = null;
             subTitle = null;
+        }
+        if(mealOptions.length == 1){
+            sizeTitle.setText("Size");
+        }
+
+        if(meatCut.equals("Wings")){
+            sizeTitle.setText("Select Amount");
         }
     }
 

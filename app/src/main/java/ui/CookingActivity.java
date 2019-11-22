@@ -238,8 +238,6 @@ public class CookingActivity extends AppCompatActivity {
         }
     }
 
-
-
     @Override
     protected void onStop() {
         super.onStop();

@@ -348,7 +348,8 @@ public class CookingActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                resetTimer();
+                  resetmessage();
+
             }
         });
 
@@ -861,6 +862,60 @@ public class CookingActivity extends AppCompatActivity {
                 blunoLibrary.scanLeDevice(true);
                 Log.d("BluetoothLE", "scanLeDevice from onTick");
             }
+        }
+    }
+
+    public void resetmessage(){
+        if (cThmSwitch.isChecked()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+            builder.setMessage(Html.fromHtml("<b>Do you want to RESET the timer?</b>"))
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (timerRunning) {
+                                Log.d(TAG, "Cooking Activity pause message, if statement");
+                                resetTimer();
+                            }
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(Html.fromHtml("<b>Do you want to RESET the timer?</b>"))
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (timerRunning) {
+                                Log.d(TAG, "Cooking Activity if pause message" );
+                                resetTimer();
+                            }
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
         }
     }
 

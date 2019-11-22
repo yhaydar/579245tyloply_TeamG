@@ -102,12 +102,6 @@ public class TimerService extends Service {
     public static final String COUNTDOWN_BR = "backend.countdown_br";
     Intent broadcastIntent = new Intent(COUNTDOWN_BR);
 
-    CountDownTimer cdt = null;
-
-    private boolean isPaused;
-    private long timeRemaining = 0;
-    private long interval = 1000;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -276,6 +270,8 @@ public class TimerService extends Service {
                 //send notification when meat is finished
                 if (currentTemp >= finalTemp) {
                     try {
+                        Log.d("TEMP",currentTemp + " Current temp");
+                        Log.d("TEMP",finalTemp + " final temp");
                         Uri finishedAlarm = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm);
                         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), finishedAlarm);
                         ringtone.play();

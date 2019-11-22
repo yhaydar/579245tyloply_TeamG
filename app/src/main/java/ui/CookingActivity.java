@@ -104,7 +104,6 @@ public class CookingActivity extends AppCompatActivity {
     private double currentTemp;
     private boolean serviceStarted = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -268,34 +267,6 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-//        Log.d(TAG, "Cooking Activity OnStart");
-//        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-//        startTimeInMillis = 60000 * cookingTime;
-//        timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
-//        Log.d(TAG, "Cooking Activity" + timeLeftInMilliseconds );
-//        timerRunning = prefs.getBoolean("timerRunning", false);
-//
-//        updateTimerUI();
-//
-//        if (timerRunning) {
-//            endTime = prefs.getLong("endTime", 0);
-//            system_time = prefs.getLong("systemtime",0);
-//            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis()-system_time);
-//            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds );
-//            if (timeLeftInMilliseconds < 0) {
-//                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
-//                timeLeftInMilliseconds = 0;
-//                timerRunning = false;
-//                updateTimerUI();
-//            } else {
-//                startTimer();
-//            }
-//        }
-    }
-
-    @Override
     protected void onResume() {
         Log.d(TAG, "Cooking Activity onResumeBegins");
         super.onResume();
@@ -324,6 +295,39 @@ public class CookingActivity extends AppCompatActivity {
         startIntent.putExtra("finalTemp",finalTemp);
         startIntent.putExtra("flipTime",flipTime);
         startService(startIntent);
+        registerReceiver(timerReceiver, new IntentFilter(TimerService.COUNTDOWN_BR));
+    }
+
+    private void resetTimer() {
+        startButton.setText("Start");
+
+        int cookingTimeMillis = cookingTime*60000;
+        int minutes = (cookingTimeMillis / 1000) / 60;
+        int seconds = (cookingTimeMillis / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+        countdownText.setText(timeLeftFormatted);
+        serviceStarted = false;
+
+        try{
+            unregisterReceiver(timerReceiver);
+            stopService(new Intent(this, TimerService.class));
+        } catch(Exception e){
+
+        }
+        super.onStop();
+
+//        if (timerRunning == true) {
+//            stopTimer();
+//            timeLeftInMilliseconds = startTimeInMillis;
+//            updateTimerUI();
+//            timerRunning = false;
+//        } else {
+//            timeLeftInMilliseconds = startTimeInMillis;
+//            updateTimerUI();
+//            timerRunning = false;
+//        }
     }
 
     private void setupActivity() {
@@ -370,6 +374,8 @@ public class CookingActivity extends AppCompatActivity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                timerRunning = false;
+                serviceStarted = false;
                 resetTimer();
             }
         });
@@ -464,6 +470,35 @@ public class CookingActivity extends AppCompatActivity {
         dbcontroller.readCookingTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec, model);
         dbcontroller.readRestTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,model);
         dbcontroller.readFlippingTimeFromDB(getIntent().getStringExtra("meatType"),meatFoodSpec,model);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startService();
+//        Log.d(TAG, "Cooking Activity OnStart");
+//        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+//        startTimeInMillis = 60000 * cookingTime;
+//        timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
+//        Log.d(TAG, "Cooking Activity" + timeLeftInMilliseconds );
+//        timerRunning = prefs.getBoolean("timerRunning", false);
+//
+//        updateTimerUI();
+//
+//        if (timerRunning) {
+//            endTime = prefs.getLong("endTime", 0);
+//            system_time = prefs.getLong("systemtime",0);
+//            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis()-system_time);
+//            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds );
+//            if (timeLeftInMilliseconds < 0) {
+//                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
+//                timeLeftInMilliseconds = 0;
+//                timerRunning = false;
+//                updateTimerUI();
+//            } else {
+//                startTimer();
+//            }
+//        }
     }
 
     public void startStop() {
@@ -651,38 +686,6 @@ public class CookingActivity extends AppCompatActivity {
 //        countDownTimer.cancel();
 //        startButton.setText("START");
 //        timerRunning = false;
-    }
-
-    private void resetTimer() {
-        startButton.setText("Start");
-
-        int cookingTimeMillis = cookingTime*60000;
-        int minutes = (cookingTimeMillis / 1000) / 60;
-        int seconds = (cookingTimeMillis / 1000) % 60;
-
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-
-        countdownText.setText(timeLeftFormatted);
-        serviceStarted = false;
-
-        try{
-            unregisterReceiver(timerReceiver);
-            stopService(new Intent(this, TimerService.class));
-        } catch(Exception e){
-
-        }
-        super.onStop();
-
-//        if (timerRunning == true) {
-//            stopTimer();
-//            timeLeftInMilliseconds = startTimeInMillis;
-//            updateTimerUI();
-//            timerRunning = false;
-//        } else {
-//            timeLeftInMilliseconds = startTimeInMillis;
-//            updateTimerUI();
-//            timerRunning = false;
-//        }
     }
 
     public void updateTimer() {

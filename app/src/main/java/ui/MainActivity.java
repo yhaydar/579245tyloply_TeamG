@@ -114,14 +114,12 @@ public class MainActivity extends AppCompatActivity {
             if(!bluetoothAdapter.isEnabled()) {
                 Log.d("BluetoothLE", "REQUEST BLE ENABLE");
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 1);
+                this.startActivityForResult(enableBtIntent, 1);
             }
         }
 
-        if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-            IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
-        }
+        IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        this.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
 
 
     }
@@ -169,13 +167,15 @@ public class MainActivity extends AppCompatActivity {
             final String action = intent.getAction();
 
             if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
 
+                Log.d("BluetoothAdapter", "BluetoothAdapter ACTION_STATE_CHANGED" + state);
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
                         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
                             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivity(enableBtIntent);
+                            startActivityForResult(enableBtIntent, 1);
                         }
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             else if(resultCode == RESULT_CANCELED) {
                 Log.d("BluetoothLE", "REQUEST BLE ENABLE");
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 1);
+                this.startActivityForResult(enableBtIntent, 1);
             }
         }
     }

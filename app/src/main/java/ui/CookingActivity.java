@@ -70,8 +70,7 @@ public class CookingActivity extends AppCompatActivity {
     private TextView target_temp;
 
     private BlunoLibrary blunoLibrary;
-    private AlertDialog alertDialogBT;
-    private boolean hasBeenAlerted = false;
+    private AlertDialog alertDialogBTStart;
 
     private CountDownTimer countDownTimer;
 
@@ -278,6 +277,7 @@ public class CookingActivity extends AppCompatActivity {
         timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
         Log.d(TAG, "Cooking Activity" + timeLeftInMilliseconds );
         timerRunning = prefs.getBoolean("timerRunning", false);
+        blunoLibrary.setTimerRunning(timerRunning);
 
         updateTimer();
 
@@ -290,6 +290,7 @@ public class CookingActivity extends AppCompatActivity {
                 Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
                 timeLeftInMilliseconds = 0;
                 timerRunning = false;
+                blunoLibrary.setTimerRunning(timerRunning);
                 updateTimer();
             } else {
                 startTimer();
@@ -348,7 +349,18 @@ public class CookingActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startStop();
+                if(blunoLibrary.mBluetoothLeService != null && !timerRunning) {
+                    if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
+
+                        BluetoothOnStartAlert();
+                    } else {
+                        //hasBeenAlerted = false;
+                        startStop();
+                    }
+                }
+                else{
+                    startStop();
+                }
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -512,10 +524,10 @@ public class CookingActivity extends AppCompatActivity {
                 if(blunoLibrary.mBluetoothLeService != null) {
                     if (blunoLibrary.mBluetoothLeService.mConnectionState == 0) {
 
-                        BluetoothAlert();
+                        //BluetoothAlert();
                         isThereConnection = false;
                     } else {
-                        hasBeenAlerted = false;
+                        //hasBeenAlerted = false;
                         isThereConnection = true;
                         textBTDisconnect.setVisibility(View.INVISIBLE);
                     }
@@ -652,6 +664,7 @@ public class CookingActivity extends AppCompatActivity {
                 Log.d("DEBUG", " THIS IS THE onFinish");
                 countdownText.setText("00:00");
                 timerRunning = false;
+                blunoLibrary.setTimerRunning(timerRunning);
 
                 if(restTime==0){
                     createRestTimer();
@@ -692,6 +705,7 @@ public class CookingActivity extends AppCompatActivity {
 
         startButton.setText("PAUSE");
         timerRunning = true;
+        blunoLibrary.setTimerRunning(timerRunning);
 
     }
 
@@ -699,6 +713,7 @@ public class CookingActivity extends AppCompatActivity {
         countDownTimer.cancel();
         startButton.setText("START");
         timerRunning = false;
+        blunoLibrary.setTimerRunning(timerRunning);
     }
 
     private void resetTimer() {
@@ -708,11 +723,13 @@ public class CookingActivity extends AppCompatActivity {
             updateTimer();
             progressBar.setProgress(100);
             timerRunning = false;
+            blunoLibrary.setTimerRunning(timerRunning);
         } else {
             timeLeftInMilliseconds = startTimeInMillis;
             updateTimer();
             progressBar.setProgress(100);
             timerRunning = false;
+            blunoLibrary.setTimerRunning(timerRunning);
         }
     }
 
@@ -780,6 +797,7 @@ public class CookingActivity extends AppCompatActivity {
 
         if(restTime==0) {
             timerRunning = false;
+            blunoLibrary.setTimerRunning(timerRunning);
             if (cThmSwitch.isChecked()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this,AlertDialog.THEME_DEVICE_DEFAULT_DARK);
                 builder.setMessage(Html.fromHtml("<b>Your Food is ready</b>"))
@@ -822,6 +840,7 @@ public class CookingActivity extends AppCompatActivity {
         }
         updateTimer();
         timerRunning = false;
+        blunoLibrary.setTimerRunning(timerRunning);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -836,45 +855,57 @@ public class CookingActivity extends AppCompatActivity {
         stopTimer();
         startStop();
     }
-    private void BluetoothAlert(){
+    private void BluetoothOnStartAlert(){
         Log.d("BluetoothLE", "BluetoothAlert() started");
-        if(!hasBeenAlerted) {
-            hasBeenAlerted = true;
+        if(!blunoLibrary.hasBeenAlerted) {
+            blunoLibrary.hasBeenAlerted = true;
             if (cThmSwitch.isChecked()) {
-                alertDialogBT = new AlertDialog.Builder(cookingContext,AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                alertDialogBTStart = new AlertDialog.Builder(cookingContext,AlertDialog.THEME_DEVICE_DEFAULT_DARK)
                         .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
                         .setTitle("Bluetooth Connection Lost")
-                        .setMessage("BBQ Buddy is no longer able to communicate " +
-                                "with the Bluetooth device and is trying to " +
-                                "reconnect. Please make sure that the device " +
-                                "is turned on.")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setMessage("BBQ Buddy is not connected " +
+                                "to the Bluetooth Device. " +
+                                "Do you wish to start cooking without " +
+                                "temperature information?")
+                        .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                startStop();
+                            }
+                        })
+                        .setNegativeButton("Wait for Bluetooth", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                blunoLibrary.scanLeDevice(true);
                             }
                         })
                         .show();
                 textBTDisconnect.setVisibility(View.VISIBLE);
-                blunoLibrary.scanLeDevice(true);
+                //blunoLibrary.scanLeDevice(true);
                 Log.d("BluetoothLE", "scanLeDevice from onTick");
             } else {
-                alertDialogBT = new AlertDialog.Builder(cookingContext)
+                alertDialogBTStart = new AlertDialog.Builder(cookingContext)
                         .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
                         .setTitle("Bluetooth Connection Lost")
-                        .setMessage("BBQ Buddy is no longer able to communicate" +
-                                "with the Bluetooth device and is trying to " +
-                                "reconnect. Please make sure that the device " +
-                                "is turned on.")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setMessage("BBQ Buddy is not connected " +
+                                "to the Bluetooth Device. " +
+                                "Do you wish to start cooking without " +
+                                "temperature information?")
+                        .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                startStop();
+                            }
+                        })
+                        .setNegativeButton("Wait for Bluetooth", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                blunoLibrary.scanLeDevice(true);
                             }
                         })
                         .show();
                 textBTDisconnect.setVisibility(View.VISIBLE);
-                blunoLibrary.scanLeDevice(true);
+                //blunoLibrary.scanLeDevice(true);
                 Log.d("BluetoothLE", "scanLeDevice from onTick");
             }
         }

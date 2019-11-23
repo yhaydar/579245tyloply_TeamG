@@ -2,6 +2,7 @@ package backend;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -10,19 +11,24 @@ import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.bbqbuddy.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ui.CookingActivity;
 
 import static ui.SettingsActivity.SHARED_PREFS;
 import static ui.SettingsActivity.TempUnitSwitch;
@@ -62,6 +68,12 @@ public class BlunoLibrary extends Activity {
 
     private TextView textReceived;
     private TextView textStatus;
+    private TextView textBTDisconnect;
+
+    public boolean hasBeenAlerted = false;
+    boolean timerRunning = false;
+    int nightModeFlags;
+    private AlertDialog alertDialogBT;
 
     private boolean DegreesC;
 
@@ -69,6 +81,7 @@ public class BlunoLibrary extends Activity {
         this.mainContext = mainContext;
         textReceived = ((Activity)mainContext).findViewById(R.id.text_Received);
         textStatus = ((Activity)mainContext).findViewById(R.id.textStatus);
+        textBTDisconnect = ((Activity)mainContext).findViewById(R.id.textBTDisconnect);
 
         final BluetoothManager bluetoothManager = (BluetoothManager) mainContext.getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
@@ -86,6 +99,8 @@ public class BlunoLibrary extends Activity {
             IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
             mainContext.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
         }
+
+        nightModeFlags = mainContext.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
 //
 //        if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
@@ -200,6 +215,7 @@ public class BlunoLibrary extends Activity {
                 onConectionStateChange(mConnectionState);
                 mHandler.removeCallbacks(mDisonnectingOverTimeRunnable);
                 mBluetoothLeService.close();
+                BluetoothAlert();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 for (BluetoothGattService gattService : mBluetoothLeService.getSupportedGattServices()) {
@@ -374,6 +390,7 @@ public class BlunoLibrary extends Activity {
             case isConnected:
                 textStatus.setText("Connected");
                 serialSend("1");
+                hasBeenAlerted = false;
                 break;
             case isConnecting:
                 textStatus.setText("Connecting");
@@ -494,4 +511,52 @@ public class BlunoLibrary extends Activity {
             }
         }
     };
+
+    private void BluetoothAlert(){
+        Log.d("BluetoothLE", "BluetoothAlert() started");
+        if(!hasBeenAlerted && timerRunning) {
+            hasBeenAlerted = true;
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                alertDialogBT = new AlertDialog.Builder(mainContext,AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                        .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
+                        .setTitle("Bluetooth Connection Lost")
+                        .setMessage("BBQ Buddy is no longer able to communicate " +
+                                "with the Bluetooth device and is trying to " +
+                                "reconnect. Please make sure that the device " +
+                                "is turned on.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+                textBTDisconnect.setVisibility(View.VISIBLE);
+                scanLeDevice(true);
+                Log.d("BluetoothLE", "scanLeDevice from onTick");
+            } else {
+                alertDialogBT = new AlertDialog.Builder(mainContext)
+                        .setIcon(R.drawable.ic_bluetooth_disabled_black_24dp)
+                        .setTitle("Bluetooth Connection Lost")
+                        .setMessage("BBQ Buddy is no longer able to communicate" +
+                                "with the Bluetooth device and is trying to " +
+                                "reconnect. Please make sure that the device " +
+                                "is turned on.")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+                textBTDisconnect.setVisibility(View.VISIBLE);
+                scanLeDevice(true);
+                Log.d("BluetoothLE", "scanLeDevice from onTick");
+            }
+        }
+    }
+
+    public void setTimerRunning(boolean timerStatus){
+        timerRunning = timerStatus;
+    }
 }

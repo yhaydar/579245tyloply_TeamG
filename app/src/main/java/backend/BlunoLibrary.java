@@ -112,10 +112,10 @@ public class BlunoLibrary extends Activity {
         if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
             Intent gattServiceIntent = new Intent(mainContext, BluetoothLeService.class);
             mainContext.bindService(gattServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-            IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            mainContext.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
         }
+
+        IntentFilter BTAdapterFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mainContext.registerReceiver(BTAdapterReceiver, BTAdapterFilter);
 
         if(mBluetoothLeService != null) {
             if (mBluetoothLeService.mConnectionState == 0) {
@@ -136,6 +136,7 @@ public class BlunoLibrary extends Activity {
 
     public void onPauseProcess(){
         mainContext.unregisterReceiver(GattUpdateReceiver);
+        mainContext.unregisterReceiver(BTAdapterReceiver);
     }
 
     public void onDestroyProcess(){
@@ -148,9 +149,6 @@ public class BlunoLibrary extends Activity {
             mHandler.removeCallbacks(mDisonnectingOverTimeRunnable);
             mBluetoothLeService.close();
 
-            if(bluetoothAdapter.isEnabled()) {
-                mainContext.unregisterReceiver(BTAdapterReceiver);
-            }
 
             mainContext.unbindService(serviceConnection);
         }
@@ -276,17 +274,19 @@ public class BlunoLibrary extends Activity {
                         mDeviceName=device.getName();
                         mDeviceAddress=device.getAddress();
 
-                        if (mBluetoothLeService.connect(mDeviceAddress)) {
-                            Log.d(TAG, "Connect request success");
-                            mConnectionState= connectionStateEnum.isConnecting;
-                            onConectionStateChange(mConnectionState);
-                            mHandler.postDelayed(mConnectingOverTimeRunnable, 10000);
-                            scanLeDevice(false);
-                        }
-                        else {
-                            Log.d(TAG, "Connect request fail");
-                            mConnectionState= connectionStateEnum.isToScan;
-                            onConectionStateChange(mConnectionState);
+                        if(mBluetoothLeService != null) {
+
+                            if (mBluetoothLeService.connect(mDeviceAddress)) {
+                                Log.d(TAG, "Connect request success");
+                                mConnectionState = connectionStateEnum.isConnecting;
+                                onConectionStateChange(mConnectionState);
+                                mHandler.postDelayed(mConnectingOverTimeRunnable, 10000);
+                                scanLeDevice(false);
+                            } else {
+                                Log.d(TAG, "Connect request fail");
+                                mConnectionState = connectionStateEnum.isToScan;
+                                onConectionStateChange(mConnectionState);
+                            }
                         }
                     }
                     else {

@@ -62,7 +62,7 @@ public class FoodSpecDialog extends DialogFragment {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_layout, mealOptions);
             spinner.setAdapter(adapter);
             if(mealOptions.length == 1){
-                spinner.setEnabled(false);
+                spinner.setEnabled(true);
             }
         }
         else{

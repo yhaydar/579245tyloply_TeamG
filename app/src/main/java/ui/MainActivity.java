@@ -202,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        Log.d("DEBUG", "MainActivity onDestroy");
+
         if(bluetoothAdapter != null) {
             if (bluetoothAdapter.isEnabled()) {
                 this.unregisterReceiver(BTAdapterReceiver);

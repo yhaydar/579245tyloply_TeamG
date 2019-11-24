@@ -40,7 +40,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="9dp"
-        android:text="Weight units in kg"
+        android:text="Vibrate with Notifications"
         android:textColor="?attr/textcolor"/>
 
     <Switch

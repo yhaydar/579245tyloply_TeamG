@@ -428,8 +428,6 @@ public class BlunoLibrary extends Activity {
         SharedPreferences preferences = mainContext.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         cTmpChecked = preferences.getBoolean(TempUnitSwitch, false);
 
-        //cTmpChecked = false;
-
         if(cTmpChecked){
             DegreesC = false;
 

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
+    android:layout_gravity="center"
     android:focusableInTouchMode="true"
     tools:context="ui.MainActivity">
 

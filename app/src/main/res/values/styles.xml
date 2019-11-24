@@ -11,6 +11,7 @@
         <item name="android:windowBackground">@drawable/background2</item>
         <item name="backgroundcolor">@color/backgroundlight</item>
         <item name="dropdown">@color/dropdownlight</item>
+        <item name="actionBarSize">46dp</item>
     </style>
 
     <style name="darktheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -23,12 +24,14 @@
         <item name="listviewbackground">@color/lvcolordark</item>
         <item name="backgroundcolor">@color/backgrounddark</item>
         <item name="dropdown">@color/dropdowndark</item>
+        <item name="actionBarSize">46dp</item>
 
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionBarSize">46dp</item>
 
     </style>
 

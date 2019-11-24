@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -116,14 +117,19 @@ public class FoodSpecDialog extends DialogFragment {
                         RadioButton clickedButton = view.findViewById(radioGroup.getCheckedRadioButtonId());
                         intent.putExtra("doneness", clickedButton.getText().toString());
                         startActivity(intent);
+                        getDialog().dismiss();
+                    }else{
+                        Toast.makeText(getActivity(), " Please Select a Doneness", Toast.LENGTH_SHORT).show();
+
                     }
                 }
                 else{
                     //if radiogroup is disabled, we can ignore it
                     intent.putExtra("doneness", "Well");
                     startActivity(intent);
+                    getDialog().dismiss();
                 }
-                getDialog().dismiss();
+               // getDialog().dismiss();
             }
         });
     }

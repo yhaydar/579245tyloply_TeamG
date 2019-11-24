@@ -279,6 +279,10 @@ public class CookingActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+
         Log.d("DEBUG", "Cooking Activity OnStart");
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         startTimeInMillis = 60000 * cookingTime;
@@ -316,10 +320,6 @@ public class CookingActivity extends AppCompatActivity {
         blunoLibrary.onResumeProcess();
         if(alertDialog != null) {
             alertDialog.dismiss();
-        }
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
 

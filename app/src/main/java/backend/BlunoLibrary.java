@@ -449,6 +449,7 @@ public class BlunoLibrary extends Activity {
     }
 
     public void serialSend(String theString){
+        Log.d("DEBUG", "serialSend " + theString);
         if (mConnectionState == connectionStateEnum.isConnected) {
             mSCharacteristic.setValue(theString);
             mBluetoothLeService.writeCharacteristic(mSCharacteristic);

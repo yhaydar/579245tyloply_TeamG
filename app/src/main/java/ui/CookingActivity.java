@@ -1,5 +1,6 @@
 package ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -27,13 +29,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -119,6 +125,7 @@ public class CookingActivity extends AppCompatActivity {
     private double currentTemp;
 
     private ImageView meatImage;
+    private AlertDialog alertDialog;
 
 
     @Override
@@ -271,6 +278,7 @@ public class CookingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         Log.d("DEBUG", "Cooking Activity OnStart");
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         startTimeInMillis = 60000 * cookingTime;
@@ -303,10 +311,18 @@ public class CookingActivity extends AppCompatActivity {
         Log.d("DEBUG", "Cooking Activity onResumeBegins");
         super.onResume();
         blunoLibrary.onResumeProcess();
+        if(alertDialog != null) {
+            alertDialog.dismiss();
+        }
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
     }
 
     @Override
     protected void onPause() {
+        Log.d("DEBUG", "Cooking Activity onPauseBegins");
         super.onPause();
 
         blunoLibrary.onPauseProcess();
@@ -711,7 +727,9 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     public void stopTimer() {
-        countDownTimer.cancel();
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+        }
         startButton.setText("START");
         timerRunning = false;
         blunoLibrary.setTimerRunning(timerRunning);
@@ -834,7 +852,7 @@ public class CookingActivity extends AppCompatActivity {
                             }
                         });
 
-                AlertDialog alertDialog = builder.create();
+                alertDialog = builder.create();
                 alertDialog.show();
 
             }
@@ -1031,6 +1049,20 @@ public class CookingActivity extends AppCompatActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(this, "Bluetooth features will be disabled", Toast.LENGTH_LONG).show();
+                }
+                else if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    finish();
+                    startActivity(getIntent());
+                }
         }
     }
 }

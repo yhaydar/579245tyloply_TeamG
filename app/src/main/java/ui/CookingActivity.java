@@ -145,7 +145,7 @@ public class CookingActivity extends AppCompatActivity {
         cTmpSwitch = findViewById(R.id.cTmpswitch);
         cVibrateSwitch = findViewById(R.id.cVibrateswitch);
 
-        Log.d(TAG, "Cooking Activity On Create Built");
+        Log.d("DEBUG", "Cooking Activity On Create Built");
 
         //retrieve boolean value from settings page
         Boolean cThmChecked;
@@ -198,10 +198,10 @@ public class CookingActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             if (timerRunning) {
-                                Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
+                                Log.d("DEBUG", "Cooking Activity if onBackpressed" + cookingTime);
                                 stopTimer();
                             }
-                            Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
+                            Log.d("DEBUG", "Cooking Activity onBackpressed" + cookingTime);
                             CookingActivity.super.onBackPressed();
                         }
                     })
@@ -226,10 +226,10 @@ public class CookingActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             if (timerRunning) {
-                                Log.d(TAG, "Cooking Activity if onBackpressed" + cookingTime);
+                                Log.d("DEBUG", "Cooking Activity if onBackpressed" + cookingTime);
                                 stopTimer();
                             }
-                            Log.d(TAG, "Cooking Activity onBackpressed" + cookingTime);
+                            Log.d("DEBUG", "Cooking Activity onBackpressed" + cookingTime);
                             CookingActivity.super.onBackPressed();
                         }
                     })
@@ -249,11 +249,11 @@ public class CookingActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "Cooking Activity On OnStop");
+        Log.d("DEBUG", "Cooking Activity On OnStop");
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        Log.d(TAG,"CookingActivity " + timeLeftInMilliseconds);
+        Log.d("DEBUG","CookingActivity " + timeLeftInMilliseconds);
         editor.putLong("millisLeft", timeLeftInMilliseconds);
         editor.putBoolean("timerRunning", timerRunning);
         editor.putLong("endTime", endTime);
@@ -271,7 +271,7 @@ public class CookingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "Cooking Activity OnStart");
+        Log.d("DEBUG", "Cooking Activity OnStart");
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         startTimeInMillis = 60000 * cookingTime;
         timeLeftInMilliseconds = prefs.getLong("millisLeft", startTimeInMillis);
@@ -300,7 +300,7 @@ public class CookingActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "Cooking Activity onResumeBegins");
+        Log.d("DEBUG", "Cooking Activity onResumeBegins");
         super.onResume();
         blunoLibrary.onResumeProcess();
     }
@@ -314,7 +314,7 @@ public class CookingActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "Cooking Activity onDestroy");
+        Log.d("DEBUG", "Cooking Activity onDestroy");
         blunoLibrary.onDestroyProcess();
         timerRunning = false;
         super.onDestroy();
@@ -535,6 +535,7 @@ public class CookingActivity extends AppCompatActivity {
 
 
                 if(isThereConnection) {
+                    Log.d("DEBUG", "Bluetooth active");
                     currentTempInC = blunoLibrary.getCurrentTemp();
                     currentTempInF = blunoLibrary.getCurrentTemp() * 1.8 + 32;
                     if(DegreesC){

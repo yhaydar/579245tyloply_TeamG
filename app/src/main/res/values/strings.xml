@@ -25,10 +25,10 @@
         <item>Tenderloin</item>
     </string-array>
     <string-array name="PoultryDrumstick">
-        <item>1-1.5lbs|450-680g</item>
+        <item>1-1.5lbs | 450-680g</item>
     </string-array>
     <string-array name="PoultryBreast">
-        <item>1-1.5lbs|450-680g</item>
+        <item>1-1.5lbs | 450-680g</item>
     </string-array>
     <string-array name="PoultryWings">
         <item>5-10</item>
@@ -36,29 +36,29 @@
         <item>15-20</item>
     </string-array>
     <string-array name="BeefSteak">
-        <item>0.75Inch|1.9cm</item>
-        <item>1Inch|2.54cm</item>
-        <item>1.5Inch|3.80cm</item>
-        <item>2Inch|5.10cm</item>
+        <item>0.75Inch | 1.9cm</item>
+        <item>1Inch | 2.54cm</item>
+        <item>1.5Inch | 3.80cm</item>
+        <item>2Inch | 5.10cm</item>
     </string-array>
     <string-array name="BeefTenderloin">
-        <item>1-2lbs|450-900g</item>
-        <item>2-3lbs|900-1360g</item>
-        <item>3-4lbs|1360-1815g</item>
+        <item>1-2lbs | 450-900g</item>
+        <item>2-3lbs | 900-1360g</item>
+        <item>3-4lbs | 1360-1815g</item>
     </string-array>
     <string-array name="BeefGroundPatty">
         <item>0.5Inch|1.27cm</item>
     </string-array>
     <string-array name="PorkHam">
-        <item>1-3lbs|450-1360g</item>
-        <item>3-4lbs|1360-1815g</item>
-        <item>4-6lbs|1815-2720g</item>
+        <item>1-3lbs | 450-1360g</item>
+        <item>3-4lbs | 1360-1815g</item>
+        <item>4-6lbs | 1815-2720g</item>
     </string-array>
     <string-array name="PorkChop">
-        <item>1Inch|2.54cm</item>
-        <item>1.5Inch|3.80cm</item>
+        <item>1Inch | 2.54cm</item>
+        <item>1.5Inch | 3.80cm</item>
     </string-array>
     <string-array name="PorkTenderloin">
-        <item>1Inch|2.54cm</item>
+        <item>1Inch | 2.54cm</item>
     </string-array>
 </resources>

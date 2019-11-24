@@ -63,7 +63,7 @@ public class FoodSpecDialog extends DialogFragment {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_layout, mealOptions);
             spinner.setAdapter(adapter);
             if(mealOptions.length == 1){
-                spinner.setEnabled(true);
+                spinner.setEnabled(false);
             }
         }
         else{
@@ -106,11 +106,13 @@ public class FoodSpecDialog extends DialogFragment {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String foodSpec = spinner.getSelectedItem().toString().replaceAll("\\s+","");
+
                 //Make intent and send all the cooking values to cooking activity
                 Intent intent = new Intent(getActivity(), CookingActivity.class);
                 intent.putExtra("meatType", meatType);
                 intent.putExtra("meatCut", meatCut);
-                intent.putExtra("foodSpec", spinner.getSelectedItem().toString());
+                intent.putExtra("foodSpec", foodSpec);
 
                 if(radioGroup != null) {
                     if(radioGroup.getCheckedRadioButtonId() != -1) {

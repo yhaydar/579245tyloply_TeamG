@@ -1016,7 +1016,7 @@ public class CookingActivity extends AppCompatActivity {
                 break;
             case "Pork":
                 switch(meatCut) {
-                    case "HamSlices":
+                    case "Ham":
                         meatImage.setImageResource(R.drawable.pork_slices);
                         break;
                     case "Chop":

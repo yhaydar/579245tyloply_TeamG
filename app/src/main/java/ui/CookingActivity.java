@@ -354,7 +354,7 @@ public class CookingActivity extends AppCompatActivity {
 
                         BluetoothOnStartAlert();
                     } else {
-                        //hasBeenAlerted = false;
+                        blunoLibrary.hasBeenAlerted = false;
                         startStop();
                     }
                 }
@@ -857,7 +857,7 @@ public class CookingActivity extends AppCompatActivity {
     }
     private void BluetoothOnStartAlert(){
         Log.d("BluetoothLE", "BluetoothAlert() started");
-        if(!blunoLibrary.hasBeenAlerted) {
+        //if(!blunoLibrary.hasBeenAlerted) {
             blunoLibrary.hasBeenAlerted = true;
             if (cThmSwitch.isChecked()) {
                 alertDialogBTStart = new AlertDialog.Builder(cookingContext,AlertDialog.THEME_DEVICE_DEFAULT_DARK)
@@ -908,7 +908,7 @@ public class CookingActivity extends AppCompatActivity {
                 //blunoLibrary.scanLeDevice(true);
                 Log.d("BluetoothLE", "scanLeDevice from onTick");
             }
-        }
+        //}
     }
 
     public void resetmessage(){

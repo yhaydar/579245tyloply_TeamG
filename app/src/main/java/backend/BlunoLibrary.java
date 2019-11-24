@@ -420,13 +420,15 @@ public class BlunoLibrary extends Activity {
     }
 
     public void onSerialReceived( String theString) {							//Once connection data received, this function will be called
-
+        Log.d("DEBUG","onSerialRecieved");
 //        char temp = theString.charAt(0);
 //        int i = (int) temp;
 
         Boolean cTmpChecked;
-        SharedPreferences preferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences preferences = mainContext.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         cTmpChecked = preferences.getBoolean(TempUnitSwitch, false);
+
+        //cTmpChecked = false;
 
         if(cTmpChecked){
             DegreesC = false;
@@ -439,11 +441,12 @@ public class BlunoLibrary extends Activity {
         double currentTempInF = currentTempInC *1.8 +32;
 
         if(DegreesC){
-            currentTemp = Double.toString(currentTempInC);
+            currentTemp = theString;
             textReceived.setText(currentTemp +"°C");
         }else {
             currentTemp = Double.toString(currentTempInF);
-            textReceived.setText(currentTemp + "°C");        //append the text into the EditText
+            textReceived.setText(currentTemp + "°F");        //append the text into the EditText
+            currentTemp = theString;
         }
     }
 

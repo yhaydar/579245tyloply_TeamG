@@ -289,13 +289,16 @@ public class CookingActivity extends AppCompatActivity {
 
         updateTimer();
 
+        if(cookingTime == 0) {
+            timerRunning = false;
+        }
         if (timerRunning) {
             endTime = prefs.getLong("endTime", 0);
-            system_time = prefs.getLong("systemtime",0);
-            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis()-system_time);
-            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds );
+            system_time = prefs.getLong("systemtime", 0);
+            timeLeftInMilliseconds = timeLeftInMilliseconds - (System.currentTimeMillis() - system_time);
+            Log.d(TAG, "Cooking Activity after if" + timeLeftInMilliseconds);
             if (timeLeftInMilliseconds < 0) {
-                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds );
+                Log.d(TAG, "Cooking Activity <0 " + timeLeftInMilliseconds);
                 timeLeftInMilliseconds = 0;
                 timerRunning = false;
                 blunoLibrary.setTimerRunning(timerRunning);
@@ -505,7 +508,7 @@ public class CookingActivity extends AppCompatActivity {
     }
 
     public void startTimer() {
-        Log.d("DEBUG", " THIS IS THE startTimer");
+        Log.d("DEBUG", " THIS IS THE startTimer " + timeLeftInMilliseconds + restTimerSet + timerStarted);
         endTime = System.currentTimeMillis() + timeLeftInMilliseconds;
         nextFlipTime = cookingTime - flipTime;
         startingTemp = currentTemp;
@@ -518,7 +521,7 @@ public class CookingActivity extends AppCompatActivity {
             }
         }
 
-
+        Log.d("DEBUG", "about to create timer " + timeLeftInMilliseconds);
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             // CountDownTimer(time left, countdown interval)
 
@@ -833,7 +836,7 @@ public class CookingActivity extends AppCompatActivity {
                             }
                         });
 
-                AlertDialog alertDialog = builder.create();
+                alertDialog = builder.create();
                 alertDialog.show();
 
             } else {

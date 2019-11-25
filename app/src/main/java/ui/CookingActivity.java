@@ -435,10 +435,12 @@ public class CookingActivity extends AppCompatActivity {
             public void onChanged(String s) {
                 if(DegreesC) {
                     finalTemp = Double.parseDouble(s);
-                    target_temp.setText(finalTemp + "°C"); //To view temp on app
+                    int targetTempC = (int) finalTemp;
+                    target_temp.setText(targetTempC + "°C"); //To view temp on app
                 }else {
                     finalTemp = Double.parseDouble(s) * (1.8) + 32;
-                    target_temp.setText(finalTemp + ("°F"));
+                    int targetTempF = (int) finalTemp;
+                    target_temp.setText(targetTempF + ("°F"));
                 }
             }
         };

@@ -150,6 +150,7 @@ const int tempsval[] = {
 char i = 'n';
 void setup() {
   Serial.begin(115200); //Needed for bluetooth connection
+  
 }
 
 void loop() {
@@ -162,19 +163,18 @@ void loop() {
 
  
   //Sends data when needed
-  if(Serial.available()){
-    i = Serial.read();
-  }
+  //if(Serial.available()){
+    //i = Serial.read();
+  //}
 
   //Send data when y is received
-  if(i=='1'){  
+  //if(i=='1'){  
     //Serial.println(voltage);
     Serial.print(temp_result);
     //Serial.println(value);
     //Serial.println(valueprime);
     //Serial.println(valueprime1);
-    delay(1000);
-    Serial.println();
- }  
+    delay(500);
+ //}  
 
 }
